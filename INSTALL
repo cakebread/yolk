@@ -1,0 +1,7 @@
+
+
+With easy_install:
+  easy_install yolk
+
+With distutils:
+  python setup.py install

@@ -1,0 +1,27 @@
+
+
+Example usage:
+
+yolk -n
+    List only the non-activated (--multi-version) packages installed
+
+yolk -a
+    List only the activated packages installed
+    (Activated packages are normal packages on sys.path you can import)
+
+yolk -l -f License,Author
+    Show the license and author for each installed package
+
+yolk -H twisded
+    Launches your web browser at Twisted's home page
+
+yolk -M Paste 1.0
+    Show all the metadata for Paste version 1.0
+
+yolk -M Paste
+    Show all the metadata for each version of Paste listed on PyPi
+
+yolk -D cheesecake
+    Show all URL's for cheesecake packages you can download
+
+

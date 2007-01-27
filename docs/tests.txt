@@ -1,0 +1,2 @@
+
+tests/rss_feed.py tests interfacing with PyPI's RSS feed
