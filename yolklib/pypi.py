@@ -20,6 +20,7 @@ import xmlrpclib
 import cPickle
 import urllib2
 import os
+import sys
 
 import __version__
 
@@ -32,7 +33,7 @@ except ImportError:
 
 PYPI_SERVER = xmlrpclib.Server('http://cheeseshop.python.org/pypi')
 PYPI_URL = 'http://www.python.org/pypi?:action=rss'
-VERSION = __version__.version
+VERSION = __version__.VERSION
 
 
 class CheeseShop:
@@ -71,7 +72,7 @@ class CheeseShop:
             #Check entire list of packages using case-insensitive search.
 
             if use_cached_pkglist:
-                package_list = query_cached_package_list()
+                package_list = self.query_cached_package_list()
             else:
 
                 #Download package list from PYPI
@@ -104,10 +105,9 @@ class CheeseShop:
         pickle_file = '%s/package_list.pkl' % self.yolk_dir
         cPickle.dump(package_list, open(pickle_file, "w"))
 
-    def search(self, spec):
+    def search(self, spec, operator):
         '''Query PYPI via XMLRPC interface using search spec'''
-        #XXX Allow AND/OR searches.
-        return PYPI_SERVER.search(spec, "and")
+        return PYPI_SERVER.search(spec, operator.lower())
 
     def list_packages(self):
         """Query PYPI via XMLRPC interface for a a list of all package names"""
@@ -121,8 +121,12 @@ class CheeseShop:
 
     def release_data(self, package_name, version):
         """Query PYPI via XMLRPC interface for a pkg's metadata"""
-
-        return PYPI_SERVER.release_data(package_name, version)
+        try:
+            return PYPI_SERVER.release_data(package_name, version)
+        except xmlrpclib.Fault:
+            #XXX Raises xmlrpclib.Fault if you give non-existant version
+            #Could this be server bug?
+            sys.exit(2)
 
     def package_releases(self, package_name):
         """Query PYPI via XMLRPC interface for a pkg's available versions"""
