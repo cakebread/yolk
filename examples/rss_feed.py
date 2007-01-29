@@ -1,11 +1,15 @@
 #!/usr/bin/python
 
+"""
+Some basic tests of the command-line and API
+"""
+
 import urllib
 import os
+import sys
 
 from cElementTree import iterparse
 
-import sys
 
 try:
     from yolklib.pypi import CheeseShop
