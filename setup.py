@@ -6,8 +6,8 @@ from yolklib import __version__
 
 setup(name="yolk",
     license = "PSF",
-    version=__version__.version,
-    description="Library and CLI tool for listing installed eggs, their metadata and dependencies and PYPI querying.",
+    version=__version__.VERSION,
+    description="Library and command-line tool for listing installed packages, their metadata and dependencies and PyPI querying.",
     long_description="Command-line tool and library for information about Python packages installed by setuptools, and querying of The Cheese Shop (Python Package Index).",
     maintainer="Rob Cakebread",
     author="Rob Cakebread",
