@@ -133,29 +133,10 @@ def show_deps(pkg_ver):
 ##############################################################################
 
 
-def get_download_links(package_name, version):
+def show_download_links(package_name, version, file_type):
     """Query PyPI for pkg download URI for a packge"""
-
-    if version:
-        versions = version
-    else:
-
-        #If they don't specify version, show em all.
-
-        (package_name, versions) = PYPI.query_versions_pypi(package_name, 
-                None)
-
-    for ver in versions:
-        metadata = PYPI.release_data(package_name, ver)
-
-        #Try the package's metadata in case there's nothing with release_urls
-
-        if metadata.has_key('download_url') and \
-                metadata['download_url'] != "UNKNOWN":
-                print metadata['download_url']
-
-        for urls in PYPI.release_urls(package_name, ver):
-            print urls['url']
+    for url in PYPI.get_download_urls(package_name, version, file_type):
+        print url
 
 
 def browse_website(package_name, browser=None):
@@ -390,6 +371,10 @@ def setup_opt_parser():
                           "search", default=False, help=
                           "Search PyPI by spec and operator.")
 
+    group_pypi.add_option("-T", "--file-type", action='store', dest=
+                          "file_type", default="all", help=
+                          "You may specify 'source', 'egg' or 'all' when using -D.")
+
     group_pypi.add_option("-V", "--versions-available", action=
                           'store_true', dest="versions_available", 
                           default=False, help=
@@ -445,7 +430,7 @@ def main():
 
         PYPI.store_pkg_list()
     elif options.download_links:
-        get_download_links(package, version)
+        show_download_links(package, version, options.file_type)
     elif options.rss_feed:
 
         get_rss_feed()
