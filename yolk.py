@@ -37,6 +37,17 @@ class Usage(Exception):
 #Functions for obtaining info about packages installed with setuptools
 ##############################################################################
 
+def show_updates(package_name="", version=""):
+    """Check installed packages for available updates on PyPI"""
+    dists = Distributions()
+    for (dist, active) in dists.get_distributions("all"):
+        #metadata = get_metadata(dist)
+        #print dist.project_name, dist.version
+        (pkg_name, versions) = PYPI.query_versions_pypi(dist.project_name, True)
+        if versions:
+            if versions[0] != dist.version:
+                print pkg_name, dist.version
+                print "\tInstalled: %s\tPyPI: %s" % (dist.version, versions[0])
 
 def show_distributions(show, pkg_name, version, show_metadata, fields):
     """Show list of installed activated OR non-activated packages"""
@@ -375,6 +386,10 @@ def setup_opt_parser():
                           "file_type", default="all", help=
                           "You may specify 'source', 'egg' or 'all' when using -D.")
 
+    group_pypi.add_option("-U", "--show-updates", action='store_true', dest=
+                          "show_updates", default=False, help=
+                          "Check PyPI for updates on packages.")
+
     group_pypi.add_option("-V", "--versions-available", action=
                           'store_true', dest="versions_available", 
                           default=False, help=
@@ -391,45 +406,43 @@ def main():
     opt_parser = setup_opt_parser()
     (options, remaining_args) = opt_parser.parse_args()
 
-    def usage():
+    def usage(msg=""):
+        """Print optparse help msg plus an optional additional msg"""
         opt_parser.print_help()
+        if msg:
+            print >> sys.stderr, "%s" % msg
         sys.exit(2)
 
-
-    if options.search:
-        pypi_search(remaining_args)
-        sys.exit()
-
-    if len(sys.argv) == 1 or len(remaining_args) > 2:
+    if not options.search and (len(sys.argv) == 1 or len(remaining_args) > 2):
         usage()
 
     (package, version) = parse_pkg_ver(remaining_args)
 
-    if options.version:
+    if options.search:
+        pypi_search(remaining_args)
+
+    elif options.version:
         print "Version %s" % __version__.VERSION
     elif options.depends:
         show_deps(remaining_args)
     elif options.all:
-
         if options.active or options.nonactive:
-            usage()
+            usage("Choose either -l, -n or -a, not combinations of those.")
         show_distributions('all', package, version, options.metadata, 
                            options.fields)
     elif options.active:
-
         if options.all or options.nonactive:
-            usage()
+            usage("Choose either -l, -n or -a, not combinations of those.")
 
         show_distributions("active", package, version, options.metadata, 
                            options.fields)
     elif options.nonactive:
-
         if options.active or options.all:
-            usage()
+            usage("Choose either -l, -n or -a, not combinations of those.")
         show_distributions("nonactive", package, version, options.metadata, 
                            options.fields)
-    elif options.versions_available:
 
+    elif options.versions_available:
         get_all_versions_pypi(package, options.use_cached_pkglist)
     elif options.browse_website:
         browse_website(package)
@@ -441,6 +454,8 @@ def main():
     elif options.rss_feed:
 
         get_rss_feed()
+    elif options.show_updates:
+        show_updates(package, version)
     elif options.query_metadata_pypi:
         show_pkg_metadata_pypi(package, version)
     else:
