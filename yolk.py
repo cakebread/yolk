@@ -391,12 +391,18 @@ def main():
     opt_parser = setup_opt_parser()
     (options, remaining_args) = opt_parser.parse_args()
 
+    def usage():
+        opt_parser.print_help()
+        sys.exit(2)
+
+
     if options.search:
         pypi_search(remaining_args)
         sys.exit()
 
     if len(sys.argv) == 1 or len(remaining_args) > 2:
-        raise Usage(opt_parser.print_help())
+        usage()
+
     (package, version) = parse_pkg_ver(remaining_args)
 
     if options.version:
@@ -406,19 +412,20 @@ def main():
     elif options.all:
 
         if options.active or options.nonactive:
-            raise Usage(opt_parser.print_help())
+            usage()
         show_distributions('all', package, version, options.metadata, 
                            options.fields)
     elif options.active:
 
         if options.all or options.nonactive:
-            raise Usage(opt_parser.print_help())
+            usage()
+
         show_distributions("active", package, version, options.metadata, 
                            options.fields)
     elif options.nonactive:
 
         if options.active or options.all:
-            raise Usage(opt_parser.print_help())
+            usage()
         show_distributions("nonactive", package, version, options.metadata, 
                            options.fields)
     elif options.versions_available:
@@ -437,12 +444,11 @@ def main():
     elif options.query_metadata_pypi:
         show_pkg_metadata_pypi(package, version)
     else:
-        opt_parser.print_help()
-        sys.exit()
+        usage()
 
 
 PYPI = CheeseShop()
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
 
