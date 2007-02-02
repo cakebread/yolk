@@ -7,7 +7,8 @@ Name: yolk.py
 
 Desc: Command-line tool for listing Python packages installed by setuptools,
       package metadata, package dependencies, and querying The Cheese Shop
-      (PyPI) for Python package release information.
+      (PyPI) for Python package release information such as which installed
+      packages have updates available.
 
 Author: Rob Cakebread <gentoodev a t gmail.com>
 
@@ -41,8 +42,6 @@ def show_updates(package_name="", version=""):
     """Check installed packages for available updates on PyPI"""
     dists = Distributions()
     for (dist, active) in dists.get_distributions("all"):
-        #metadata = get_metadata(dist)
-        #print dist.project_name, dist.version
         (pkg_name, versions) = PYPI.query_versions_pypi(dist.project_name, True)
         if versions:
             if versions[0] != dist.version:
@@ -94,8 +93,8 @@ def print_metadata(show, metadata, active, show_metadata, fields):
     else:
 
         #Default when listing packages
-
-        print "    %s" % metadata['Summary']
+        if metadata.has_key('Summary'):
+            print "    %s" % metadata['Summary']
     print 
 
 
