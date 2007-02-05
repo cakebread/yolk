@@ -45,8 +45,11 @@ def show_updates(package_name="", version=""):
         (pkg_name, versions) = PYPI.query_versions_pypi(dist.project_name, True)
         if versions:
             if versions[0] != dist.version:
-                print pkg_name, dist.version
-                print "\tInstalled: %s\tPyPI: %s" % (dist.version, versions[0])
+                #We may have newer than what PyPI knows about
+                if pkg_resources.parse_version(dist.version) < \
+                        pkg_resources.parse_version(versions[0]):
+                    print pkg_name, dist.version
+                    print "\tInstalled: %s\tPyPI: %s\n" % (dist.version, versions[0])
 
 def show_distributions(show, pkg_name, version, show_metadata, fields):
     """Show list of installed activated OR non-activated packages"""
