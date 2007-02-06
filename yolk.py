@@ -44,12 +44,12 @@ def show_updates(package_name="", version=""):
     for (dist, active) in dists.get_distributions("all"):
         (pkg_name, versions) = PYPI.query_versions_pypi(dist.project_name, True)
         if versions:
-            if versions[0] != dist.version:
+            newest = get_highest_version(versions)
+            if newest != dist.version:
                 #We may have newer than what PyPI knows about
                 if pkg_resources.parse_version(dist.version) < \
-                        pkg_resources.parse_version(versions[0]):
-                    print pkg_name, dist.version
-                    print "\tInstalled: %s\tPyPI: %s\n" % (dist.version, versions[0])
+                        pkg_resources.parse_version(newest):
+                    print " %s %s (%s)" % (pkg_name, dist.version, newest)
 
 def show_distributions(show, pkg_name, version, show_metadata, fields):
     """Show list of installed activated OR non-activated packages"""
@@ -285,6 +285,15 @@ def get_rss_feed():
 #Utility functions
 ##############################################################################
 
+#XXX Move to yolklib
+def get_highest_version(versions):
+    """Given list of versions returns highest available version for a package"""
+    sorted_versions = []
+    for ver in versions:
+        sorted_versions.append((pkg_resources.parse_version(ver), ver))
+
+    sorted_versions.sort()
+    return sorted_versions[0][1]
 
 def parse_pkg_ver(args):
     """Return tuple with package_name and version from CLI args"""
