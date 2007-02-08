@@ -22,12 +22,21 @@ import sys
 
 import __version__
 
-#XXX celementree is part of the stdlib in Python 2.5 but it uses a different
-#namespace. Add check for it before this:
-try:
-    from cElementTree import parse
-except ImportError:
-    from elementtree.ElementTree import parse
+
+XMLRPC = True
+#Python >=2.5 has elementtree 
+if sys.version_info[0] == 2 and sys.version_info[1] == 5:
+    from xml.etree.ElementTree import parse
+else:
+    try:
+        from cElementTree import parse
+    except ImportError:
+        try:
+            from elementtree.ElementTree import parse
+        except ImportError:
+            #If there is absolutely no version of elementtree available
+            #this disables reading RSS feed (-L option).
+            XMLRPC = False
 
 PYPI_SERVER = xmlrpclib.Server('http://cheeseshop.python.org/pypi')
 PYPI_URL = 'http://www.python.org/pypi?:action=rss'
@@ -44,6 +53,7 @@ class CheeseShop:
 
     def get_rss(self):
         """Fetch last 20 package release items from PyPI RSS feed"""
+        if not XMLRPC:
         rss = {}
         request = urllib2.Request(PYPI_URL)
         request.add_header('User-Agent', "yolk/%s (Python-urllib)" % VERSION)
