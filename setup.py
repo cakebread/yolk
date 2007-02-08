@@ -23,6 +23,6 @@ setup(name="yolk",
     py_modules=["yolklib/pypi", "yolklib/metadata", "yolklib/yolklib", "yolklib/__init__", "yolklib/__version__"],
     packages=['yolklib',],
     package_dir={'yolklib':''},
-    scripts=['yolk.py',],
+    scripts=['yolklib/scripts/yolk.py',],
 )
 
