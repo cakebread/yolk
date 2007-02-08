@@ -1,3 +1,23 @@
 
+*0.0.3 (08 Feb 2007)
 
-This package is still pre-alpha, beware if you're thinking about using yolklib's API just yet.
+  08 Feb 2007; Rob Cakebread <gentoodev@gmail.com> pypi.py:
+  Added check for Python 2.5 elementtree
+
+  05 Feb 2007; Rob Cakebread <gentoodev@gmail.com> yolk.py:
+  Added get_highest_version
+
+  02 Feb 2007; Rob Cakebread <gentoodev@gmail.com> yolk.py:
+  Check for Summary metadata key 
+
+  02 Feb 2007; Rob Cakebread <gentoodev@gmail.com> yolk.py;
+  Show which installed pkgs have updates on PyPI (-U)
+
+  02 Feb 2007; Rob Cakebread <gentoodev@gmail.com> yolk.py;
+  Fixed print_help so it doesn't print None
+
+  31 Jan 2007; Rob Cakebread <gentoodev@gmail.com> yolk.py;
+  Add check for filetype (-T) 
+
+*0.0.2 (29 Jan 2007)
+
