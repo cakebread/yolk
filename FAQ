@@ -1,4 +1,7 @@
 
 
-Q: Why do you have a FAQ with no questions?
-A: Because nobody has asked any, and more importantly, I'm trying to boost my Cheesecake score!
+Q: Why don't you list elementtree as a dependency with setuptools? 
+A: Because most distributions already have elementtree. If I set it as a dependency and elementtree
+wasn't installed by setuptools yolk will fail to import it.
+
+

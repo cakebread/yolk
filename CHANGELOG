@@ -1,5 +1,9 @@
 
-*0.0.3 (08 Feb 2007)
+*0.0.3 (12 Feb 2007)
+
+  12 Feb 2007; Rob Cakebread <gentoodev@gmail.com> yolk.py:
+  Refactored 'yolklib' to 'yolk', use setuptools to auto-generate
+  yolk script. Moved yolk.py to cli.py
 
   08 Feb 2007; Rob Cakebread <gentoodev@gmail.com> pypi.py:
   Added check for Python 2.5 elementtree
