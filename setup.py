@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
-from yolklib import __version__
+from lib import __version__
+
 
 setup(name="yolk",
     license = "PSF",
@@ -20,9 +21,8 @@ setup(name="yolk",
                  "Programming Language :: Python",
                  "Topic :: Software Development :: Libraries :: Python Modules",
                  ],
-    py_modules=["yolklib/pypi", "yolklib/metadata", "yolklib/yolklib", "yolklib/__init__", "yolklib/__version__"],
-    packages=['yolklib',],
-    package_dir={'yolklib':''},
-    scripts=['yolklib/scripts/yolk.py',],
+    packages=['yolk'],
+    package_dir={'yolk':'lib'},
+    entry_points={'console_scripts': ['yolk = yolk.cli:main',]},
 )
 
