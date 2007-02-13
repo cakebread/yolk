@@ -1,4 +1,11 @@
 
+*0.0.4 (12 Feb 2007)
+
+  12 Feb 2007; Rob Cakebread <gentoodev@gmail.com> yolk.py:
+  Fix problem with -U falsely detecting newer version if multiple
+  versions are installed. Fixed problem where it was trying to
+  query cached pkg list.
+
 *0.0.3 (12 Feb 2007)
 
   12 Feb 2007; Rob Cakebread <gentoodev@gmail.com> yolk.py:
