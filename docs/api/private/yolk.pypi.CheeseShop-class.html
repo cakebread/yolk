@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>yolk.pypi.CheeseShop</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="yolk-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          yolk
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="yolk-module.html">Package&nbsp;yolk</a> ::
+        <a href="yolk.pypi-module.html">Module&nbsp;pypi</a> ::
+        Class&nbsp;CheeseShop
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[show&nbsp;private&nbsp;|&nbsp;<a href="../public/yolk.pypi.CheeseShop-class.html">hide&nbsp;private</a>]</font></td></tr>
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="yolk.pypi.CheeseShop-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class CheeseShop</h2>
+
+<hr/>
+
+Interface to Python Package Index
+<hr/>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><a name="__init__"></a><span class="summary-sig"><span class="summary-sig-name">__init__</span>(<span class=summary-sig-arg>self</span>)</span></code>
+</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#get_download_urls" class="summary-sig-name"><code>get_download_urls</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>package_name</span>,
+          <span class=summary-sig-arg>version</span>,
+          <span class=summary-sig-arg>pkg_type</span>)</span></code>
+<br />
+Query PyPI for pkg download URI for a packge</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#get_rss" class="summary-sig-name"><code>get_rss</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Fetch last 20 package release items from PyPI RSS feed</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#get_yolk_dir" class="summary-sig-name"><code>get_yolk_dir</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return location we store config files and data</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#list_packages" class="summary-sig-name"><code>list_packages</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Query PYPI via XMLRPC interface for a a list of all package names</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#package_releases" class="summary-sig-name"><code>package_releases</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>package_name</span>)</span></code>
+<br />
+Query PYPI via XMLRPC interface for a pkg's available versions</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#query_cached_package_list" class="summary-sig-name"><code>query_cached_package_list</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return list of pickled package names from PYPI</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#query_versions_pypi" class="summary-sig-name"><code>query_versions_pypi</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>package_name</span>,
+          <span class=summary-sig-arg>use_cached_pkglist</span>)</span></code>
+<br />
+Fetch list of available versions for a package from The CheeseShop</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#release_data" class="summary-sig-name"><code>release_data</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>package_name</span>,
+          <span class=summary-sig-arg>version</span>)</span></code>
+<br />
+Query PYPI via XMLRPC interface for a pkg's metadata</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#release_urls" class="summary-sig-name"><code>release_urls</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>package_name</span>,
+          <span class=summary-sig-arg>version</span>)</span></code>
+<br />
+Query PYPI via XMLRPC interface for a pkg's available versions</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#search" class="summary-sig-name"><code>search</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>spec</span>,
+          <span class=summary-sig-arg>operator</span>)</span></code>
+<br />
+Query PYPI via XMLRPC interface using search spec</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#store_pkg_list" class="summary-sig-name"><code>store_pkg_list</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Cache master list of package names from PYPI</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="get_download_urls"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_download_urls</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>package_name</span>,
+          <span class=sig-arg>version</span>=<span class=sig-default>''</span>,
+          <span class=sig-arg>pkg_type</span>=<span class=sig-default>'all'</span>)</span>
+  </h3>
+  Query PyPI for pkg download URI for a packge
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_rss"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_rss</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  Fetch last 20 package release items from PyPI RSS feed
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_yolk_dir"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_yolk_dir</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  Return location we store config files and data
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="list_packages"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">list_packages</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  Query PYPI via XMLRPC interface for a a list of all package 
+  names
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="package_releases"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">package_releases</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>package_name</span>)</span>
+  </h3>
+  Query PYPI via XMLRPC interface for a pkg's available versions
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="query_cached_package_list"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">query_cached_package_list</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  Return list of pickled package names from PYPI
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="query_versions_pypi"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">query_versions_pypi</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>package_name</span>,
+          <span class=sig-arg>use_cached_pkglist</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  Fetch list of available versions for a package from The 
+  CheeseShop
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="release_data"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">release_data</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>package_name</span>,
+          <span class=sig-arg>version</span>)</span>
+  </h3>
+  Query PYPI via XMLRPC interface for a pkg's metadata
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="release_urls"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">release_urls</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>package_name</span>,
+          <span class=sig-arg>version</span>)</span>
+  </h3>
+  Query PYPI via XMLRPC interface for a pkg's available versions
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="search"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">search</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>spec</span>,
+          <span class=sig-arg>operator</span>)</span>
+  </h3>
+  Query PYPI via XMLRPC interface using search spec
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="store_pkg_list"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">store_pkg_list</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  Cache master list of package names from PYPI
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="yolk-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          yolk
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Mon Feb 12 18:44:10 2007</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>
