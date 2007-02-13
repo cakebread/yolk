@@ -3,7 +3,7 @@
 
 """
 
-Name: yolk.py
+Name: cli.py
 
 Desc: Command-line tool for listing Python packages installed by setuptools,
       package metadata, package dependencies, and querying The Cheese Shop
@@ -23,7 +23,7 @@ import webbrowser
 
 from yolk import __version__
 from yolk.metadata import get_metadata
-from yolk.yolklib import Distributions
+from yolk.yolklib import Distributions, get_highest_installed, get_highest_version
 from yolk.pypi import CheeseShop
 
 
@@ -38,18 +38,29 @@ class Usage(Exception):
 #Functions for obtaining info about packages installed with setuptools
 ##############################################################################
 
+def get_pkglist():
+    """Return list of all pkg names"""
+    dists = Distributions()
+    pkgs = []
+    for (dist, active) in dists.get_distributions("all"):
+        if dist.project_name not in pkgs:
+            pkgs.append(dist.project_name)
+    return pkgs
+
 def show_updates(package_name="", version=""):
     """Check installed packages for available updates on PyPI"""
     dists = Distributions()
-    for (dist, active) in dists.get_distributions("all"):
-        (pkg_name, versions) = PYPI.query_versions_pypi(dist.project_name, True)
-        if versions:
-            newest = get_highest_version(versions)
-            if newest != dist.version:
-                #We may have newer than what PyPI knows about
-                if pkg_resources.parse_version(dist.version) < \
-                        pkg_resources.parse_version(newest):
-                    print " %s %s (%s)" % (pkg_name, dist.version, newest)
+    for pkg in get_pkglist():
+        for (dist, active) in dists.get_distributions("all", pkg,
+                get_highest_installed(pkg)):
+            (pkg_name, versions) = PYPI.query_versions_pypi(dist.project_name, True)
+            if versions:
+                newest = get_highest_version(versions)
+                if newest != dist.version:
+                    #We may have newer than what PyPI knows about
+                    if pkg_resources.parse_version(dist.version) < \
+                            pkg_resources.parse_version(newest):
+                        print " %s %s (%s)" % (pkg_name, dist.version, newest)
 
 def show_distributions(show, pkg_name, version, show_metadata, fields):
     """Show list of installed activated OR non-activated packages"""
@@ -285,16 +296,6 @@ def get_rss_feed():
 #Utility functions
 ##############################################################################
 
-#XXX Move to yolklib
-def get_highest_version(versions):
-    """Given list of versions returns highest available version for a package"""
-    sorted_versions = []
-    for ver in versions:
-        sorted_versions.append((pkg_resources.parse_version(ver), ver))
-
-    sorted_versions.sort()
-    return sorted_versions[0][1]
-
 def parse_pkg_ver(args):
     """Return tuple with package_name and version from CLI args"""
 
@@ -458,12 +459,10 @@ def main():
     elif options.browse_website:
         browse_website(package)
     elif options.fetch_package_list:
-
         PYPI.store_pkg_list()
     elif options.download_links:
         show_download_links(package, version, options.file_type)
     elif options.rss_feed:
-
         get_rss_feed()
     elif options.show_updates:
         show_updates(package, version)

@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-from lib import __version__
+from yolk import __version__
 
 
 setup(name="yolk",
@@ -22,7 +22,7 @@ setup(name="yolk",
                  "Topic :: Software Development :: Libraries :: Python Modules",
                  ],
     packages=['yolk'],
-    package_dir={'yolk':'lib'},
+    package_dir={'yolk':'yolk'},
     entry_points={'console_scripts': ['yolk = yolk.cli:main',]},
 )
 

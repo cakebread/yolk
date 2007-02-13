@@ -106,6 +106,8 @@ class CheeseShop:
         """Return list of pickled package names from PYPI"""
 
         pickle_file = '%s/package_list.pkl' % self.yolk_dir
+        if not os.path.exists(pickle_file):
+            self.store_pkg_list()
         return cPickle.load(open(pickle_file, "r"))
 
     def store_pkg_list(self):
