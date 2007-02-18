@@ -74,19 +74,16 @@ class Distributions:
             # Only activated packages
             return self.working_set
 
+    def get_highest_installed(self, project_name):
+        return self.environment[project_name][0].version
+
 def get_highest_version(versions):
     """Given list of versions returns highest available version for a package"""
+    #Used to sort versions returned from PyPI
     sorted_versions = []
     for ver in versions:
         sorted_versions.append((pkg_resources.parse_version(ver), ver))
 
     sorted_versions.reverse()
     return sorted_versions[0][1]
-
-def get_highest_installed(pkg_name):
-    dists = Distributions()
-    versions = []
-    for (dist, active) in dists.get_distributions("all", pkg_name):
-        versions.append(dist.version)
-    return get_highest_version(versions)
 

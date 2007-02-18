@@ -20,10 +20,11 @@ import sys
 import optparse
 import pkg_resources
 import webbrowser
+from distutils.sysconfig import get_python_lib
 
 from yolk import __version__
 from yolk.metadata import get_metadata
-from yolk.yolklib import Distributions, get_highest_installed, get_highest_version
+from yolk.yolklib import Distributions, get_highest_version
 from yolk.pypi import CheeseShop
 
 
@@ -52,44 +53,70 @@ def show_updates(package_name="", version=""):
     dists = Distributions()
     for pkg in get_pkglist():
         for (dist, active) in dists.get_distributions("all", pkg,
-                get_highest_installed(pkg)):
-            (pkg_name, versions) = PYPI.query_versions_pypi(dist.project_name, True)
+                dists.get_highest_installed(pkg)):
+            (project_name, versions) = \
+                    PYPI.query_versions_pypi(dist.project_name, True)
             if versions:
+                #PyPI returns them in chronological order, 
+                #but who knows if its guaranteed in the API?
+                #Make sure we grab the highest version:
                 newest = get_highest_version(versions)
                 if newest != dist.version:
                     #We may have newer than what PyPI knows about
                     if pkg_resources.parse_version(dist.version) < \
                             pkg_resources.parse_version(newest):
-                        print " %s %s (%s)" % (pkg_name, dist.version, newest)
+                        print " %s %s (%s)" % (project_name, dist.version, newest)
 
-def show_distributions(show, pkg_name, version, show_metadata, fields):
+def show_distributions(show, project_name, version, show_metadata, fields):
     """Show list of installed activated OR non-activated packages"""
 
     dists = Distributions()
     results = None
-    for (dist, active) in dists.get_distributions(show, pkg_name, 
+    for (dist, active) in dists.get_distributions(show, project_name, 
             version):
         metadata = get_metadata(dist)
-        print_metadata(show, metadata, active, show_metadata, fields)
+        if dist.location.startswith(get_python_lib()):
+            develop = ""
+        else:
+            develop = dist.location
+        print_metadata(show, metadata, develop, active, show_metadata, fields)
         results = True
-    if show == 'all' and results:
+    if show == 'all' and results and fields:
         print "Versions with '*' are non-active."
+        print "Versions with '!' are deployed in development mode."
 
 
-def print_metadata(show, metadata, active, show_metadata, fields):
+def print_metadata(show, metadata, develop, active, show_metadata, fields):
     """Print out formatted metadata"""
 
     version = metadata['Version']
 
     #When showing all packages, note which are not active:
 
-    if show == 'all' and not active:
-        active = " *"
+    if active:
+        if fields:
+            active_status = ""
+        else:
+            active_status = "active"
     else:
-        active = ''
-
-    print '%s (%s)%s' % (metadata['Name'], version, active)
-
+        if fields:
+            active_status = "*"
+        else:
+            active_status = "non-active"
+    if develop:
+        if fields:
+            development_status = "! (%s)" % develop
+        else:
+            development_status = "development (%s)" % develop
+    else:
+        development_status = ""
+    status = "%s %s" % (active_status, development_status)
+    if fields:
+        print '%s (%s)%s %s' % (metadata['Name'], version, active_status, \
+                development_status)
+    else:
+        #XXX Need intelligent justification
+        print metadata['Name'].ljust(15) + " - " + version.ljust(12) + " - " + status
     if fields:
 
         #Only show specific fields
@@ -97,6 +124,7 @@ def print_metadata(show, metadata, active, show_metadata, fields):
         for field in metadata.keys():
             if field in fields:
                 print '    %s: %s' % (field, metadata[field])
+        print
     elif show_metadata:
 
         #Print all available metadata fields
@@ -104,13 +132,6 @@ def print_metadata(show, metadata, active, show_metadata, fields):
         for field in metadata.keys():
             if field != 'Name' and field != 'Summary':
                 print '    %s: %s' % (field, metadata[field])
-    else:
-
-        #Default when listing packages
-        if metadata.has_key('Summary'):
-            print "    %s" % metadata['Summary']
-    print 
-
 
 def show_deps(pkg_ver):
     """Show dependencies for package(s)"""
@@ -122,18 +143,18 @@ def show_deps(pkg_ver):
         raise Usage(msg)
 
     try:
-        (pkg_name, ver) = pkg_ver[0].split('=')
+        (project_name, ver) = pkg_ver[0].split('=')
     except ValueError:
-        pkg_name = pkg_ver[0]
+        project_name = pkg_ver[0]
         ver = None
 
     pkgs = pkg_resources.Environment()
 
-    if not len(pkgs[pkg_name]):
-        print >> sys.stderr, "Can't find package for %s" % pkg_name
+    if not len(pkgs[project_name]):
+        print >> sys.stderr, "Can't find package for %s" % project_name
         sys.exit(2)
 
-    for pkg in pkgs[pkg_name]:
+    for pkg in pkgs[project_name]:
         if not ver:
             print pkg.project_name, pkg.version
 
@@ -168,9 +189,9 @@ def browse_website(package_name, browser=None):
 
     #Get verified name from pypi.
 
-    (pypi_pkg_name, versions) = PYPI.query_versions_pypi(package_name)
+    (pypi_project_name, versions) = PYPI.query_versions_pypi(package_name)
     if len(versions):
-        metadata = PYPI.release_data(pypi_pkg_name, versions[0])
+        metadata = PYPI.release_data(pypi_project_name, versions[0])
         if metadata.has_key("home_page"):
             print "Launching browser: %s" % metadata["home_page"]
             if browser == 'konqueror':
@@ -202,17 +223,17 @@ def show_pkg_metadata_pypi(package_name, version):
             print "%s: %s" % (key, metadata[key])
 
 
-def get_all_versions_pypi(package_name, use_cached_pkglist):
+def get_all_versions_pypi(package_name, use_cached_pkglist=False):
     """Fetch list of available versions for a package from The Cheese Shop"""
 
-    (pypi_pkg_name, versions) = PYPI.query_versions_pypi(package_name, 
+    (pypi_project_name, versions) = PYPI.query_versions_pypi(package_name, 
             use_cached_pkglist)
 
-    #pypi_pkg_name may != package_name; it returns the name with correct case
+    #pypi_project_name may != package_name; it returns the name with correct case
     #i.e. You give beautifulsoup but PyPI knows it as BeautifulSoup
 
     if versions:
-        print_pkg_versions(pypi_pkg_name, versions)
+        print_pkg_versions(pypi_project_name, versions)
     else:
         print >> sys.stderr, "Nothing found on PyPI for %s" % \
             package_name
@@ -271,10 +292,14 @@ def parse_search_spec(spec):
     return (spec, operator)
 
 
-def pypi_search(spec):
+def pypi_search(arg, spec):
     """Search PyPI by metadata keyword"""
-
+    #spec = "%s %s" % (arg, "".join(spec))
+    #spec = spec.strip()
+    spec.insert(0, arg.strip())
     (spec, operator) = parse_search_spec(spec)
+    print spec, operator
+    #sys.exit()
     for pkg in PYPI.search(spec, operator):
         if pkg['summary']:
             summary = pkg['summary'].encode('utf-8')
@@ -296,16 +321,23 @@ def get_rss_feed():
 #Utility functions
 ##############################################################################
 
-def parse_pkg_ver(args):
+def parse_pkg_ver(package_spec, args):
     """Return tuple with package_name and version from CLI args"""
 
-    version = package = None
-    if len(args) == 1:
-        package = args[0]
-    elif len(args) == 2:
-        package = args[0]
-        version = args[1]
-    return (package, version)
+    #version = package_name = None
+    if len(args) == 0 and "==" not in package_spec:
+        #No version specified
+        package_name = package_spec
+        version = None
+    else:
+        if len(args):
+            arg_str = package_spec + "".join(args)
+        else:
+            arg_str = package_spec
+        (package_name, version) = arg_str.split("==")
+        package_name = package_name.strip()
+        version = version.strip()
+    return (package_name, version)
 
 
 def print_pkg_versions(package_name, versions):
@@ -315,11 +347,25 @@ def print_pkg_versions(package_name, versions):
         print "%s %s" % (package_name, ver)
 
 
+def validate_pypi_opts(opt_parser):
+    """Check for sane parse options"""
+    (options, remaining_args) = opt_parser.parse_args()
+    if options.versions_available or options.query_metadata_pypi or \
+            options.download_links or options.browse_website:
+        if not options.pkg_spec:
+            raise Usage, "You must specify a package spec by using -p\nExamples:\n  -p PackageName\n  -p PackageName==2.0"
+
+
 def setup_opt_parser():
     """Setup the optparser"""
 
-    usage = "usage: %prog [options] <package_name> <version>"
+    usage = "usage: %prog [options]"
     opt_parser = optparse.OptionParser(usage=usage)
+    opt_parser.add_option("-p", "--pkg-spec", action='store', 
+                           dest="pkg_spec", default=False, help=
+                           'Use with other options which may use a package spec. e.g. PackageName or ' +
+                           'PackageName==1.0')
+
     opt_parser.add_option("-v", "--version", action='store_true', dest=
                           "version", default=False, help=
                           "Show yolk version and exit.")
@@ -330,17 +376,17 @@ def setup_opt_parser():
 
     group_local.add_option("-l", "--list", action='store_true', dest=
                            'all', default=False, help=
-                           "List all packages installed by setuptools.")
+                           "List packages installed by setuptools. Use -p PKG_SPEC to narrow results.")
 
     group_local.add_option("-a", "--activated", action='store_true', 
                            dest="active", default=False, help=
-                           'List only activated packages installed by ' +
-                           'setuptools.')
+                           'List activated packages installed by ' +
+                           'setuptools. Use -p PKG_SPEC to narrow results.')
 
     group_local.add_option("-n", "--non-activated", action='store_true', 
                            dest="nonactive", default=False, help=
-                           'List only non-activated packages installed by ' +
-                           'setuptools.')
+                           'List non-activated packages installed by ' +
+                           'setuptools. Use -p PKG_SPEC to narrow results.')
 
     group_local.add_option("-m", "--metadata", action='store_true', dest=
                            "metadata", default=False, help=
@@ -355,44 +401,36 @@ def setup_opt_parser():
     group_local.add_option("-d", "--depends", action='store_true', dest=
                            "depends", default=False, help=
                            "Show dependencies for a package installed by " + 
-                           "setuptools if they are available. " + 
-                           '(use with -l -a or -n)')
+                           "setuptools if they are available. (Use with -p)")
 
     group_pypi = optparse.OptionGroup(opt_parser, 
             "PyPI (Cheese Shop) options", 
             "The following options query the Python Package Index:")
 
-    group_pypi.add_option("-C", "--use-cached-pkglist", action=
-                          'store_true', dest="use_cached_pkglist", 
-                          default=False, help=
-                          "Use cached package list instead of querying PyPI " + 
-                          "(Use -F to force retrieving list.)")
-
     group_pypi.add_option("-D", "--download-links", action='store_true', 
+                          metavar="PKG_SPEC",
                           dest="download_links", default=False, help=
-                          "Show download URL's for package listed on PyPI. ")
-
-    group_pypi.add_option("-F", "--fetch-package-list", action=
-                          'store_true', dest="fetch_package_list", 
-                          default=False, help=
-                          "Fetch and cache list of packages from PyPI.")
+                          "Show download URL's for package listed on PyPI. (Use with -p PKG_SPEC)")
 
     group_pypi.add_option("-H", "--browse-homepage", action='store_true', 
+                          metavar="PKG_SPEC",
                           dest="browse_website", default=False, help=
-                          "Launch web browser at home page for package.")
+                          "Launch web browser at home page for package. (Use with -p PKG_SPEC)")
 
     group_pypi.add_option("-L", "--latest", action='store_true', dest=
                           "rss_feed", default=False, help=
                           "Show last 20 updates on PyPI.")
 
     group_pypi.add_option("-M", "--query-metadata", action='store_true', 
-                          dest="query_metadata_pypi", default=False, 
+                          dest="query_metadata_pypi", default=False,
+                          metavar="PKG_SPEC",
                           help=
-                          "Show metadata for a package listed on PyPI.")
+                          "Show metadata for a package listed on PyPI. (Use with -p PKG_SPEC)")
 
-    group_pypi.add_option("-S", "--search", action='store_true', dest=
+    group_pypi.add_option("-S", "", action='store', dest=
                           "search", default=False, help=
-                          "Search PyPI by spec and operator.")
+                          "Search PyPI by spec and optional AND/OR operator.",
+                          metavar='SEARCH_SPEC <AND/OR SEARCH_SPEC>')
 
     group_pypi.add_option("-T", "--file-type", action='store', dest=
                           "file_type", default="all", help=
@@ -406,7 +444,7 @@ def setup_opt_parser():
                           'store_true', dest="versions_available", 
                           default=False, help=
                           "Show available versions for given package " + 
-                          "listeded on PyPI.")
+                          "listed on PyPI. (Use with -p PKG_SPEC)")
     opt_parser.add_option_group(group_local)
     opt_parser.add_option_group(group_pypi)
     return opt_parser
@@ -418,20 +456,17 @@ def main():
     opt_parser = setup_opt_parser()
     (options, remaining_args) = opt_parser.parse_args()
 
-    def usage(msg=""):
-        """Print optparse help msg plus an optional additional msg"""
+    validate_pypi_opts(opt_parser)
+    if not options.search and (len(sys.argv) == 1 or len(remaining_args) > 2):
         opt_parser.print_help()
-        if msg:
-            print >> sys.stderr, "%s" % msg
         sys.exit(2)
 
-    if not options.search and (len(sys.argv) == 1 or len(remaining_args) > 2):
-        usage()
-
-    (package, version) = parse_pkg_ver(remaining_args)
-
+    if options.pkg_spec:
+        (package, version) = parse_pkg_ver(options.pkg_spec, remaining_args)
+    else:
+        package = version = None 
     if options.search:
-        pypi_search(remaining_args)
+        pypi_search(options.search, remaining_args)
 
     elif options.version:
         print "Version %s" % __version__.VERSION
@@ -439,27 +474,25 @@ def main():
         show_deps(remaining_args)
     elif options.all:
         if options.active or options.nonactive:
-            usage("Choose either -l, -n or -a, not combinations of those.")
+            opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
         show_distributions('all', package, version, options.metadata, 
                            options.fields)
     elif options.active:
         if options.all or options.nonactive:
-            usage("Choose either -l, -n or -a, not combinations of those.")
+            opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
 
         show_distributions("active", package, version, options.metadata, 
                            options.fields)
     elif options.nonactive:
         if options.active or options.all:
-            usage("Choose either -l, -n or -a, not combinations of those.")
+            opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
         show_distributions("nonactive", package, version, options.metadata, 
                            options.fields)
 
     elif options.versions_available:
-        get_all_versions_pypi(package, options.use_cached_pkglist)
+        get_all_versions_pypi(package, False)
     elif options.browse_website:
         browse_website(package)
-    elif options.fetch_package_list:
-        PYPI.store_pkg_list()
     elif options.download_links:
         show_download_links(package, version, options.file_type)
     elif options.rss_feed:
@@ -468,8 +501,11 @@ def main():
         show_updates(package, version)
     elif options.query_metadata_pypi:
         show_pkg_metadata_pypi(package, version)
+    elif options.pkg_spec:
+        opt_parser.error("-p can't be used by itself. It's used with -l, -a, -n etc.")
     else:
-        usage()
+        opt_parser.print_help()
+        sys.exit(2)
 
 
 PYPI = CheeseShop()
