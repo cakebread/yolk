@@ -321,23 +321,15 @@ def get_rss_feed():
 #Utility functions
 ##############################################################################
 
-def parse_pkg_ver(package_spec, args):
+def parse_pkg_ver(args):
     """Return tuple with package_name and version from CLI args"""
-
-    #version = package_name = None
-    if len(args) == 0 and "==" not in package_spec:
-        #No version specified
-        package_name = package_spec
-        version = None
-    else:
-        if len(args):
-            arg_str = package_spec + "".join(args)
-        else:
-            arg_str = package_spec
-        (package_name, version) = arg_str.split("==")
-        package_name = package_name.strip()
-        version = version.strip()
-    return (package_name, version)
+    version = package = None
+    if len(args) == 1:
+        package = args[0]
+    elif len(args) == 2:
+        package = args[0]
+        version = args[1]
+    return (package, version)
 
 
 def print_pkg_versions(package_name, versions):
@@ -352,8 +344,8 @@ def validate_pypi_opts(opt_parser):
     (options, remaining_args) = opt_parser.parse_args()
     if options.versions_available or options.query_metadata_pypi or \
             options.download_links or options.browse_website:
-        if not options.pkg_spec:
-            raise Usage, "You must specify a package spec by using -p\nExamples:\n  -p PackageName\n  -p PackageName==2.0"
+        if not remaining_args:
+            raise Usage, "You must specify a package spec\nExamples:\n  PackageName\n  PackageName==2.0"
 
 
 def setup_opt_parser():
@@ -361,10 +353,6 @@ def setup_opt_parser():
 
     usage = "usage: %prog [options]"
     opt_parser = optparse.OptionParser(usage=usage)
-    opt_parser.add_option("-p", "--pkg-spec", action='store', 
-                           dest="pkg_spec", default=False, help=
-                           'Use with other options which may use a package spec. e.g. PackageName or ' +
-                           'PackageName==1.0')
 
     opt_parser.add_option("-v", "--version", action='store_true', dest=
                           "version", default=False, help=
@@ -376,17 +364,17 @@ def setup_opt_parser():
 
     group_local.add_option("-l", "--list", action='store_true', dest=
                            'all', default=False, help=
-                           "List packages installed by setuptools. Use -p PKG_SPEC to narrow results.")
+                           "List packages installed by setuptools. Use PKG_SPEC to narrow results.")
 
     group_local.add_option("-a", "--activated", action='store_true', 
                            dest="active", default=False, help=
                            'List activated packages installed by ' +
-                           'setuptools. Use -p PKG_SPEC to narrow results.')
+                           'setuptools. Use PKG_SPEC to narrow results.')
 
     group_local.add_option("-n", "--non-activated", action='store_true', 
                            dest="nonactive", default=False, help=
                            'List non-activated packages installed by ' +
-                           'setuptools. Use -p PKG_SPEC to narrow results.')
+                           'setuptools. Use PKG_SPEC to narrow results.')
 
     group_local.add_option("-m", "--metadata", action='store_true', dest=
                            "metadata", default=False, help=
@@ -401,7 +389,7 @@ def setup_opt_parser():
     group_local.add_option("-d", "--depends", action='store_true', dest=
                            "depends", default=False, help=
                            "Show dependencies for a package installed by " + 
-                           "setuptools if they are available. (Use with -p)")
+                           "setuptools if they are available. (Use with PKG_SPEC)")
 
     group_pypi = optparse.OptionGroup(opt_parser, 
             "PyPI (Cheese Shop) options", 
@@ -410,12 +398,12 @@ def setup_opt_parser():
     group_pypi.add_option("-D", "--download-links", action='store_true', 
                           metavar="PKG_SPEC",
                           dest="download_links", default=False, help=
-                          "Show download URL's for package listed on PyPI. (Use with -p PKG_SPEC)")
+                          "Show download URL's for package listed on PyPI. (Use with PKG_SPEC)")
 
     group_pypi.add_option("-H", "--browse-homepage", action='store_true', 
                           metavar="PKG_SPEC",
                           dest="browse_website", default=False, help=
-                          "Launch web browser at home page for package. (Use with -p PKG_SPEC)")
+                          "Launch web browser at home page for package. (Use with PKG_SPEC)")
 
     group_pypi.add_option("-L", "--latest", action='store_true', dest=
                           "rss_feed", default=False, help=
@@ -425,7 +413,7 @@ def setup_opt_parser():
                           dest="query_metadata_pypi", default=False,
                           metavar="PKG_SPEC",
                           help=
-                          "Show metadata for a package listed on PyPI. (Use with -p PKG_SPEC)")
+                          "Show metadata for a package listed on PyPI. (Use with PKG_SPEC)")
 
     group_pypi.add_option("-S", "", action='store', dest=
                           "search", default=False, help=
@@ -444,7 +432,7 @@ def setup_opt_parser():
                           'store_true', dest="versions_available", 
                           default=False, help=
                           "Show available versions for given package " + 
-                          "listed on PyPI. (Use with -p PKG_SPEC)")
+                          "listed on PyPI. (Use with PKG_SPEC)")
     opt_parser.add_option_group(group_local)
     opt_parser.add_option_group(group_pypi)
     return opt_parser
@@ -461,8 +449,8 @@ def main():
         opt_parser.print_help()
         sys.exit(2)
 
-    if options.pkg_spec:
-        (package, version) = parse_pkg_ver(options.pkg_spec, remaining_args)
+    if remaining_args:
+        (package, version) = parse_pkg_ver(remaining_args)
     else:
         package = version = None 
     if options.search:
@@ -501,8 +489,6 @@ def main():
         show_updates(package, version)
     elif options.query_metadata_pypi:
         show_pkg_metadata_pypi(package, version)
-    elif options.pkg_spec:
-        opt_parser.error("-p can't be used by itself. It's used with -l, -a, -n etc.")
     else:
         opt_parser.print_help()
         sys.exit(2)
