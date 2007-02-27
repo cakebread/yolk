@@ -1,27 +1,62 @@
+yolk
+=============
+
+.. contents::
+
+Installation
+------------
+
+You can install yolk with ``easy_install yolk``  or install from the `subversion repository
+<http://tools.assembla.com/svn/yolk/trunk/#egg=yolk-dev>`_
+with ``easy_install yolk==dev``.
+
+Summary
+-------
 
 
-Example usage:
+Usage Examples::
 
-yolk -n
-    List only the non-activated (--multi-version) packages installed
+    $ yolk -n 
+         List only the non-activated (--multi-version) packages installed 
+         
+    $ yolk -a 
+         List only the activated packages installed (Activated packages are normal packages on sys.path you can import) 
 
-yolk -a
-    List only the activated packages installed
-    (Activated packages are normal packages on sys.path you can import)
+    $ yolk -l -f License,Author 
+         Show the license and author for each installed package 
 
-yolk -l -f License,Author
-    Show the license and author for each installed package
+These options query PyPI::
+    $ yolk -U
+         Finds all packages installed via setuptools then checks PyPI for newer releases. 
 
-yolk -H twisded
-    Launches your web browser at Twisted's home page
+    $ yolk -M Paste 1.0 
+         Show all the metadata for Paste version 1.0 
 
-yolk -M Paste 1.0
-    Show all the metadata for Paste version 1.0
+    $ yolk -M Paste 
+         Show all the metadata for each version of Paste listed on PyPi? 
 
-yolk -M Paste
-    Show all the metadata for each version of Paste listed on PyPi
+    $ yolk -D cheesecake 
+         Show all URL's for cheesecake packages you can download 
 
-yolk -D cheesecake
-    Show all URL's for cheesecake packages you can download
+     $ yolk -T source -D cheesecake 
+         Show only source code releases for cheesecake 
 
+     $ yolk -H twisted 
+         Launches your web browser at Twisted's home page 
+
+Changes
+-------
+
+**0.0.5**: Show packages installed in 'development' mode.
+           Improved output of -l, -n and -a. You can get the previous (<=0.0.4)
+           output by adding '-f Summary'
+
+**0.0.4**: Added -U option to query PyPI for new versions of packages you have 
+           installed
+
+Requirements
+------------
+
+setuptools
+elementtree (Optional, for fetching PyPI RSS feed)
 
