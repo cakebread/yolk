@@ -423,7 +423,7 @@ def setup_opt_parser():
 
     group_pypi.add_option("-T", "--file-type", action='store', dest=
                           "file_type", default="all", help=
-                          "You may specify 'source', 'egg' or 'all' when using -D.")
+                          "You may specify 'source', 'binary' or 'all' when using -D.")
 
     group_pypi.add_option("-U", "--show-updates", action='store_true', dest=
                           "show_updates", default=False, help=
@@ -433,7 +433,7 @@ def setup_opt_parser():
                           'store_true', dest="versions_available", 
                           default=False, help=
                           "Show available versions for given package " + 
-                          "listed on PyPI. (Use with PKG_SPEC)")
+                          "listed on PyPI. (Use with PKG_NAME)")
     opt_parser.add_option_group(group_local)
     opt_parser.add_option_group(group_pypi)
     return opt_parser
