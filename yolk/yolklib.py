@@ -1,5 +1,7 @@
 
 
+# pylint: disable-msg=C0301,W0613,W0612
+
 '''
 
 Name: yolklib.py
