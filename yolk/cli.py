@@ -69,16 +69,21 @@ def show_updates(package_name="", version=""):
 
 def show_distributions(show, project_name, version, show_metadata, fields):
     """Show list of installed activated OR non-activated packages"""
-
+    #When using unionfs in livecd's such as Knoppix we remove prefixes
+    #otherwise all packages show as development
+    ignores = ["/UNIONFS", "/KNOPPIX.IMG"]
     dists = Distributions()
     results = None
     for (dist, active) in dists.get_distributions(show, project_name, 
             version):
         metadata = get_metadata(dist)
+        for ignore in ignores:
+	    if dist.location.startswith(ignore):
+	        dist.location = dist.location.replace(ignore, "")
         if dist.location.startswith(get_python_lib()):
             develop = ""
         else:
-            develop = dist.location
+	    develop = dist.location
         print_metadata(show, metadata, develop, active, show_metadata, fields)
         results = True
     if show == 'all' and results and fields:
