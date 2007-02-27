@@ -84,7 +84,10 @@ def show_distributions(show, project_name, version, show_metadata, fields):
             develop = ""
         else:
 	    develop = dist.location
-        print_metadata(show, metadata, develop, active, show_metadata, fields)
+	if metadata:
+            print_metadata(show, metadata, develop, active, show_metadata, fields)
+	else:
+	    print dist + " has no metadata"
         results = True
     if show == 'all' and results and fields:
         print "Versions with '*' are non-active."
