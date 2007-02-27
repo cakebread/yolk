@@ -1,7 +1,8 @@
-#!/usr/bin/python
+#!/usr/env python
 
 """
-Some basic tests of the command-line and API
+Some basic tests of the command-line and API using the PyPI RSS feed of recent
+updates.
 """
 
 import urllib
@@ -11,12 +12,7 @@ import sys
 from cElementTree import iterparse
 
 
-try:
-    from yolklib.pypi import CheeseShop
-except:
-    sys.path.insert(0, os.getcwd())
-    from yolklib.pypi import CheeseShop
-
+from yolk.pypi import CheeseShop
 
 PYPI_URL = 'http://www.python.org/pypi?:action=rss'
 
@@ -57,15 +53,13 @@ def test_api(pypi_xml):
         print "\t%s" % msg
 
 def test_cli(pypi_xml):
-    #Fetch master list of package names so we can use cache
-    os.system('./yolk.py -F')
     for event, elem in iterparse(pypi_xml):
         if elem.tag == "title":
             if not elem.text.startswith('Cheese Shop recent updates'):
                 print "Testing %s..." % elem.text
                 pkg_name, ver = get_pkg_ver(elem.text)
-                os.system('./yolk.py -V %s' % pkg_name)
-                os.system('./yolk.py -C -D %s %s' % (pkg_name, ver))
+                os.system('yolk -V %s' % pkg_name)
+                os.system('yolk -D %s %s' % (pkg_name, ver))
             elem.clear()
 
 test_cli(urllib.urlopen(PYPI_URL))
