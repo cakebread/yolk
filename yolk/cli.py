@@ -293,13 +293,11 @@ def parse_search_spec(spec):
 
 
 def pypi_search(arg, spec):
-    """Search PyPI by metadata keyword"""
-    #spec = "%s %s" % (arg, "".join(spec))
-    #spec = spec.strip()
+    """Search PyPI by metadata keyword
+    e.g. yolk -S name=yolk
+    """
     spec.insert(0, arg.strip())
     (spec, operator) = parse_search_spec(spec)
-    print spec, operator
-    #sys.exit()
     for pkg in PYPI.search(spec, operator):
         if pkg['summary']:
             summary = pkg['summary'].encode('utf-8')
@@ -321,15 +319,18 @@ def get_rss_feed():
 #Utility functions
 ##############################################################################
 
-def parse_pkg_ver(args):
+def parse_pkg_ver(package_spec):
     """Return tuple with package_name and version from CLI args"""
-    version = package = None
-    if len(args) == 1:
-        package = args[0]
-    elif len(args) == 2:
-        package = args[0]
-        version = args[1]
-    return (package, version)
+    arg_str = "".join(package_spec)
+    if "==" not in arg_str:
+        #No version specified
+        package_name = arg_str
+        version = None
+    else:
+	(package_name, version) = arg_str.split("==")
+        package_name = package_name.strip()
+        version = version.strip()
+    return (package_name, version)
 
 
 def print_pkg_versions(package_name, versions):

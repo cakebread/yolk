@@ -1,4 +1,11 @@
 
+*0.0.5 (26 Feb 2007)
+
+  26 Feb 2007; Rob Cakebread <gentoodev@gmail.com> cli.py:
+  Added 'development' locations to output of -l, -n and -a.
+  Ticket #5 fixed bug when you gave no PKG_SPEC with some options that needed it.
+  Ticket #4 fixed help for -d
+
 *0.0.4 (12 Feb 2007)
 
   12 Feb 2007; Rob Cakebread <gentoodev@gmail.com> yolk.py:
