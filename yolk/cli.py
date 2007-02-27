@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=C0301,W0613,W0612
 
@@ -169,7 +169,7 @@ def show_deps(pkg_ver):
         msg = \
             '''I need at least a package name.
 You can also specify a package name and version:
-  yolk.py -d kid 0.8'''
+  yolk -d kid==0.8'''
         raise Usage(msg)
 
     try:
