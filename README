@@ -1,5 +1,5 @@
 yolk
-=============
+====
 
 .. contents::
 
@@ -10,9 +10,14 @@ You can install yolk with ``easy_install yolk``  or install from the `subversion
 <http://tools.assembla.com/svn/yolk/trunk/#egg=yolk-dev>`_
 with ``easy_install yolk==dev``.
 
+Gentoo users can use the ebuild in my `overlay <http://overlays.gentoo.org/dev/pythonhead/wiki>`_
+
 Summary
 -------
 
+Yolk is a Python library and command-line tool for obtaining information about packages installed by setuptools and packages on PyPI (Python Package Index a.k.a. The Cheese Shop). 
+
+Yolk can list all the packages installed by setuptools on your system, show which packages are active, non-active or in development mode and show you which have newer versions available. 
 
 Usage Examples::
 
@@ -22,10 +27,14 @@ Usage Examples::
     $ yolk -a 
          List only the activated packages installed (Activated packages are normal packages on sys.path you can import) 
 
+    $ yolk -l
+         List all installed package 
+
     $ yolk -l -f License,Author 
          Show the license and author for each installed package 
 
 These options query PyPI::
+
     $ yolk -U
          Finds all packages installed via setuptools then checks PyPI for newer releases. 
 
@@ -50,6 +59,8 @@ Changes
 **0.0.5**: Show packages installed in 'development' mode.
            Improved output of -l, -n and -a. You can get the previous (<=0.0.4)
            output by adding '-f Summary'
+           More sanity checking for various options.
+           Don't throw exception if there is no package metadata
 
 **0.0.4**: Added -U option to query PyPI for new versions of packages you have 
            installed
