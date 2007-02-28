@@ -92,10 +92,10 @@ def show_distributions(show, project_name, version, show_metadata,
     for (dist, active) in dists.get_distributions(show, project_name,
             version):
         metadata = get_metadata(dist)
-        for ignore in ignores:
-            if dist.location.startswith(ignore):
-                dist.location = dist.location.replace(ignore, "")
-        if dist.location.startswith(get_python_lib()):
+        for prefix in ignores:
+            if dist.location.startswith(prefix):
+                dist.location = dist.location.replace(prefix, "")
+        if dist.location.lower().startswith(get_python_lib().lower()):
             develop = ""
         else:
             develop = dist.location
