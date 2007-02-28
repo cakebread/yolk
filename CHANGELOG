@@ -1,3 +1,5 @@
+  28 Feb 2007; Rob Cakebread <gentoodev@gmail.com> cli.py:
+  Fixed Windows problem where all pkgs showed as 'development' in some cases.
 
 *0.0.5 (26 Feb 2007)
 
