@@ -24,5 +24,6 @@ setup(name="yolk",
     packages=['yolk'],
     package_dir={'yolk':'yolk'},
     entry_points={'console_scripts': ['yolk = yolk.cli:main',]},
+    test_suite = 'nose.collector',
 )
 
