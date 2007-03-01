@@ -1,9 +1,14 @@
-#!/usr/env python
+#!/usr/bin/env python
 
 """
 Some basic tests of the command-line and API using the PyPI RSS feed of recent
 updates.
+
+Known issues: PyPI packages with spaces in the name will show as a fail on the second test.
+
 """
+
+__docformat__ = 'restructuredtext'
 
 import urllib
 import os
@@ -33,6 +38,7 @@ def get_pkg_ver(pv, add_quotes=True):
     return pkg_name, ver
 
 def test_api(pypi_xml):
+    "Basic API tests"
     failed = 0
     failed_msgs =[]
     for event, elem in iterparse(pypi_xml):
@@ -53,6 +59,7 @@ def test_api(pypi_xml):
         print "\t%s" % msg
 
 def test_cli(pypi_xml):
+    """Test the command-line tool"""
     for event, elem in iterparse(pypi_xml):
         if elem.tag == "title":
             if not elem.text.startswith('Cheese Shop recent updates'):
