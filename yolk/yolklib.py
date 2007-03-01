@@ -4,7 +4,8 @@
 
 '''
 
-Name: yolklib.py
+yolklib.py
+==========
 
 Desc: Library for getting information about Python packages installed by
       setuptools, package metadata, package dependencies, and querying
@@ -17,13 +18,18 @@ License  : PSF (Python Software Foundation License)
 
 '''
 
+__docformat__ = 'restructuredtext'
+
 import pkg_resources
 
 
 
 class Distributions:
 
+    """Helper class for pkg_resources"""
+
     def __init__(self):
+        """init"""
 
         self.environment = pkg_resources.Environment()
         self.working_set = pkg_resources.WorkingSet()

@@ -4,7 +4,8 @@
 
 """
 
-Name: pypi.py
+pypi.py
+=======
 
 Desc: Library for getting information about Python packages by querying
       The CheeseShop (PYPI a.k.a. Python Package Index).
@@ -15,6 +16,8 @@ Author: Rob Cakebread <gentoodev a t gmail.com>
 License  : PSF (Python Software Foundation License)
 
 """
+
+__docformat__ = 'restructuredtext'
 
 import xmlrpclib
 import cPickle
@@ -50,6 +53,7 @@ class CheeseShop:
     """Interface to Python Package Index"""
 
     def __init__(self):
+        """init"""
 
         self.yolk_dir = self.get_yolk_dir()
 

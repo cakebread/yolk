@@ -4,7 +4,8 @@
 
 """
 
-Name: cli.py
+cli.py
+======
 
 Desc: Command-line tool for listing Python packages installed by setuptools,
       package metadata, package dependencies, and querying The Cheese Shop
@@ -16,6 +17,8 @@ Author: Rob Cakebread <gentoodev a t gmail.com>
 License  : PSF (Python Software Foundation License)
 
 """
+
+__docformat__ = 'restructuredtext'
 
 import sys
 import optparse
@@ -34,6 +37,7 @@ class Usage(Exception):
     """Usage exception"""
 
     def __init__(self, msg):
+        """init"""
         print >> sys.stderr, "%s" % msg
         sys.exit(2)
 
