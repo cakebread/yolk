@@ -1,3 +1,14 @@
+*0.0.6 (01 Mar 2007)
+
+  01 Mar 2007; Rob Cakebread <gentoodev@gmail.com> *.py:
+  Use restructuredtext for docstrings
+
+  01 Mar 2007; Rob Cakebread <gentoodev@gmail.com> rss_feed.py:
+  Fixed bad interpreter shebang
+
+  01 Mar 2007; Rob Cakebread <gentoodev@gmail.com> setup.py:
+  Added nose unit tests
+
   28 Feb 2007; Rob Cakebread <gentoodev@gmail.com> cli.py:
   Fixed Windows problem where all pkgs showed as 'development' in some cases.
 
