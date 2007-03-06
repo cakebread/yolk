@@ -6,7 +6,10 @@ yolk
 Installation
 ------------
 
-You can install yolk with ``easy_install yolk`` or install from the subversion repository  at http://tools.assembla.com/svn/yolk/trunk
+You can install yolk with ``easy_install yolk`` or install from the `subversion
+repository <http://anonymous:@tools.assembla.com/svn/yolk/trunk/#egg=yolk-dev>`_
+with ``easy_install yolk==dev``.
+
 
 Gentoo users can use the ebuild in my `overlay <http://overlays.gentoo.org/dev/pythonhead/wiki>`_
 
