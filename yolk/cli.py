@@ -362,7 +362,7 @@ def get_rss_feed():
 ##############################################################################
 
 
-def parse_pkg_ver(package_spec):
+def parse_pkg_ver(package_spec, installed):
     """Return tuple with package_name and version from CLI args"""
 
     arg_str = ("").join(package_spec)
@@ -376,6 +376,10 @@ def parse_pkg_ver(package_spec):
         (package_name, version) = arg_str.split("==")
         package_name = package_name.strip()
         version = version.strip()
+    if installed:
+        #Find proper case for package name
+        dists = Distributions()
+        package_name = dists.case_sensitive_name(package_name)
     return (package_name, version)
 
 
@@ -500,9 +504,13 @@ def main():
                                2):
         opt_parser.print_help()
         sys.exit(2)
-
+    #Option depends on querying installed package, not PyPI
+    if options.depends or options.all or options.active or options.nonactive:
+        installed = True
+    else:
+        installed = False
     if remaining_args:
-        (package, version) = parse_pkg_ver(remaining_args)
+        (package, version) = parse_pkg_ver(remaining_args, installed)
     else:
         package = version = None
     if options.search:

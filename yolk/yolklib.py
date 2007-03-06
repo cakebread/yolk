@@ -85,6 +85,14 @@ class Distributions:
     def get_highest_installed(self, project_name):
         return self.environment[project_name][0].version
 
+    def case_sensitive_name(self, package_name):
+        """Return case-sensitive package name given any-case package name"""
+        if len(self.environment[package_name]):
+            return self.environment[package_name][0].project_name
+        else:
+            raise "No installed package found: %s" % package_name
+
+
 def get_highest_version(versions):
     """Given list of versions returns highest available version for a package"""
     #Used to sort versions returned from PyPI
