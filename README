@@ -6,7 +6,7 @@ yolk
 Installation
 ------------
 
-You can install yolk with ``easy_install yolk`` or install from the `subversion repository <http://anonymous@tools.assembla.com/svn/yolk/trunk/#egg=yolk-dev>`_ with ``easy_install yolk==dev``.
+You can install yolk with ``easy_install yolk`` or install from the subversion repository  at http://tools.assembla.com/svn/yolk/trunk
 
 Gentoo users can use the ebuild in my `overlay <http://overlays.gentoo.org/dev/pythonhead/wiki>`_
 
@@ -53,6 +53,11 @@ These options query PyPI::
 
 Changes
 -------
+**0.0.6**: Fix Windows problem which showed all pkgs in develop mode
+           on some systems.
+           Fix bad interpreter shebang in rss_feed.py example
+           Start using nose unit tests from setup.py
+           Use restructuredtext in docstrings
 
 **0.0.5**: Show packages installed in 'development' mode.
            Improved output of -l, -n and -a. You can get the previous (<=0.0.4)
