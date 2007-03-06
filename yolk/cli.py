@@ -87,10 +87,9 @@ def show_distributions(show, project_name, version, show_metadata,
                        fields):
     """Show list of installed activated OR non-activated packages"""
 
-    #When using unionfs in livecd's such as Knoppix we remove prefixes
-    #otherwise all packages show as development
+    #Some locations show false positive for 'development' packages:
 
-    ignores = ["/UNIONFS", "/KNOPPIX.IMG"]
+    ignores = ["/UNIONFS", "/KNOPPIX.IMG", "/var/lib/python-support/python2.4", "/var/lib/python-support/python2.5"]
     dists = Distributions()
     results = None
     for (dist, active) in dists.get_distributions(show, project_name,
@@ -504,7 +503,10 @@ def main():
                                2):
         opt_parser.print_help()
         sys.exit(2)
-    #Option depends on querying installed package, not PyPI
+
+    #Options that depend on querying installed packages, not PyPI.
+    #We find the proper case for package names if they are installed,
+    #otherwise PyPI returns the correct case.
     if options.depends or options.all or options.active or options.nonactive:
         installed = True
     else:
@@ -513,10 +515,10 @@ def main():
         (package, version) = parse_pkg_ver(remaining_args, installed)
     else:
         package = version = None
+
     if options.search:
         pypi_search(options.search, remaining_args)
     elif options.version:
-
         print "Version %s" % __version__.VERSION
     elif options.depends:
         show_deps(remaining_args)
