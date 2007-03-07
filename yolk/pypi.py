@@ -142,9 +142,9 @@ class CheeseShop:
         try:
             return PYPI_SERVER.release_data(package_name, version)
         except xmlrpclib.Fault:
-            #XXX Raises xmlrpclib.Fault if you give non-existant version
+            #XXX Raises xmlrpclib. Fault if you give non-existant version
             #Could this be server bug?
-            sys.exit(2)
+            return
 
     def package_releases(self, package_name):
         """Query PYPI via XMLRPC interface for a pkg's available versions"""
