@@ -89,7 +89,8 @@ def show_distributions(show, project_name, version, show_metadata,
 
     #Some locations show false positive for 'development' packages:
 
-    ignores = ["/UNIONFS", "/KNOPPIX.IMG", "/var/lib/python-support/python2.4", "/var/lib/python-support/python2.5"]
+    ignores = ["/UNIONFS", "/KNOPPIX.IMG", "/var/lib/python-support/python2.4", "/var/lib/python-support/python2.5", "/usr/lib/python2.5/lib-dynload"]
+
     dists = Distributions()
     results = None
     for (dist, active) in dists.get_distributions(show, project_name,
