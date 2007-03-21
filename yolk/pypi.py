@@ -178,27 +178,26 @@ class CheeseShop:
 
             #Try the package's metadata directly in case there's nothing
             #returned by XML-RPC's release_urls()
-
             if metadata.has_key('download_url') and \
-                    metadata['download_url'] != "UNKNOWN":
+                    metadata['download_url'] != "UNKNOWN" and \
+                    metadata['download_url'] != None:
                 if metadata['download_url'] not in all_urls:
                     if pkg_type != "all":
-                        url = _filter_urls(pkg_type, metadata['download_url'])
+                        url = filter_url(pkg_type, metadata['download_url'])
                         if url:
                             all_urls.append(url)
         return all_urls
         
-def _filter_urls(pkg_type, url):
-    """Returns list of URL's of specified file type"""
+def filter_url(pkg_type, url):
+    """Returns URL of specified file type, else None"""
 
     if pkg_type == "source":
-        valid_source_types = ["tgz", "tar.gz", "zip", "bz2", "tar.bz2"]
+        valid_source_types = ["tgz", "tar.gz", "zip", "tbz2", "tar.bz2"]
         for extension in valid_source_types:
             if url.lower().endswith(extension):
                 return url
 
     elif pkg_type == "binary":
-        for url in all_urls:
-            if url.lower().endswith("egg") or url.lower().endswith("exe"):
-                return url
+        if url.lower().endswith("egg") or url.lower().endswith("exe"):
+            return url
 
