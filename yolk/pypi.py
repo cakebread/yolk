@@ -75,6 +75,8 @@ class CheeseShop:
                 if element.text:
                     if not element.text.startswith("Updates to the Python Cheese Shop"):
                         rss[title] = element.text
+            elif element.tag == "pubDate":
+                        rss[title] = (rss[title], element.text)
                         element.clear()
         return rss
 
