@@ -16,13 +16,7 @@
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
-    <th class="navbar" align="right" width="100%">
-      <table border="0" cellpadding="0" cellspacing="0">
-      <tr><th class="navbar" align="center">
-        <p class="nomargin">
-          yolk
-      </p></th></tr></table>
-    </th>
+    <th class="navbar" width="100%"></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -45,14 +39,23 @@
 
 <hr/>
 
+<p>Helper class for pkg_resources</p>
+<hr/>
+
 
 <!-- =========== START OF METHOD SUMMARY =========== -->
 <table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="summary">
   <th colspan="2">Method Summary</th></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><a name="__init__"></a><span class="summary-sig"><span class="summary-sig-name">__init__</span>(<span class=summary-sig-arg>self</span>)</span></code>
-</td></tr>
+  <td><code><span class="summary-sig"><a href="yolk.yolklib.Distributions-class.html#__init__" class="summary-sig-name"><code>__init__</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+init</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.yolklib.Distributions-class.html#case_sensitive_name" class="summary-sig-name"><code>case_sensitive_name</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>package_name</span>)</span></code>
+<br />
+Return case-sensitive package name given any-case package name</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
   <td><code><span class="summary-sig"><a href="yolk.yolklib.Distributions-class.html#get_alpha" class="summary-sig-name"><code>get_alpha</code></a>(<span class=summary-sig-arg>self</span>,
           <span class=summary-sig-arg>show</span>,
@@ -67,6 +70,11 @@ Return list of alphabetized packages</td></tr>
           <span class=summary-sig-arg>version</span>)</span></code>
 <br />
 List installed packages</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.yolklib.Distributions-class.html#get_highest_installed" class="summary-sig-name"><code>get_highest_installed</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>project_name</span>)</span></code>
+<br />
+Return highest version of installed package</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
   <td><code><span class="summary-sig"><a href="yolk.yolklib.Distributions-class.html#get_packages" class="summary-sig-name"><code>get_packages</code></a>(<span class=summary-sig-arg>self</span>,
           <span class=summary-sig-arg>show</span>)</span></code>
@@ -86,6 +94,26 @@ Return True if distribution is active</td></tr>
   <th colspan="2">Method Details</th></tr>
 </table>
 
+<a name="__init__"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">__init__</span>(<span class=sig-arg>self</span>)</span>
+    <br /><i>(Constructor)</i>
+  </h3>
+<p>init</p>
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="case_sensitive_name"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">case_sensitive_name</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>package_name</span>)</span>
+  </h3>
+<p>Return case-sensitive package name given any-case package name</p>
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
 <a name="get_alpha"></a>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">get_alpha</span>(<span class=sig-arg>self</span>,
@@ -93,7 +121,7 @@ Return True if distribution is active</td></tr>
           <span class=sig-arg>pkg_name</span>=<span class=sig-default>''</span>,
           <span class=sig-arg>version</span>=<span class=sig-default>''</span>)</span>
   </h3>
-  Return list of alphabetized packages
+<p>Return list of alphabetized packages</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -105,7 +133,17 @@ Return True if distribution is active</td></tr>
           <span class=sig-arg>pkg_name</span>=<span class=sig-default>''</span>,
           <span class=sig-arg>version</span>=<span class=sig-default>''</span>)</span>
   </h3>
-  List installed packages
+<p>List installed packages</p>
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_highest_installed"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_highest_installed</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>project_name</span>)</span>
+  </h3>
+<p>Return highest version of installed package</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -115,7 +153,7 @@ Return True if distribution is active</td></tr>
   <h3><span class="sig"><span class="sig-name">get_packages</span>(<span class=sig-arg>self</span>,
           <span class=sig-arg>show</span>)</span>
   </h3>
-  Return list of Distributions
+<p>Return list of Distributions</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -125,7 +163,7 @@ Return True if distribution is active</td></tr>
   <h3><span class="sig"><span class="sig-name">query_activated</span>(<span class=sig-arg>self</span>,
           <span class=sig-arg>dist</span>)</span>
   </h3>
-  Return True if distribution is active
+<p>Return True if distribution is active</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -139,19 +177,13 @@ Return True if distribution is active</td></tr>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
-    <th class="navbar" align="right" width="100%">
-      <table border="0" cellpadding="0" cellspacing="0">
-      <tr><th class="navbar" align="center">
-        <p class="nomargin">
-          yolk
-      </p></th></tr></table>
-    </th>
+    <th class="navbar" width="100%"></th>
   </tr>
 </table>
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
-    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Mon Feb 12 18:44:10 2007</font></td>
+    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Tue Apr 10 08:40:26 2007</font></td>
     <td align="right"><a href="http://epydoc.sourceforge.net"
                       ><font size="-2">http://epydoc.sf.net</font></a></td>
   </tr>

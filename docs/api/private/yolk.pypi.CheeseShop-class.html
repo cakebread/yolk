@@ -16,13 +16,7 @@
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
-    <th class="navbar" align="right" width="100%">
-      <table border="0" cellpadding="0" cellspacing="0">
-      <tr><th class="navbar" align="center">
-        <p class="nomargin">
-          yolk
-      </p></th></tr></table>
-    </th>
+    <th class="navbar" width="100%"></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -45,7 +39,7 @@
 
 <hr/>
 
-Interface to Python Package Index
+<p>Interface to Python Package Index</p>
 <hr/>
 
 
@@ -54,8 +48,9 @@ Interface to Python Package Index
 <tr bgcolor="#70b0f0" class="summary">
   <th colspan="2">Method Summary</th></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><a name="__init__"></a><span class="summary-sig"><span class="summary-sig-name">__init__</span>(<span class=summary-sig-arg>self</span>)</span></code>
-</td></tr>
+  <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#__init__" class="summary-sig-name"><code>__init__</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+init</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
   <td><code><span class="summary-sig"><a href="yolk.pypi.CheeseShop-class.html#get_download_urls" class="summary-sig-name"><code>get_download_urls</code></a>(<span class=summary-sig-arg>self</span>,
           <span class=summary-sig-arg>package_name</span>,
@@ -121,6 +116,16 @@ Cache master list of package names from PYPI</td></tr>
   <th colspan="2">Method Details</th></tr>
 </table>
 
+<a name="__init__"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">__init__</span>(<span class=sig-arg>self</span>)</span>
+    <br /><i>(Constructor)</i>
+  </h3>
+<p>init</p>
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
 <a name="get_download_urls"></a>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">get_download_urls</span>(<span class=sig-arg>self</span>,
@@ -128,7 +133,7 @@ Cache master list of package names from PYPI</td></tr>
           <span class=sig-arg>version</span>=<span class=sig-default>''</span>,
           <span class=sig-arg>pkg_type</span>=<span class=sig-default>'all'</span>)</span>
   </h3>
-  Query PyPI for pkg download URI for a packge
+<p>Query PyPI for pkg download URI for a packge</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -137,7 +142,7 @@ Cache master list of package names from PYPI</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">get_rss</span>(<span class=sig-arg>self</span>)</span>
   </h3>
-  Fetch last 20 package release items from PyPI RSS feed
+<p>Fetch last 20 package release items from PyPI RSS feed</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -146,7 +151,7 @@ Cache master list of package names from PYPI</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">get_yolk_dir</span>(<span class=sig-arg>self</span>)</span>
   </h3>
-  Return location we store config files and data
+<p>Return location we store config files and data</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -155,8 +160,7 @@ Cache master list of package names from PYPI</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">list_packages</span>(<span class=sig-arg>self</span>)</span>
   </h3>
-  Query PYPI via XMLRPC interface for a a list of all package 
-  names
+<p>Query PYPI via XMLRPC interface for a a list of all package names</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -166,7 +170,7 @@ Cache master list of package names from PYPI</td></tr>
   <h3><span class="sig"><span class="sig-name">package_releases</span>(<span class=sig-arg>self</span>,
           <span class=sig-arg>package_name</span>)</span>
   </h3>
-  Query PYPI via XMLRPC interface for a pkg's available versions
+<p>Query PYPI via XMLRPC interface for a pkg's available versions</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -175,7 +179,7 @@ Cache master list of package names from PYPI</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">query_cached_package_list</span>(<span class=sig-arg>self</span>)</span>
   </h3>
-  Return list of pickled package names from PYPI
+<p>Return list of pickled package names from PYPI</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -186,8 +190,7 @@ Cache master list of package names from PYPI</td></tr>
           <span class=sig-arg>package_name</span>,
           <span class=sig-arg>use_cached_pkglist</span>=<span class=sig-default>None</span>)</span>
   </h3>
-  Fetch list of available versions for a package from The 
-  CheeseShop
+<p>Fetch list of available versions for a package from The CheeseShop</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -198,7 +201,7 @@ Cache master list of package names from PYPI</td></tr>
           <span class=sig-arg>package_name</span>,
           <span class=sig-arg>version</span>)</span>
   </h3>
-  Query PYPI via XMLRPC interface for a pkg's metadata
+<p>Query PYPI via XMLRPC interface for a pkg's metadata</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -209,7 +212,7 @@ Cache master list of package names from PYPI</td></tr>
           <span class=sig-arg>package_name</span>,
           <span class=sig-arg>version</span>)</span>
   </h3>
-  Query PYPI via XMLRPC interface for a pkg's available versions
+<p>Query PYPI via XMLRPC interface for a pkg's available versions</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -220,7 +223,7 @@ Cache master list of package names from PYPI</td></tr>
           <span class=sig-arg>spec</span>,
           <span class=sig-arg>operator</span>)</span>
   </h3>
-  Query PYPI via XMLRPC interface using search spec
+<p>Query PYPI via XMLRPC interface using search spec</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -229,7 +232,7 @@ Cache master list of package names from PYPI</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">store_pkg_list</span>(<span class=sig-arg>self</span>)</span>
   </h3>
-  Cache master list of package names from PYPI
+<p>Cache master list of package names from PYPI</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -243,19 +246,13 @@ Cache master list of package names from PYPI</td></tr>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
-    <th class="navbar" align="right" width="100%">
-      <table border="0" cellpadding="0" cellspacing="0">
-      <tr><th class="navbar" align="center">
-        <p class="nomargin">
-          yolk
-      </p></th></tr></table>
-    </th>
+    <th class="navbar" width="100%"></th>
   </tr>
 </table>
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
-    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Mon Feb 12 18:44:10 2007</font></td>
+    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Tue Apr 10 08:40:25 2007</font></td>
     <td align="right"><a href="http://epydoc.sourceforge.net"
                       ><font size="-2">http://epydoc.sf.net</font></a></td>
   </tr>

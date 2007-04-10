@@ -16,13 +16,7 @@
     <th bgcolor="#70b0f0" class="navselect">&nbsp;&nbsp;&nbsp;Trees&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
-    <th class="navbar" align="right" width="100%">
-      <table border="0" cellpadding="0" cellspacing="0">
-      <tr><th class="navbar" align="center">
-        <p class="nomargin">
-          yolk
-      </p></th></tr></table>
-    </th>
+    <th class="navbar" width="100%"></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -41,46 +35,46 @@
 <li> <b><a href="yolk-module.html"><code>yolk</code></a></b>
   <ul>
     <li> <b><a href="yolk.__version__-module.html"><code>__version__</code></a></b>
-    <li> <b><a href="yolk.cli-module.html"><code>cli</code></a></b>: <i>Name: cli.py
-
-Desc: Command-line tool for listing Python packages installed by setuptools,
-      package metadata, package dependencies, and querying The Cheese Shop
-      (PyPI) for Python package release information such as which installed
-      packages have updates available.</i>
-    <li> <b><a href="yolk.metadata-module.html"><code>metadata</code></a></b>: <i>Name     : metadata.py
-
-Author   : Rob Cakebread &lt;gentoodev&#64;gmail.com&gt;
-
-License  : PSF (Python Software Foundation License)
-
-Desc     : Return metadata for Python distribution installed by setuptools
-           in a dict
-
-           Note: The metadata uses RFC 2822-based message documents.</i>
-    <li> <b><a href="yolk.pypi-module.html"><code>pypi</code></a></b>: <i>Name: pypi.py
-
-Desc: Library for getting information about Python packages by querying
-      The CheeseShop (PYPI a.k.a.</i>
-    <li> <b><a href="yolk.yolklib-module.html"><code>yolklib</code></a></b>: <i>Name: yolklib.py
-
-Desc: Library for getting information about Python packages installed by
-      setuptools, package metadata, package dependencies, and querying
-      The CheeseShop (PYPI) for Python package release information.</i>
+    <li> <b><a href="yolk.cli-module.html"><code>cli</code></a></b>: <i>package metadata, package dependencies, and querying The Cheese Shop
+(PyPI) for Python package release information such as which installed
+packages have updates available.</i>
+    <li> <b><a href="yolk.metadata-module.html"><code>metadata</code></a></b>: <i>Author   : Rob Cakebread &lt;<a class="rst-reference rst-reference rst-reference" href="mailto:gentoodev&#64;gmail.com">gentoodev&#64;gmail.com</a>&gt;</i>
+    <li> <b><a href="yolk.pypi-module.html"><code>pypi</code></a></b>: <i>The CheeseShop (PYPI a.k.a.</i>
+    <li> <b><a href="yolk.setuptools_support-module.html"><code>setuptools_support</code></a></b>: <i>setuptools_support.py ======</i>
+    <li> <b><a href="yolk.yolklib-module.html"><code>yolklib</code></a></b>: <i>setuptools, package metadata, package dependencies, and querying
+The CheeseShop (PYPI) for Python package release information.</i>
   </ul>
 </ul>
 
 <!-- =========== START OF CLASS HIERARCHY =========== -->
 <h2>Class Hierarchy</h2>
 <ul>
-  <li> <b><a href="exceptions.Exception-class.html"><code>exceptions.Exception</code></a></b>: <i>
-Common base class for all exceptions.</i>
+  <li> <b><a href="__builtin__.object-class.html"><code>__builtin__.object</code></a></b>: <i>
+The most base type</i>
     <ul>
+  <li> <b><a href="exceptions.BaseException-class.html"><code>exceptions.BaseException</code></a></b>: <i>
+Common base class for all exceptions</i>
+    <ul>
+  <li> <b><a href="exceptions.Exception-class.html"><code>exceptions.Exception</code></a></b>: <i>
+Common base class for all non-exit exceptions.</i>
+    <ul>
+  <li> <b><a href="yolk.setuptools_support.DownloadURI-class.html"><code>yolk.setuptools_support.DownloadURI</code></a></b>
   <li> <b><a href="yolk.cli.Usage-class.html"><code>yolk.cli.Usage</code></a></b>: <i>
 Usage exception</i>
     </ul>
+    </ul>
+  <li> <b><a href="pkg_resources.Environment-class.html"><code>pkg_resources.Environment</code></a></b>: <i>
+Searchable snapshot of distributions on a search path</i>
+    <ul>
+    </ul>
+  <li> <b><a href="__builtin__.type-class.html"><code>__builtin__.type</code></a></b>: <i>
+type(object) -&gt; the object's type type(name, bases, dict) -&gt; a 
+new type</i>
+    </ul>
   <li> <b><a href="yolk.pypi.CheeseShop-class.html"><code>yolk.pypi.CheeseShop</code></a></b>: <i>
 Interface to Python Package Index</i>
-  <li> <b><a href="yolk.yolklib.Distributions-class.html"><code>yolk.yolklib.Distributions</code></a></b>
+  <li> <b><a href="yolk.yolklib.Distributions-class.html"><code>yolk.yolklib.Distributions</code></a></b>: <i>
+Helper class for pkg_resources</i>
 </ul>
 
 <!-- =========== START OF NAVBAR =========== -->
@@ -90,19 +84,13 @@ Interface to Python Package Index</i>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
-    <th class="navbar" align="right" width="100%">
-      <table border="0" cellpadding="0" cellspacing="0">
-      <tr><th class="navbar" align="center">
-        <p class="nomargin">
-          yolk
-      </p></th></tr></table>
-    </th>
+    <th class="navbar" width="100%"></th>
   </tr>
 </table>
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
-    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Mon Feb 12 18:44:10 2007</font></td>
+    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Tue Apr 10 08:40:26 2007</font></td>
     <td align="right"><a href="http://epydoc.sourceforge.net"
                       ><font size="-2">http://epydoc.sf.net</font></a></td>
   </tr>

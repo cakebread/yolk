@@ -16,13 +16,7 @@
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
-    <th class="navbar" align="right" width="100%">
-      <table border="0" cellpadding="0" cellspacing="0">
-      <tr><th class="navbar" align="center">
-        <p class="nomargin">
-          yolk
-      </p></th></tr></table>
-    </th>
+    <th class="navbar" width="100%"></th>
   </tr>
 </table>
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -42,18 +36,14 @@
 <!-- =========== START OF MODULE DESCRIPTION =========== -->
 <h2 class="module">Module yolk.cli</h2>
 
-<pre class="literalblock">
-Name: cli.py
-
-Desc: Command-line tool for listing Python packages installed by setuptools,
-      package metadata, package dependencies, and querying The Cheese Shop
-      (PyPI) for Python package release information such as which installed
-      packages have updates available.
-
-Author: Rob Cakebread &lt;gentoodev a t gmail.com&gt;
-
-License  : PSF (Python Software Foundation License)
-</pre>
+<dl class="docutils">
+<dt>Desc: Command-line tool for listing Python packages installed by setuptools,</dt>
+<dd>package metadata, package dependencies, and querying The Cheese Shop
+(PyPI) for Python package release information such as which installed
+packages have updates available.</dd>
+</dl>
+<p>Author: Rob Cakebread &lt;gentoodev a t gmail.com&gt;</p>
+<p>License  : PSF (Python Software Foundation License)</p>
 <hr/>
 
 <!-- =========== START OF EXCEPTIONS =========== -->
@@ -79,8 +69,7 @@ Launch web browser at project's homepage</td></tr>
   <td><code><span class="summary-sig"><a href="yolk.cli-module.html#get_all_versions_pypi" class="summary-sig-name"><code>get_all_versions_pypi</code></a>(<span class=summary-sig-arg>package_name</span>,
           <span class=summary-sig-arg>use_cached_pkglist</span>)</span></code>
 <br />
-Fetch list of available versions for a package from The Cheese 
-Shop</td></tr>
+Fetch list of available versions for a package from The Cheese Shop</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
   <td><code><span class="summary-sig"><a href="yolk.cli-module.html#get_pkglist" class="summary-sig-name"><code>get_pkglist</code></a>()</span></code>
 <br />
@@ -94,7 +83,8 @@ Show last 20 package updates from PyPI RSS feed</td></tr>
 <br />
 Main function</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="yolk.cli-module.html#parse_pkg_ver" class="summary-sig-name"><code>parse_pkg_ver</code></a>(<span class=summary-sig-arg>args</span>)</span></code>
+  <td><code><span class="summary-sig"><a href="yolk.cli-module.html#parse_pkg_ver" class="summary-sig-name"><code>parse_pkg_ver</code></a>(<span class=summary-sig-arg>package_spec</span>,
+          <span class=summary-sig-arg>installed</span>)</span></code>
 <br />
 Return tuple with package_name and version from CLI args</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
@@ -102,8 +92,8 @@ Return tuple with package_name and version from CLI args</td></tr>
 <br />
 Parse search args and return spec dict for PyPI</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="yolk.cli-module.html#print_metadata" class="summary-sig-name"><code>print_metadata</code></a>(<span class=summary-sig-arg>show</span>,
-          <span class=summary-sig-arg>metadata</span>,
+  <td><code><span class="summary-sig"><a href="yolk.cli-module.html#print_metadata" class="summary-sig-name"><code>print_metadata</code></a>(<span class=summary-sig-arg>metadata</span>,
+          <span class=summary-sig-arg>develop</span>,
           <span class=summary-sig-arg>active</span>,
           <span class=summary-sig-arg>show_metadata</span>,
           <span class=summary-sig-arg>fields</span>)</span></code>
@@ -115,9 +105,11 @@ Print out formatted metadata</td></tr>
 <br />
 Print list of versions available for a package</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="yolk.cli-module.html#pypi_search" class="summary-sig-name"><code>pypi_search</code></a>(<span class=summary-sig-arg>spec</span>)</span></code>
+  <td><code><span class="summary-sig"><a href="yolk.cli-module.html#pypi_search" class="summary-sig-name"><code>pypi_search</code></a>(<span class=summary-sig-arg>arg</span>,
+          <span class=summary-sig-arg>spec</span>)</span></code>
 <br />
-Search PyPI by metadata keyword</td></tr>
+Search PyPI by metadata keyword
+e.g.</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
   <td><code><span class="summary-sig"><a href="yolk.cli-module.html#setup_opt_parser" class="summary-sig-name"><code>setup_opt_parser</code></a>()</span></code>
 <br />
@@ -128,7 +120,7 @@ Setup the optparser</td></tr>
 Show dependencies for package(s)</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
   <td><code><span class="summary-sig"><a href="yolk.cli-module.html#show_distributions" class="summary-sig-name"><code>show_distributions</code></a>(<span class=summary-sig-arg>show</span>,
-          <span class=summary-sig-arg>pkg_name</span>,
+          <span class=summary-sig-arg>project_name</span>,
           <span class=summary-sig-arg>version</span>,
           <span class=summary-sig-arg>show_metadata</span>,
           <span class=summary-sig-arg>fields</span>)</span></code>
@@ -139,7 +131,7 @@ Show list of installed activated OR non-activated packages</td></tr>
           <span class=summary-sig-arg>version</span>,
           <span class=summary-sig-arg>file_type</span>)</span></code>
 <br />
-Query PyPI for pkg download URI for a packge</td></tr>
+Query PyPI for pkg download URI for a packge.</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
   <td><code><span class="summary-sig"><a href="yolk.cli-module.html#show_pkg_metadata_pypi" class="summary-sig-name"><code>show_pkg_metadata_pypi</code></a>(<span class=summary-sig-arg>package_name</span>,
           <span class=summary-sig-arg>version</span>)</span></code>
@@ -150,6 +142,10 @@ Show pkg metadata queried from PyPI</td></tr>
           <span class=summary-sig-arg>version</span>)</span></code>
 <br />
 Check installed packages for available updates on PyPI</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="yolk.cli-module.html#validate_pypi_opts" class="summary-sig-name"><code>validate_pypi_opts</code></a>(<span class=summary-sig-arg>opt_parser</span>)</span></code>
+<br />
+Check for sane parse options</td></tr>
 </table><br />
 
 
@@ -164,7 +160,7 @@ Check installed packages for available updates on PyPI</td></tr>
   <h3><span class="sig"><span class="sig-name">browse_website</span>(<span class=sig-arg>package_name</span>,
           <span class=sig-arg>browser</span>=<span class=sig-default>None</span>)</span>
   </h3>
-  Launch web browser at project's homepage
+<p>Launch web browser at project's homepage</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -172,10 +168,9 @@ Check installed packages for available updates on PyPI</td></tr>
 <a name="get_all_versions_pypi"></a>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">get_all_versions_pypi</span>(<span class=sig-arg>package_name</span>,
-          <span class=sig-arg>use_cached_pkglist</span>)</span>
+          <span class=sig-arg>use_cached_pkglist</span>=<span class=sig-default>False</span>)</span>
   </h3>
-  Fetch list of available versions for a package from The Cheese 
-  Shop
+<p>Fetch list of available versions for a package from The Cheese Shop</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -184,7 +179,7 @@ Check installed packages for available updates on PyPI</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">get_pkglist</span>()</span>
   </h3>
-  Return list of all pkg names
+<p>Return list of all pkg names</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -193,7 +188,7 @@ Check installed packages for available updates on PyPI</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">get_rss_feed</span>()</span>
   </h3>
-  Show last 20 package updates from PyPI RSS feed
+<p>Show last 20 package updates from PyPI RSS feed</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -202,16 +197,17 @@ Check installed packages for available updates on PyPI</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">main</span>()</span>
   </h3>
-  Main function
+<p>Main function</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
 
 <a name="parse_pkg_ver"></a>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">parse_pkg_ver</span>(<span class=sig-arg>args</span>)</span>
+  <h3><span class="sig"><span class="sig-name">parse_pkg_ver</span>(<span class=sig-arg>package_spec</span>,
+          <span class=sig-arg>installed</span>)</span>
   </h3>
-  Return tuple with package_name and version from CLI args
+<p>Return tuple with package_name and version from CLI args</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -220,20 +216,20 @@ Check installed packages for available updates on PyPI</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">parse_search_spec</span>(<span class=sig-arg>spec</span>)</span>
   </h3>
-  Parse search args and return spec dict for PyPI
+<p>Parse search args and return spec dict for PyPI</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
 
 <a name="print_metadata"></a>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">print_metadata</span>(<span class=sig-arg>show</span>,
-          <span class=sig-arg>metadata</span>,
+  <h3><span class="sig"><span class="sig-name">print_metadata</span>(<span class=sig-arg>metadata</span>,
+          <span class=sig-arg>develop</span>,
           <span class=sig-arg>active</span>,
           <span class=sig-arg>show_metadata</span>,
           <span class=sig-arg>fields</span>)</span>
   </h3>
-  Print out formatted metadata
+<p>Print out formatted metadata</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -243,16 +239,18 @@ Check installed packages for available updates on PyPI</td></tr>
   <h3><span class="sig"><span class="sig-name">print_pkg_versions</span>(<span class=sig-arg>package_name</span>,
           <span class=sig-arg>versions</span>)</span>
   </h3>
-  Print list of versions available for a package
+<p>Print list of versions available for a package</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
 
 <a name="pypi_search"></a>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">pypi_search</span>(<span class=sig-arg>spec</span>)</span>
+  <h3><span class="sig"><span class="sig-name">pypi_search</span>(<span class=sig-arg>arg</span>,
+          <span class=sig-arg>spec</span>)</span>
   </h3>
-  Search PyPI by metadata keyword
+<p>Search PyPI by metadata keyword
+e.g. yolk -S name=yolk</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -261,7 +259,7 @@ Check installed packages for available updates on PyPI</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">setup_opt_parser</span>()</span>
   </h3>
-  Setup the optparser
+<p>Setup the optparser</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -270,7 +268,7 @@ Check installed packages for available updates on PyPI</td></tr>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">show_deps</span>(<span class=sig-arg>pkg_ver</span>)</span>
   </h3>
-  Show dependencies for package(s)
+<p>Show dependencies for package(s)</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -278,12 +276,12 @@ Check installed packages for available updates on PyPI</td></tr>
 <a name="show_distributions"></a>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
   <h3><span class="sig"><span class="sig-name">show_distributions</span>(<span class=sig-arg>show</span>,
-          <span class=sig-arg>pkg_name</span>,
+          <span class=sig-arg>project_name</span>,
           <span class=sig-arg>version</span>,
           <span class=sig-arg>show_metadata</span>,
           <span class=sig-arg>fields</span>)</span>
   </h3>
-  Show list of installed activated OR non-activated packages
+<p>Show list of installed activated OR non-activated packages</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -294,7 +292,8 @@ Check installed packages for available updates on PyPI</td></tr>
           <span class=sig-arg>version</span>,
           <span class=sig-arg>file_type</span>)</span>
   </h3>
-  Query PyPI for pkg download URI for a packge
+<p>Query PyPI for pkg download URI for a packge.
+If PyPI can't find it try setuptools.</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -304,7 +303,7 @@ Check installed packages for available updates on PyPI</td></tr>
   <h3><span class="sig"><span class="sig-name">show_pkg_metadata_pypi</span>(<span class=sig-arg>package_name</span>,
           <span class=sig-arg>version</span>)</span>
   </h3>
-  Show pkg metadata queried from PyPI
+<p>Show pkg metadata queried from PyPI</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -314,7 +313,16 @@ Check installed packages for available updates on PyPI</td></tr>
   <h3><span class="sig"><span class="sig-name">show_updates</span>(<span class=sig-arg>package_name</span>=<span class=sig-default>''</span>,
           <span class=sig-arg>version</span>=<span class=sig-default>''</span>)</span>
   </h3>
-  Check installed packages for available updates on PyPI
+<p>Check installed packages for available updates on PyPI</p>
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="validate_pypi_opts"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">validate_pypi_opts</span>(<span class=sig-arg>opt_parser</span>)</span>
+  </h3>
+<p>Check for sane parse options</p>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -328,19 +336,13 @@ Check installed packages for available updates on PyPI</td></tr>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
     <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
-    <th class="navbar" align="right" width="100%">
-      <table border="0" cellpadding="0" cellspacing="0">
-      <tr><th class="navbar" align="center">
-        <p class="nomargin">
-          yolk
-      </p></th></tr></table>
-    </th>
+    <th class="navbar" width="100%"></th>
   </tr>
 </table>
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
-    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Mon Feb 12 18:44:10 2007</font></td>
+    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Tue Apr 10 08:40:26 2007</font></td>
     <td align="right"><a href="http://epydoc.sourceforge.net"
                       ><font size="-2">http://epydoc.sf.net</font></a></td>
   </tr>
