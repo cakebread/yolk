@@ -66,18 +66,20 @@ class CheeseShop:
         request = urllib2.Request(PYPI_URL)
         request.add_header('User-Agent', "yolk/%s (Python-urllib)" % VERSION)
         root = parse(urllib2.urlopen(request)).getiterator()
-        #XXX It'd be nicer if we did a reverse chronological sort. 
+        #Remove Cheeseshop header
+        for i in range(5):
+            del root[i]
         for element in root:
             if element.tag == "title":
-                if not element.text.startswith("Cheese Shop recent updates"):
-                    title = element.text
+                title = element.text
             elif element.tag == "description":
                 if element.text:
-                    if not element.text.startswith("Updates to the Python Cheese Shop"):
-                        rss[title] = element.text
+                    rss[title] = element.text
+                else:
+                    rss[title] = "No description."
             elif element.tag == "pubDate":
-                        rss[title] = (rss[title], element.text)
-                        element.clear()
+                if element.text:
+                    rss[title] = (rss[title], element.text)
         return rss
 
     def query_versions_pypi(self, package_name, use_cached_pkglist=None):
