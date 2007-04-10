@@ -352,11 +352,14 @@ def get_rss_feed():
     """Show last 20 package updates from PyPI RSS feed"""
 
     rss = PYPI.get_rss()
+    items = []
     for pkg in rss.keys():
-        print """%s
-    %s
-""" % (pkg, rss[pkg])
-
+        date = rss[pkg][1][:10]
+        #Show packages grouped by date released
+        if not date in items:
+            items.append(date)
+            print date
+        print "  %s - %s" % (pkg, rss[pkg][0])
 
 #Utility functions
 ##############################################################################
