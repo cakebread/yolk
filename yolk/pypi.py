@@ -194,14 +194,20 @@ class CheeseShop:
         
 def filter_url(pkg_type, url):
     """Returns URL of specified file type, else None"""
+    #Remove MD5 checksum
+    if "#md5=" in url:
+         url = url.split("#")[0]
+
+    if pkg_type == "all":
+        return url
 
     if pkg_type == "source":
-        valid_source_types = ["tgz", "tar.gz", "zip", "tbz2", "tar.bz2"]
+        valid_source_types = [".tgz", ".tar.gz", ".zip", ".tbz2", ".tar.bz2"]
         for extension in valid_source_types:
             if url.lower().endswith(extension):
                 return url
 
     elif pkg_type == "binary":
-        if url.lower().endswith("egg") or url.lower().endswith("exe"):
+        if url.lower().endswith(".egg") or url.lower().endswith(".exe"):
             return url
 
