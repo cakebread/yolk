@@ -66,7 +66,7 @@ def test_cli(pypi_xml):
                 print "Testing %s..." % elem.text
                 pkg_name, ver = get_pkg_ver(elem.text)
                 os.system('yolk -V %s' % pkg_name)
-                os.system('yolk -D %s %s' % (pkg_name, ver))
+                os.system('yolk -D %s==%s' % (pkg_name, ver))
             elem.clear()
 
 test_cli(urllib.urlopen(PYPI_URL))
