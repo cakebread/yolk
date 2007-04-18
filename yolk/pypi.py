@@ -196,7 +196,7 @@ def filter_url(pkg_type, url):
     """Returns URL of specified file type, else None"""
     #Remove MD5 checksum
     if "#md5=" in url:
-         url = url.split("#")[0]
+        url = url.split("#")[0]
 
     if pkg_type == "all":
         return url

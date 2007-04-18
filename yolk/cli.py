@@ -28,7 +28,7 @@ from distutils.sysconfig import get_python_lib
 
 from yolk import __version__
 from yolk.metadata import get_metadata
-from yolk.yolklib import Distributions, get_highest_version
+from yolk.yolklib import *
 from yolk.pypi import CheeseShop
 from yolk.setuptools_support import get_download_uri
 
@@ -64,7 +64,7 @@ def show_updates(package_name="", version=""):
     dists = Distributions()
     for pkg in get_pkglist():
         for (dist, active) in dists.get_distributions("all", pkg,
-                dists.get_highest_installed(pkg)):
+                get_highest_installed(pkg)):
             (project_name, versions) = \
                     PYPI.query_versions_pypi(dist.project_name, True)
             if versions:

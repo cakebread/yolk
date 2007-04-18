@@ -10,7 +10,6 @@ setuptools_support
 
 """
 
-import tempfile
 
 from setuptools.package_index import PackageIndex
 import pkg_resources
@@ -59,9 +58,3 @@ def get_download_uri(file_type, package_name, version=None):
     except DownloadURI, url:
         return filter_url(file_type, url.value)
 
-
-if __name__ == "__main__":
-    print get_download_uri("source", "yolk")
-    print get_download_uri("source", "yolk", "0.0.7")
-    print get_download_uri("source", "yolk", "0.0.6")
-    print get_download_uri("binary", "yolk")

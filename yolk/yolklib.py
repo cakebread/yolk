@@ -43,8 +43,8 @@ class Distributions:
         """List installed packages"""
         for name, dist in self.get_alpha(show, pkg_name, version):
             ver = dist.version
-            for p in self.environment[dist.project_name]:
-                if ver == p.version:
+            for package in self.environment[dist.project_name]:
+                if ver == package.version:
                     if show == "nonactive" and dist not in self.working_set:
                         yield (dist, self.query_activated(dist))
                     elif show == "active" and dist in self.working_set:
@@ -82,16 +82,17 @@ class Distributions:
             # Only activated packages
             return self.working_set
 
-    def get_highest_installed(self, project_name):
-        """Return highest version of installed package"""
-        return pkg_resources.require(project_name)[0].version
-
     def case_sensitive_name(self, package_name):
         """Return case-sensitive package name given any-case package name"""
         if len(self.environment[package_name]):
             return self.environment[package_name][0].project_name
         else:
-            raise "No installed package found: %s" % package_name
+            return
+
+
+def get_highest_installed(project_name):
+    """Return highest version of installed package"""
+    return pkg_resources.require(project_name)[0].version
 
 
 def get_highest_version(versions):
