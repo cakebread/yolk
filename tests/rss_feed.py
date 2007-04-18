@@ -4,7 +4,7 @@
 Some basic tests of the command-line and API using the PyPI RSS feed of recent
 updates.
 
-Known issues: PyPI packages with spaces in the name will show as a fail on the second test.
+Known issues: Package names with spaces will show as a fail.
 
 """
 
@@ -24,6 +24,7 @@ PYPI_URL = 'http://www.python.org/pypi?:action=rss'
 
 def get_pkg_ver(pv, add_quotes=True):
     """Return package name and version"""
+    #XXX Fix package names with spaces bug.
     n = len(pv.split())
     if n == 2:
         #Normal package_name 1.0
@@ -38,7 +39,8 @@ def get_pkg_ver(pv, add_quotes=True):
     return pkg_name, ver
 
 def test_api(pypi_xml):
-    "Basic API tests"
+    """Basic API tests"""
+    print "Testing API"""
     failed = 0
     failed_msgs =[]
     for event, elem in iterparse(pypi_xml):
@@ -60,13 +62,17 @@ def test_api(pypi_xml):
 
 def test_cli(pypi_xml):
     """Test the command-line tool"""
+    print "Testing CLI"
     for event, elem in iterparse(pypi_xml):
         if elem.tag == "title":
             if not elem.text.startswith('Cheese Shop recent updates'):
                 print "Testing %s..." % elem.text
                 pkg_name, ver = get_pkg_ver(elem.text)
-                os.system('yolk -V %s' % pkg_name)
-                os.system('yolk -D %s==%s' % (pkg_name, ver))
+                if " " in pkg_name:
+                    print "Space in package name, skipping: %s" % pkg_name
+                else:
+                    os.system("yolk -V '%s'" % pkg_name)
+                    os.system("yolk -D %s==%s" % (pkg_name, ver))
             elem.clear()
 
 test_cli(urllib.urlopen(PYPI_URL))
