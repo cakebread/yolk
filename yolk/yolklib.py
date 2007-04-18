@@ -84,9 +84,6 @@ class Distributions:
 
     def get_highest_installed(self, project_name):
         """Return highest version of installed package"""
-        #XXX These yield same results. Test to see which is more
-        #efficient.
-        #return self.environment[project_name][0].version
         return pkg_resources.require(project_name)[0].version
 
     def case_sensitive_name(self, package_name):

@@ -30,6 +30,7 @@ from yolk import __version__
 from yolk.metadata import get_metadata
 from yolk.yolklib import Distributions, get_highest_version
 from yolk.pypi import CheeseShop
+from yolk.setuptools_support import get_download_uri
 
 
 class Usage(Exception):
@@ -99,6 +100,7 @@ def show_distributions(show, project_name, version, show_metadata,
         for prefix in ignores:
             if dist.location.startswith(prefix):
                 dist.location = dist.location.replace(prefix, "")
+        #Case-insensitve search because of Windows
         if dist.location.lower().startswith(get_python_lib().lower()):
             develop = ""
         else:
@@ -215,9 +217,16 @@ You can also specify a package name and version:
 def show_download_links(package_name, version, file_type):
     """Query PyPI for pkg download URI for a packge"""
 
+    #Try Cheese Shop first
+    url = None
     for url in PYPI.get_download_urls(package_name, version, file_type):
         print url
 
+    #Try setuptools if there is no link on Cheese Shop
+    if not url:
+        url = get_download_uri(file_type, package_name, version)
+        if url:
+            print url
 
 def browse_website(package_name, browser=None):
     """Launch web browser at project's homepage"""
