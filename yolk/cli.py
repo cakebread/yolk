@@ -14,7 +14,7 @@ Desc: Command-line tool for listing Python packages installed by setuptools,
 
 Author: Rob Cakebread <gentoodev a t gmail.com>
 
-License  : PSF (Python Software Foundation License)
+License : GNU General Public License Version 2 (See COPYING)
 
 """
 
@@ -421,13 +421,11 @@ def parse_pkg_ver(package_spec, installed):
         package_name = dists.case_sensitive_name(package_name)
     return (package_name, version)
 
-
 def print_pkg_versions(package_name, versions):
     """Print list of versions available for a package"""
 
     for ver in versions:
         print "%s %s" % (package_name, ver)
-
 
 def validate_pypi_opts(opt_parser):
     """Check for sane parse options"""
@@ -449,9 +447,13 @@ def setup_opt_parser():
     usage = "usage: %prog [options]"
     opt_parser = optparse.OptionParser(usage=usage)
 
-    opt_parser.add_option("-v", "--version", action='store_true', dest=
+    opt_parser.add_option("--version", action='store_true', dest=
                           "version", default=False, help=
                           "Show yolk version and exit.")
+
+    opt_parser.add_option("-v", "--verbose", action='store_true', dest=
+                          "verbose", default=False, help=
+                          "Be more verbose.")
 
     group_local = optparse.OptionGroup(opt_parser,
             "Query installed Python packages",
