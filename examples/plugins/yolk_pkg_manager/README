@@ -1,0 +1,87 @@
+yolk-acme example plugin
+========================
+
+The purpose of this plugin is to show which packages were installed via an 
+external package manager or directly by distutils/setuptools.
+
+This plugin example shows how to use the `add_column` method 
+to add this information to the output of -l, -a, or -n.
+
+To actually make this plugin work you will need to be able to determine if
+a file was installed by your package manager.  An actual working plugin that
+does this is the `yolk-portage` plugin included in the examples folder. It
+determines if a file was installed by Gentoo's `portage` package manager by
+using the program `qfile` available from app-portage/portage-utils.
+
+You'll need to put the actual name of your package manager
+here:
+
+    class PackageManagerPlugin:
+        name = "pkg-manager-name"
+
+By doing that you have a new --pkg-manager-name option availabe to yolk.
+
+Next, you'll need to return a string you want added to
+the output if your package manager installed the package
+or return "" if not.
+
+    def package_manager_owns(self, dist):
+       if your pkg manager owns file:
+           return "(acme)"
+       else:
+           return ""
+
+
+The text you return can be the name of the package manager
+or the full package name your package manager used to install it,
+for example.
+
+Normal output of yolk -l looks like:
+
+python-fchksum  - 1.7.1        - active
+python-openid   - 1.2.0        - active
+python-xlib     - 0.12         - active
+pyvorbis        - 1.4          - active
+rope            - 0.4          - active
+
+With your plugin it may look like:
+
+python-fchksum  - 1.7.1        - active (acme)
+python-openid   - 1.2.0        - active (acme)
+python-xlib     - 0.12         - active
+pyvorbis        - 1.4          - active (acme)
+rope            - 0.4          - active (acme)
+
+
+Here is the code from Gentoo's yolk-portage plugin:
+
+    def package_manager_owns(self, dist):
+        """
+        `dist` is a setuptools Distribution object passed by yolk
+        when using the options -l, -n or -a
+
+        Returns True if package manager installed the package
+        Returns False if package manager did not install the package
+
+        """
+
+        #Find full path to a file in the Python package
+        #If location is in site-packages dir, check for .egg-info file
+
+        if dist.location.lower() == get_python_lib().lower():
+            filename = os.path.join(dist.location, dist.egg_name() + ".egg-info")
+        else:
+            filename = dist.location
+
+        #Determine if external package manager installed it
+
+        status, output = getstatusoutput("/usr/bin/qfile -q %s" % filename)
+
+        #status == 0 (file was installed by Gentoo Portage)
+        #status == 256 (file was not installed by Gentoo Portage)
+
+        if status == 0:
+            return output.split()[0]
+        else:
+            return ""
+
