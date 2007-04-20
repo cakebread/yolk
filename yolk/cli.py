@@ -20,6 +20,7 @@ License : GNU General Public License Version 2 (See COPYING)
 
 __docformat__ = 'restructuredtext'
 
+import os
 import sys
 import optparse
 import pkg_resources
@@ -112,6 +113,12 @@ def show_distributions(show, project_name, version, options):
     #Some locations show false positive for 'development' packages:
     ignores = ["/UNIONFS", "/KNOPPIX.IMG", "/usr/lib/python2.5/lib-dynload"]
     #/usr/lib/python2.5/lib-dynload will show 'Python' as development mode
+
+    #Check if we're in a workingenv
+    #See http://cheeseshop.python.org/pypi/workingenv.py
+    workingenv = os.environ.get('WORKING_ENV')
+    if workingenv:
+        ignores.append(workingenv)
 
     dists = Distributions()
     results = None
