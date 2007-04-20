@@ -111,8 +111,7 @@ def show_distributions(show, project_name, version, options):
     plugins = get_plugin("add_column", options)
 
     #Some locations show false positive for 'development' packages:
-    ignores = ["/UNIONFS", "/KNOPPIX.IMG", "/usr/lib/python2.5/lib-dynload"]
-    #/usr/lib/python2.5/lib-dynload will show 'Python' as development mode
+    ignores = ["/UNIONFS", "/KNOPPIX.IMG"]
 
     #Check if we're in a workingenv
     #See http://cheeseshop.python.org/pypi/workingenv.py
