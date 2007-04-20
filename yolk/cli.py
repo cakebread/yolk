@@ -31,6 +31,7 @@ from yolk.metadata import get_metadata
 from yolk.yolklib import *
 from yolk.pypi import CheeseShop
 from yolk.setuptools_support import get_download_uri
+from yolk.plugins import load_plugins, call_plugins
 
 
 class Usage(Exception):
@@ -43,7 +44,7 @@ class Usage(Exception):
         sys.exit(2)
 
 
-#Functions for obtaining info about packages installed with setuptools
+#Functions for obtaining info about packages installed by setuptools
 ##############################################################################
 
 
@@ -84,13 +85,33 @@ def show_updates(package_name="", version=""):
                                 newest)
 
 
-def show_distributions(show, project_name, version, show_metadata,
-                       fields):
+def get_plugin(method, options):
+    """Return plugin object if CLI option is activated and method exists"""
+    all_plugins = []
+    for entry_point in pkg_resources.iter_entry_points('yolk.plugins'):
+        plugin_obj = entry_point.load()
+        plugin = plugin_obj()
+        plugin.configure(options, None)
+        if plugin.enabled:
+            if not hasattr(plugin, method):
+                print >> sys.stderr, \
+                        "Error: plugin has no method: %s" % method
+                plugin = None
+            else:
+                all_plugins.append(plugin)
+    return all_plugins
+
+def show_distributions(show, project_name, version, options):
     """Show list of installed activated OR non-activated packages"""
+    show_metadata = options.metadata
+    fields = options.fields
+
+    #Search for any plugins with active CLI options with add_column() method
+    plugins = get_plugin("add_column", options)
 
     #Some locations show false positive for 'development' packages:
-
-    ignores = ["/UNIONFS", "/KNOPPIX.IMG", "/var/lib/python-support/python2.4", "/var/lib/python-support/python2.5", "/usr/lib/python2.5/lib-dynload"]
+    ignores = ["/UNIONFS", "/KNOPPIX.IMG", "/usr/lib/python2.5/lib-dynload"]
+    #/usr/lib/python2.5/lib-dynload will show 'Python' as development mode
 
     dists = Distributions()
     results = None
@@ -106,8 +127,12 @@ def show_distributions(show, project_name, version, show_metadata,
         else:
             develop = dist.location
         if metadata:
-            print_metadata(metadata, develop, active,
-                           show_metadata, fields)
+            add_column_text = ""
+            for my_plugin in plugins:
+                #See if package is 'owned' by a package manager such as portage, apt etc.
+                #add_column_text += my_plugin.add_column(filename) + " "
+                add_column_text += my_plugin.add_column(dist) + " "
+            print_metadata(metadata, develop, active, options, add_column_text)
         else:
             print dist + " has no metadata"
         results = True
@@ -116,9 +141,10 @@ def show_distributions(show, project_name, version, show_metadata,
         print "Versions with '!' are deployed in development mode."
 
 
-def print_metadata(metadata, develop, active, show_metadata,
-                   fields):
+def print_metadata(metadata, develop, active, options, installed_by):
     """Print out formatted metadata"""
+    show_metadata = options.metadata
+    fields = options.fields
 
     version = metadata['Version']
 
@@ -140,7 +166,7 @@ def print_metadata(metadata, develop, active, show_metadata,
         else:
             development_status = "development (%s)" % develop
     else:
-        development_status = ""
+        development_status = installed_by
     status = "%s %s" % (active_status, development_status)
     if fields:
         print '%s (%s)%s %s' % (metadata['Name'], version, active_status,
@@ -166,6 +192,7 @@ def print_metadata(metadata, develop, active, show_metadata,
         for field in metadata.keys():
             if field != 'Name' and field != 'Summary':
                 print '    %s: %s' % (field, metadata[field])
+
 
 
 def show_deps(pkg_ver):
@@ -502,6 +529,16 @@ def setup_opt_parser():
                           "listed on PyPI. (Use with PKG_NAME)")
     opt_parser.add_option_group(group_local)
     opt_parser.add_option_group(group_pypi)
+    # add opts from plugins
+    all_plugins = []
+    # when generating the help message, load only builtin plugins
+    for plugcls in load_plugins(others=True):
+        plug = plugcls()
+        try:
+            plug.add_options(opt_parser)
+        except AttributeError:
+            pass
+
     return opt_parser
 
 
@@ -538,19 +575,16 @@ def main():
     elif options.all:
         if options.active or options.nonactive:
             opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
-        show_distributions("all", package, version, options.metadata,
-                           options.fields)
+        show_distributions("all", package, version, options)
     elif options.active:
         if options.all or options.nonactive:
             opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
 
-        show_distributions("active", package, version, options.metadata,
-                           options.fields)
+        show_distributions("active", package, version, options)
     elif options.nonactive:
         if options.active or options.all:
             opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
-        show_distributions("nonactive", package, version, options.metadata,
-                           options.fields)
+        show_distributions("nonactive", package, version, options)
     elif options.versions_available:
 
         get_all_versions_pypi(package, False)
