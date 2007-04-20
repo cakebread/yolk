@@ -4,4 +4,11 @@ Original author:
     Rob Cakebread <gentoodev a t gmail . com>
 
 
+Credit due:
+
+The plugin code for yolk is heavily based on code by Jason Pellerin
+<jpellerin+nose a t gmail d o t com> from nose which is released
+under the terms of the GNU Library or Lesser General Public License (LGPL)
+See: http://somethingaboutorange.com/mrl/projects/nose/
+
 
