@@ -143,7 +143,15 @@ def show_distributions(show, project_name, version, options):
         else:
             print dist + " has no metadata"
         results = True
-    if show == "all" and results and fields:
+    if not results:
+        if version:
+            pkg_spec = "%s==%s" % (project_name, version)
+        else:
+            pkg_spec = "%s" % project_name
+
+        print >> sys.stderr, "%s is not installed." % pkg_spec
+        return 2
+    elif show == "all" and results and fields:
         print "Versions with '*' are non-active."
         print "Versions with '!' are deployed in development mode."
 
@@ -607,11 +615,14 @@ def main():
     #We find the proper case for package names if they are installed,
     #otherwise PyPI returns the correct case.
     if options.depends or options.all or options.active or options.nonactive:
-        installed = True
+        want_installed = True
     else:
-        installed = False
+        want_installed = False
     if remaining_args:
-        (package, version) = parse_pkg_ver(remaining_args, installed)
+        (package, version) = parse_pkg_ver(remaining_args, want_installed)
+        if want_installed and not package:
+            print >> sys.stderr, "%s is not installed." % remaining_args[0]
+            sys.exit(2)
     else:
         package = version = None
 
@@ -655,5 +666,5 @@ def main():
 PYPI = CheeseShop()
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
 
