@@ -20,6 +20,7 @@ License : GNU General Public License Version 2 (See COPYING)
 
 __docformat__ = 'restructuredtext'
 
+import pprint
 import os
 import sys
 import optparse
@@ -447,6 +448,31 @@ Examples:
   PackageName==2.0"""
 
 
+def show_entry_map(dist):
+    """Show entry map for a distribution"""
+    pprinter = pprint.PrettyPrinter()
+    try:
+        pprinter.pprint(pkg_resources.get_entry_map(dist))
+    except pkg_resources.DistributionNotFound:
+        print "Distribution not found: %s" % dist
+
+def show_entry_points(module):
+    """Show entry points for a module"""
+    found = False
+    for entry_point in pkg_resources.iter_entry_points(module):
+        found = True
+        try:
+            plugin = entry_point.load()
+            print plugin.__module__
+            print "   %s" % entry_point
+            if plugin.__doc__:
+                print plugin.__doc__
+            print
+        except ImportError:
+            pass
+    if not found:
+        print "No entry points found for %s" % module
+
 def setup_opt_parser():
     """Setup the optparser"""
 
@@ -473,6 +499,14 @@ def setup_opt_parser():
                            dest="active", default=False, help=
                            'List activated packages installed by ' +
                            'setuptools. Use PKG_SPEC to narrow results.')
+
+    group_local.add_option("--entry-points", action='store',
+                           dest="entry_points", default=False, help=
+                           'List entry points for a module')
+
+    group_local.add_option("--entry-map", action='store',
+                           dest="entry_map", default=False, help=
+                           'List entry map for a distribution.')
 
     group_local.add_option("-n", "--non-activated", action='store_true',
                            dest="nonactive", default=False, help=
@@ -561,6 +595,13 @@ def main():
                                2):
         opt_parser.print_help()
         sys.exit(2)
+
+    if options.entry_points:
+        show_entry_points(options.entry_points)
+        sys.exit()
+    if options.entry_map:
+        show_entry_map(options.entry_map)
+        sys.exit()
 
     #Options that depend on querying installed packages, not PyPI.
     #We find the proper case for package names if they are installed,
