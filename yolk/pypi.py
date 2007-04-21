@@ -13,7 +13,7 @@ Desc: Library for getting information about Python packages by querying
 
 Author: Rob Cakebread <gentoodev a t gmail.com>
 
-License  : PSF (Python Software Foundation License)
+License  : GNU General Public License Version 2
 
 """
 

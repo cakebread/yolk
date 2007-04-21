@@ -7,6 +7,7 @@
 setuptools_support
 ==================
 
+License  : GNU General Public License Version 2
 
 """
 

@@ -9,7 +9,7 @@ metadata.py
 
 Author   : Rob Cakebread <gentoodev@gmail.com>
 
-License  : PSF (Python Software Foundation License)
+License  : GNU General Public License Version 2
 
 Desc     : Return metadata for Python distribution installed by setuptools
            in a dict

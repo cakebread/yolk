@@ -14,7 +14,7 @@ Desc: Library for getting information about Python packages installed by
 
 Author: Rob Cakebread <gentoodev a t gmail.com>
 
-License  : PSF (Python Software Foundation License)
+License  : GNU General Public License Version 2
 
 '''
 
