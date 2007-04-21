@@ -1,3 +1,6 @@
+
+# pylint: disable-msg=W0142,C0103
+
 """Writing Plugins
 ---------------
 
@@ -62,14 +65,12 @@ acquire a logger in the ``yolk.plugins`` namespace.
 
 """
 
-from __future__ import generators
-
 import logging
 import pkg_resources
 from warnings import warn
-from yolk.plugins.base import *
+from yolk.plugins.base import Plugin
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 def call_plugins(plugins, method, *arg, **kw):
     """Call all method on plugins in list, that define it, with provided
@@ -79,7 +80,7 @@ def call_plugins(plugins, method, *arg, **kw):
         func = getattr(plug, method, None)
         if func is None:
             continue
-        log.debug("call plugin %s: %s", plug.name, method)
+        LOG.debug("call plugin %s: %s", plug.name, method)
         result = func(*arg, **kw)
         if result is not None:
             return result
@@ -88,22 +89,22 @@ def call_plugins(plugins, method, *arg, **kw):
 def load_plugins(builtin=True, others=True):
     """Load plugins, either builtin, others, or both.
     """
-    for ep in pkg_resources.iter_entry_points('yolk.plugins'):
-        log.debug("load plugin %s" % ep)
+    for entry_point in pkg_resources.iter_entry_points('yolk.plugins'):
+        LOG.debug("load plugin %s" % entry_point)
         try:
-            plug = ep.load()
+            plugin = entry_point.load()
         except KeyboardInterrupt:
             raise
-        except Exception, e:
-            # never want a plugin load to kill the test run
+        except Exception, err_msg:
+            # never want a plugin load to exit yolk
             # but we can't log here because the logger is not yet
             # configured
-            warn("Unable to load plugin %s: %s" % (ep, e), RuntimeWarning)
+            warn("Unable to load plugin %s: %s" % \
+                    (entry_point, err_msg), RuntimeWarning)
             continue
-        if plug.__module__.startswith('yolk.plugins'):
+        if plugin.__module__.startswith('yolk.plugins'):
             if builtin:
-                yield plug
+                yield plugin
         elif others:
-            yield plug
-
+            yield plugin
 

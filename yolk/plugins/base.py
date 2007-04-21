@@ -1,5 +1,15 @@
-import os
-import re
+
+# pylint: disable-msg=W0201,W0511
+#XXX Attribute 'conf' defined outside __init__
+
+"""
+
+Base plugin class
+This is not needed yet, see working plugins in examples directory.
+
+"""
+
+
 import textwrap
 
 class Plugin(object):
@@ -20,14 +30,14 @@ class Plugin(object):
         the user.    
     """
     enabled = False
-    enableOpt = None
+    enable_opt = None
     name = None
 
     def __init__(self):
         if self.name is None:
             self.name = self.__class__.__name__.lower()
-        if self.enableOpt is None:
-            self.enableOpt = "enable_plugin_%s" % self.name
+        if self.enable_opt is None:
+            self.enable_opt = "enable_plugin_%s" % self.name
             
     def add_options(self, parser):
         """Add command-line options for this plugin.
@@ -37,7 +47,7 @@ class Plugin(object):
         """
         parser.add_option("--with-%s" % self.name,
                           action="store_true",
-                          dest=self.enableOpt,
+                          dest=self.enable_opt,
                           help="Enable plugin %s: %s" %
                           (self.__class__.__name__, self.help())
                           )
@@ -46,11 +56,11 @@ class Plugin(object):
         """Configure the plugin and system, based on selected options.
 
         The base plugin class sets the plugin to enabled if the enable option
-        for the plugin (self.enableOpt) is true.
+        for the plugin (self.enable_opt) is true.
         """
         self.conf = conf
-        if hasattr(options, self.enableOpt):
-            self.enabled = getattr(options, self.enableOpt)
+        if hasattr(options, self.enable_opt):
+            self.enabled = getattr(options, self.enable_opt)
 
     def help(self):
         """Return help for this plugin. This will be output as the help

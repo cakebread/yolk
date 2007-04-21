@@ -1,6 +1,6 @@
 
 
-# pylint: disable-msg=C0301,W0613,W0612
+# pylint: disable-msg=C0301,W0613,W0612,R0201
 
 """
 

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# pylint: disable-msg=C0301,W0613,W0612
+# pylint: disable-msg=C0301,W0613,W0612,W0212
+# Fix W0212 Access to a protected member _headers of a client class
 
 """
 

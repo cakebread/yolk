@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# pylint: disable-msg=C0301,W0613,W0612
+# pylint: disable-msg=C0301,W0613,W0612,W0212,W0511,R0912,C0322,W0704
 
 """
 
@@ -29,10 +29,10 @@ from distutils.sysconfig import get_python_lib
 
 from yolk import __version__
 from yolk.metadata import get_metadata
-from yolk.yolklib import *
+from yolk.yolklib import get_highest_installed, get_highest_version, Distributions
 from yolk.pypi import CheeseShop
 from yolk.setuptools_support import get_download_uri
-from yolk.plugins import load_plugins, call_plugins
+from yolk.plugins import load_plugins
 
 
 class Usage(Exception):
