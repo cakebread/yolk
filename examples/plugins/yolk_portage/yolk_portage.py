@@ -4,12 +4,13 @@
 """
 
 yolk-portage
+============
 
 This is a plugin for yolk. It provides information for Gentoo
 systems using Portage.
 
 --portage used with -l, -a or -n will show you if the packages
-were installed by Portage.
+were installed by Portage or directly by easy_install/setuptools/distutils.
 
 
 """
@@ -43,7 +44,7 @@ class PackageManagerPlugin:
         parser.add_option('--%s' % self.name, action='store_true', 
                 dest=self.enable_opt,
                 help="Show which packages are installed via the " +
-                     " %s package manager. Use with -l" % self.name)
+                     "%s package manager. Use with -l, -a or -n" % self.name)
 
     def configure(self, options, conf):
         """Configure the plugin and system, based on selected options.

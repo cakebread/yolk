@@ -1,0 +1,12 @@
+
+
+The plugin system is very rudimentary as of version 0.7.
+About the only thing you can do with it is add a column of text to the
+output when using -l, -a or -n.
+
+An API will be firmed up for the 0.8 series.
+
+If you make a plugin the name does not matter but it would be nice
+if it were prefixed with `yolk-` so its easier to find in the Cheese Shop etc.
+
+

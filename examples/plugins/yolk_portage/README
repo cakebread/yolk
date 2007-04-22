@@ -1,0 +1,10 @@
+
+yolk-portage
+============
+
+This is a plugin for yolk. It provides information for Gentoo
+systems using Portage.
+
+--portage used with -l, -a or -n will show you if the packages
+were installed by Portage or directly by easy_install/distutils/setuptools.
+
