@@ -63,13 +63,14 @@ def get_pkglist():
 
 def show_updates(package_name="", version=""):
     """Check installed packages for available updates on PyPI"""
+    pypi = CheeseShop()
 
     dists = Distributions()
     for pkg in get_pkglist():
         for (dist, active) in dists.get_distributions("all", pkg,
                 get_highest_installed(pkg)):
             (project_name, versions) = \
-                    PYPI.query_versions_pypi(dist.project_name, True)
+                    pypi.query_versions_pypi(dist.project_name, True)
             if versions:
 
                 #PyPI returns them in chronological order,
@@ -258,10 +259,11 @@ You can also specify a package name and version:
 
 def show_download_links(package_name, version, file_type):
     """Query PyPI for pkg download URI for a packge"""
+    pypi = CheeseShop()
 
     #Try Cheese Shop first
     url = None
-    for url in PYPI.get_download_urls(package_name, version, file_type):
+    for url in pypi.get_download_urls(package_name, version, file_type):
         print url
 
     #Try setuptools if there is no link on Cheese Shop
@@ -273,11 +275,12 @@ def show_download_links(package_name, version, file_type):
 def browse_website(package_name, browser=None):
     """Launch web browser at project's homepage"""
 
+    pypi = CheeseShop()
     #Get verified name from pypi.
 
-    (pypi_project_name, versions) = PYPI.query_versions_pypi(package_name)
+    (pypi_project_name, versions) = pypi.query_versions_pypi(package_name)
     if len(versions):
-        metadata = PYPI.release_data(pypi_project_name, versions[0])
+        metadata = pypi.release_data(pypi_project_name, versions[0])
         if metadata.has_key("home_page"):
             print "Launching browser: %s" % metadata["home_page"]
             if browser == 'konqueror':
@@ -295,6 +298,7 @@ def browse_website(package_name, browser=None):
 
 def show_pkg_metadata_pypi(package_name, version):
     """Show pkg metadata queried from PyPI"""
+    pypi = CheeseShop()
 
     if version:
         versions = [version]
@@ -302,20 +306,20 @@ def show_pkg_metadata_pypi(package_name, version):
 
         #If they don't specify version, show all.
 
-        (package_name, versions) = PYPI.query_versions_pypi(package_name,
+        (package_name, versions) = pypi.query_versions_pypi(package_name,
                 None)
 
     for ver in versions:
-        metadata = PYPI.release_data(package_name, ver)
+        metadata = pypi.release_data(package_name, ver)
         for key in metadata.keys():
             print "%s: %s" % (key, metadata[key])
 
 
 def get_all_versions_pypi(package_name, use_cached_pkglist=False):
     """Fetch list of available versions for a package from The Cheese Shop"""
-
+    pypi = CheeseShop()
     (pypi_project_name, versions) = \
-            PYPI.query_versions_pypi(package_name, use_cached_pkglist)
+            pypi.query_versions_pypi(package_name, use_cached_pkglist)
 
     #pypi_project_name may != package_name; it returns the name with correct case
     #i.e. You give beautifulsoup but PyPI knows it as BeautifulSoup
@@ -323,7 +327,7 @@ def get_all_versions_pypi(package_name, use_cached_pkglist=False):
     if versions:
         print_pkg_versions(pypi_project_name, versions)
     else:
-        print >> sys.stderr, "Nothing found on PyPI for %s" % \
+        print >> sys.stderr, "I'm afraid we have no %s at The Cheese Shop. Perhaps a little red Leicester?" % \
             package_name
         sys.exit(2)
 
@@ -385,10 +389,11 @@ def pypi_search(arg, spec):
     """Search PyPI by metadata keyword
     e.g. yolk -S name=yolk
     """
+    pypi = CheeseShop()
 
     spec.insert(0, arg.strip())
     (spec, operator) = parse_search_spec(spec)
-    for pkg in PYPI.search(spec, operator):
+    for pkg in pypi.search(spec, operator):
         if pkg['summary']:
             summary = pkg['summary'].encode('utf-8')
         else:
@@ -402,7 +407,8 @@ def pypi_search(arg, spec):
 def get_rss_feed():
     """Show last 20 package updates from PyPI RSS feed"""
 
-    rss = PYPI.get_rss()
+    pypi = CheeseShop()
+    rss = pypi.get_rss()
     items = []
     for pkg in rss.keys():
         date = rss[pkg][1][:10]
@@ -497,7 +503,7 @@ def setup_opt_parser():
 
     group_local = optparse.OptionGroup(opt_parser,
             "Query installed Python packages",
-            "The following options show information about Python packages installed by setuptools. Activated packages are normal packages on sys.path that can be imported. Non-activated packages need 'pkg_resources.require()' before they can be imported, such as packages installed with 'easy_install --multi-version'")
+            "The following options show information about installed Python packages. Activated packages are normal packages on sys.path that can be imported. Non-activated packages need 'pkg_resources.require()' before they can be imported, such as packages installed with 'easy_install --multi-version'. PKG_SPEC can be either a package name or package name and version e.g. Paste==0.9")
 
     group_local.add_option("-l", "--list", action='store_true', dest=
                            "all", default=False, help=
@@ -510,11 +516,13 @@ def setup_opt_parser():
 
     group_local.add_option("--entry-points", action='store',
                            dest="entry_points", default=False, help=
-                           'List entry points for a module')
+                           'List entry points for a module. e.g. --entry-points yolk.plugins',
+                            metavar="MODULE")
 
     group_local.add_option("--entry-map", action='store',
                            dest="entry_map", default=False, help=
-                           'List entry map for a distribution.')
+                           'List entry map for a distribution. e.g. --entry-map yolk',
+                           metavar="PACKAGE_NAME")
 
     group_local.add_option("-n", "--non-activated", action='store_true',
                            dest="nonactive", default=False, help=
@@ -581,7 +589,6 @@ def setup_opt_parser():
     opt_parser.add_option_group(group_pypi)
     # add opts from plugins
     all_plugins = []
-    # when generating the help message, load only builtin plugins
     for plugcls in load_plugins(others=True):
         plug = plugcls()
         try:
@@ -663,7 +670,6 @@ def main():
         sys.exit(2)
 
 
-PYPI = CheeseShop()
 
 if __name__ == "__main__":
     sys.exit(main())
