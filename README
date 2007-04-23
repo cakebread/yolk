@@ -7,7 +7,7 @@ Installation
 ------------
 
 You can install yolk with ``easy_install yolk`` or install from the `subversion
-repository <http://anonymous:@tools.assembla.com/svn/yolk/trunk/#egg=yolk-dev>`_
+repository <http://anonymous@tools.assembla.com/svn/yolk/trunk/#egg=yolk-dev>`_
 with ``easy_install yolk==dev``.
 
 As of 0.0.7 yolk is in Gentoo's Portage tree.
