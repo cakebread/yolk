@@ -31,8 +31,8 @@ Usage Examples::
     $ yolk -n 
          List only the non-activated (--multi-version) packages installed 
          
-    $ yolk -l -f License,Author
-         Show the license and author for each installed package 
+    $ yolk -l -f License,Author nose
+         Show the license and author for the package `nose`
 
     $ yolk --entry-map nose
          Show entry map for the nose package
@@ -46,7 +46,7 @@ These options query PyPI::
     $ yolk -U
          Finds all packages installed via setuptools then checks PyPI for newer releases. 
 
-    $ yolk -M Paste 1.0 
+    $ yolk -M Paste==1.0 
          Show all the metadata for Paste version 1.0 
 
     $ yolk -M Paste 

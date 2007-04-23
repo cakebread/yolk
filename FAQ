@@ -1,6 +1,9 @@
 
 
-Q: Why don't you list elementtree as a dependency with setuptools? 
-A: Because most distributions already have elementtree. If I set it as a dependency and elementtree wasn't installed by setuptools yolk will fail to import it. Most distributions have elementtree available.
+Q: Why is wsgiref showing up as a development package?
+
+A: wsgiref is a 'system' package which is a development package located
+in a system directory. Currently there is no way to determine which
+packages are system packages or 'normal' development packages.
 
 

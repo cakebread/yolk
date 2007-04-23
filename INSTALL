@@ -5,3 +5,6 @@ With easy_install:
 
 With distutils:
   python setup.py install
+
+Gentoo Linux:
+  emerge dev-python/yolk
