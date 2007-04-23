@@ -30,7 +30,7 @@ from distutils.sysconfig import get_python_lib
 
 from yolk import __version__
 from yolk.metadata import get_metadata
-from yolk.yolklib import get_highest_installed, get_highest_version, Distributions
+from yolk.yolklib import get_highest_version, Distributions
 from yolk.pypi import CheeseShop
 from yolk.setuptools_support import get_download_uri
 from yolk.plugins import load_plugins
@@ -68,7 +68,7 @@ def show_updates(package_name="", version=""):
     dists = Distributions()
     for pkg in get_pkglist():
         for (dist, active) in dists.get_distributions("all", pkg,
-                get_highest_installed(pkg)):
+                dists.get_highest_installed(pkg)):
             (project_name, versions) = \
                     pypi.query_versions_pypi(dist.project_name, True)
             if versions:

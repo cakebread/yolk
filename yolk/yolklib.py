@@ -90,9 +90,15 @@ class Distributions:
             return
 
 
-def get_highest_installed(project_name):
-    """Return highest version of installed package"""
-    return pkg_resources.require(project_name)[0].version
+    def get_highest_installed(self, project_name):
+        """Return highest version of installed package"""
+        #http://tools.assembla.com/yolk/ticket/17
+        #try:
+        #    return pkg_resources.require(project_name)[0].version
+        #except pkg_resources.DistributionNotFound:
+        #    Do something like:
+        #    return "Error: Possibly corrupt egg."
+        return self.environment[project_name][0].version
 
 
 def get_highest_version(versions):
