@@ -1,3 +1,77 @@
+2007-04-23 04:58  cakebread
+
+	* README: Update changelog
+
+2007-04-23 04:42  cakebread
+
+	* yolk/__version__.py: Update version for 0.0.7 release
+
+2007-04-23 03:03  cakebread
+
+	* FAQ, INSTALL, NEWS, README: Update for 0.7 release
+
+2007-04-23 02:46  cakebread
+
+	* examples/plugins/yolk_portage: Add svn:ignore
+
+2007-04-23 00:37  cakebread
+
+	* README, yolk/cli.py, yolk/pypi.py: Make sure -M works with
+	  PKG_SPEC
+
+2007-04-22 05:48  cakebread
+
+	* setup.py: Added yolk.plugins
+
+2007-04-22 05:06  cakebread
+
+	* yolk/cli.py: Move PYPI to local scope. Tidy up.
+
+2007-04-22 03:47  cakebread
+
+	* examples/plugins/README, examples/plugins/yolk_portage,
+	  examples/plugins/yolk_portage/README,
+	  examples/plugins/yolk_portage/yolk_portage.py: Add docs.
+
+2007-04-22 02:54  cakebread
+
+	* tests: Updated svn:ignore
+
+2007-04-22 02:40  cakebread
+
+	* yolk/plugins: Updated svn:ignore
+
+2007-04-21 21:59  cakebread
+
+	* yolk/cli.py: Fix bug when invalid package showed all installed.
+
+2007-04-21 21:15  cakebread
+
+	* yolk/cli.py: new --entry-points and --entry-map options
+
+2007-04-21 04:51  cakebread
+
+	* yolk/cli.py, yolk/metadata.py, yolk/plugins/__init__.py,
+	  yolk/plugins/base.py, yolk/pypi.py, yolk/setuptools_support.py:
+	  Tidy up after pylint.
+
+2007-04-21 04:14  cakebread
+
+	* yolk/__version__.py, yolk/metadata.py, yolk/pypi.py,
+	  yolk/setuptools_support.py, yolk/yolklib.py: Change license info.
+
+2007-04-21 04:13  cakebread
+
+	* yolk/__init__.py: Change license to GPL-2
+
+2007-04-21 00:19  cakebread
+
+	* CHANGELOG, ChangeLog: Renamed.
+
+2007-04-21 00:19  cakebread
+
+	* CHANGELOG: Updated.
+
 2007-04-20 21:18  cakebread
 
 	* examples/plugins, examples/plugins/yolk_pkg_manager,
