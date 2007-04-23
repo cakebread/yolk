@@ -10,29 +10,36 @@ You can install yolk with ``easy_install yolk`` or install from the `subversion
 repository <http://anonymous:@tools.assembla.com/svn/yolk/trunk/#egg=yolk-dev>`_
 with ``easy_install yolk==dev``.
 
+As of 0.7 yolk is in Gentoo's Portage tree.
 
-Gentoo users can use the ebuild in my `overlay <http://overlays.gentoo.org/dev/pythonhead/wiki>`_
 
 Summary
 -------
 
-Yolk is a Python library and command-line tool for obtaining information about packages installed by setuptools and packages on PyPI (Python Package Index a.k.a. The Cheese Shop). 
+Yolk is a Python tool and library for obtaining information about packages installed by distutils, setuptools and easy_install and packages on PyPI (Python Package Index a.k.a. The Cheese Shop). 
 
-Yolk can list all the packages installed by setuptools on your system, show which packages are active, non-active or in development mode and show you which have newer versions available. 
+Yolk can list all the packages installed by setuptools on your system, show which packages are active, non-active or in development mode and show you which have newer versions available according to PyPI. 
 
 Usage Examples::
+
+    $ yolk -l
+         List all installed Python packages
+
+    $ yolk -a 
+         List only the activated packages installed (Activated packages are normal packages on sys.path you can import) 
 
     $ yolk -n 
          List only the non-activated (--multi-version) packages installed 
          
-    $ yolk -a 
-         List only the activated packages installed (Activated packages are normal packages on sys.path you can import) 
-
-    $ yolk -l
-         List all installed package 
-
-    $ yolk -l -f License,Author 
+    $ yolk -l -f License,Author
          Show the license and author for each installed package 
+
+    $ yolk --entry-map nose
+         Show entry map for the nose package
+
+    $ yolk --entry-points nose.plugins
+         Show all setuptools entry points for nose.plugins
+
 
 These options query PyPI::
 
@@ -43,7 +50,7 @@ These options query PyPI::
          Show all the metadata for Paste version 1.0 
 
     $ yolk -M Paste 
-         Show all the metadata for each version of Paste listed on PyPi? 
+         Show all the metadata for each version of Paste listed on PyPi
 
     $ yolk -D cheesecake 
          Show all URL's for cheesecake packages you can download 
@@ -56,6 +63,19 @@ These options query PyPI::
 
 Changes
 -------
+**0.0.7**: New options: --entry-map and -entry-points
+           
+           Improved results with --download-links
+
+           New plugin system. First plugin available: yolk-portage
+           for Gentoo Linux.
+
+           -v option is now --version
+
+           -v is now a new option: --verbose
+
+           Many bug fixes.
+
 **0.0.6**: Fix Windows problem which showed all pkgs in develop mode
            on some systems.
            Fix bad interpreter shebang in rss_feed.py example

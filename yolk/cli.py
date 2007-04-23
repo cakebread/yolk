@@ -299,20 +299,20 @@ def browse_website(package_name, browser=None):
 def show_pkg_metadata_pypi(package_name, version):
     """Show pkg metadata queried from PyPI"""
     pypi = CheeseShop()
+    (pypi_project_name, versions) = \
+            pypi.query_versions_pypi(package_name, False)
 
-    if version:
-        versions = [version]
+    if versions:
+        for ver in versions:
+            metadata = pypi.release_data(pypi_project_name, ver)
+            if metadata:
+                for key in metadata.keys():
+                    print "%s: %s" % (key, metadata[key])
+        
     else:
-
-        #If they don't specify version, show all.
-
-        (package_name, versions) = pypi.query_versions_pypi(package_name,
-                None)
-
-    for ver in versions:
-        metadata = pypi.release_data(package_name, ver)
-        for key in metadata.keys():
-            print "%s: %s" % (key, metadata[key])
+        print >> sys.stderr, "I'm afraid we have no %s at The Cheese Shop. Perhaps a little red Leicester?" % \
+            package_name
+        sys.exit(2)
 
 
 def get_all_versions_pypi(package_name, use_cached_pkglist=False):
@@ -600,7 +600,7 @@ def setup_opt_parser():
 
 
 def main():
-    """Main function"""
+    """Parse options and perform actions"""
 
     opt_parser = setup_opt_parser()
     (options, remaining_args) = opt_parser.parse_args()
@@ -653,7 +653,6 @@ def main():
             opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
         show_distributions("nonactive", package, version, options)
     elif options.versions_available:
-
         get_all_versions_pypi(package, False)
     elif options.browse_website:
         browse_website(package)
@@ -667,9 +666,7 @@ def main():
         show_pkg_metadata_pypi(package, version)
     else:
         opt_parser.print_help()
-        sys.exit(2)
-
-
+        return 2
 
 if __name__ == "__main__":
     sys.exit(main())
