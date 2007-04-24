@@ -514,16 +514,6 @@ def setup_opt_parser():
                            'List activated packages installed by ' +
                            'setuptools. Use PKG_SPEC to narrow results.')
 
-    group_local.add_option("--entry-points", action='store',
-                           dest="entry_points", default=False, help=
-                           'List entry points for a module. e.g. --entry-points yolk.plugins',
-                            metavar="MODULE")
-
-    group_local.add_option("--entry-map", action='store',
-                           dest="entry_map", default=False, help=
-                           'List entry map for a distribution. e.g. --entry-map yolk',
-                           metavar="PACKAGE_NAME")
-
     group_local.add_option("-n", "--non-activated", action='store_true',
                            dest="nonactive", default=False, help=
                            'List non-activated packages installed by ' +
@@ -544,6 +534,15 @@ def setup_opt_parser():
                            "Show dependencies for a package installed by " +
                            "setuptools if they are available. (Use with PKG_SPEC)")
 
+    group_local.add_option("--entry-points", action='store',
+                           dest="entry_points", default=False, help=
+                           'List entry points for a module. e.g. --entry-points yolk.plugins',
+                            metavar="MODULE")
+
+    group_local.add_option("--entry-map", action='store',
+                           dest="entry_map", default=False, help=
+                           'List entry map for a distribution. e.g. --entry-map yolk',
+                           metavar="PACKAGE_NAME")
     group_pypi = optparse.OptionGroup(opt_parser,
             "PyPI (Cheese Shop) options",
             "The following options query the Python Package Index:")
