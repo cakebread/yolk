@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# pylint: disable-msg=C0301,W0613,W0612,W0212,W0511,R0912,C0322,W0704
+# pylint: disable-msg=W0613,W0612,W0212,W0511,R0912,C0322,W0704
 
 """
 
@@ -43,7 +43,7 @@ class Usage(Exception):
 
     def __init__(self, msg):
         """init"""
-        logger.error("%s" % msg)
+        LOGGER.error("%s" % msg)
         sys.exit(2)
 
 
@@ -62,12 +62,19 @@ def get_pkglist():
     return pkgs
 
 
-def show_updates(package_name="", version=""):
+def show_updates(package_name=""):
     """Check installed packages for available updates on PyPI"""
     pypi = CheeseShop()
-
     dists = Distributions()
-    for pkg in get_pkglist():
+    if package_name:
+        #Check for a single package
+        pkg_list = []
+        pkg_list.append(package_name)
+    else:
+        #Check for every installed package
+        pkg_list = get_pkglist()
+
+    for pkg in pkg_list:
         for (dist, active) in dists.get_distributions("all", pkg,
                 dists.get_highest_installed(pkg)):
             (project_name, versions) = \
@@ -98,7 +105,7 @@ def get_plugin(method, options):
         plugin.configure(options, None)
         if plugin.enabled:
             if not hasattr(plugin, method):
-                logger.error("Error: plugin has no method: %s" % method)
+                LOGGER.error("Error: plugin has no method: %s" % method)
                 plugin = None
             else:
                 all_plugins.append(plugin)
@@ -137,7 +144,8 @@ def show_distributions(show, project_name, version, options):
         if metadata:
             add_column_text = ""
             for my_plugin in plugins:
-                #See if package is 'owned' by a package manager such as portage, apt etc.
+                #See if package is 'owned' by a package manager such as
+                #portage, apt, rpm etc.
                 #add_column_text += my_plugin.add_column(filename) + " "
                 add_column_text += my_plugin.add_column(dist) + " "
             print_metadata(metadata, develop, active, options, add_column_text)
@@ -150,7 +158,7 @@ def show_distributions(show, project_name, version, options):
         else:
             pkg_spec = "%s" % project_name
 
-        logger.error("%s is not installed." % pkg_spec)
+        LOGGER.error("%s is not installed." % pkg_spec)
         return 2
     elif show == "all" and results and fields:
         print "Versions with '*' are non-active."
@@ -230,7 +238,7 @@ You can also specify a package name and version:
     pkgs = pkg_resources.Environment()
 
     if not len(pkgs[project_name]):
-        logger.error("Can't find package for %s" % project_name)
+        LOGGER.error("Can't find package for %s" % project_name)
         return 2
 
     for pkg in pkgs[project_name]:
@@ -248,7 +256,7 @@ You can also specify a package name and version:
                     print "  " + str(pkg._dep_map.values()[0][i - 1])
                 i -= 1
         else:
-            logger.error(\
+            LOGGER.error(\
                     "No dependency information was supplied with the package.")
             return 2
 
@@ -310,7 +318,7 @@ def show_pkg_metadata_pypi(package_name, version):
                     print "%s: %s" % (key, metadata[key])
         
     else:
-        logger.error(\
+        LOGGER.error(\
                 "I'm afraid we have no %s at The Cheese Shop. \
                 \nPerhaps a little red Leicester?" % package_name)
         return 2
@@ -322,13 +330,14 @@ def get_all_versions_pypi(package_name, use_cached_pkglist=False):
     (pypi_project_name, versions) = \
             pypi.query_versions_pypi(package_name, use_cached_pkglist)
 
-    #pypi_project_name may != package_name; it returns the name with correct case
+    #pypi_project_name may != package_name
+    #it returns the name with correct case
     #i.e. You give beautifulsoup but PyPI knows it as BeautifulSoup
 
     if versions:
         print_pkg_versions(pypi_project_name, versions)
     else:
-        logger.error(\
+        LOGGER.error(\
                 "I'm afraid we have no %s at The Cheese Shop. \
                 \nPerhaps a little red Leicester?" % package_name)
         return 2
@@ -470,7 +479,7 @@ def show_entry_map(dist):
     try:
         pprinter.pprint(pkg_resources.get_entry_map(dist))
     except pkg_resources.DistributionNotFound:
-        logger.error("Distribution not found: %s" % dist)
+        LOGGER.error("Distribution not found: %s" % dist)
         return 2
 
 def show_entry_points(module):
@@ -488,7 +497,7 @@ def show_entry_points(module):
         except ImportError:
             pass
     if not found:
-        logger.error("No entry points found for %s" % module)
+        LOGGER.error("No entry points found for %s" % module)
         return 2
 
 def setup_opt_parser():
@@ -504,7 +513,8 @@ def setup_opt_parser():
     opt_parser.add_option("-v", "--verbose", action='store_true', dest=
                           "verbose", default=False, help=
                           "Be more verbose.")
-
+    #pylint: disable-msg=C0301
+    #line too long
     group_local = optparse.OptionGroup(opt_parser,
             "Query installed Python packages",
             "The following options show information about installed Python packages. Activated packages are normal packages on sys.path that can be imported. Non-activated packages need 'pkg_resources.require()' before they can be imported, such as packages installed with 'easy_install --multi-version'. PKG_SPEC can be either a package name or package name and version e.g. Paste==0.9")
@@ -622,14 +632,15 @@ def main():
     #Options that depend on querying installed packages, not PyPI.
     #We find the proper case for package names if they are installed,
     #otherwise PyPI returns the correct case.
-    if options.depends or options.all or options.active or options.nonactive:
+    if options.depends or options.all or options.active or options.nonactive \
+            or (options.show_updates and remaining_args):
         want_installed = True
     else:
         want_installed = False
     if remaining_args:
         (package, version) = parse_pkg_ver(remaining_args, want_installed)
         if want_installed and not package:
-            logger.error("%s is not installed." % remaining_args[0])
+            LOGGER.error("%s is not installed." % remaining_args[0])
             return 2
     else:
         package = version = None
@@ -643,15 +654,15 @@ def main():
         return show_deps(remaining_args)
     elif options.all:
         if options.active or options.nonactive:
-            opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
+            opt_parser.error("Choose either -l, -n or -a")
         return show_distributions("all", package, version, options)
     elif options.active:
         if options.all or options.nonactive:
-            opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
+            opt_parser.error("Choose either -l, -n or -a")
         return show_distributions("active", package, version, options)
     elif options.nonactive:
         if options.active or options.all:
-            opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
+            opt_parser.error("Choose either -l, -n or -a")
         return show_distributions("nonactive", package, version, options)
     elif options.versions_available:
         return get_all_versions_pypi(package, False)
@@ -662,18 +673,20 @@ def main():
     elif options.rss_feed:
         return get_rss_feed()
     elif options.show_updates:
-        return show_updates(package, version)
+        return show_updates(package)
     elif options.query_metadata_pypi:
         return show_pkg_metadata_pypi(package, version)
     else:
         opt_parser.print_help()
         return 2
 
-logger = logging.getLogger("yolk")
-logger.setLevel(logging.DEBUG)
+LOGGER = logging.getLogger("yolk")
+LOGGER.setLevel(logging.DEBUG)
+#pylint: disable-msg=C0103
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)
-logger.addHandler(console_handler)
+LOGGER.addHandler(console_handler)
+del console_handler
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -1,7 +1,4 @@
 
-
-# pylint: disable-msg=C0301,W0613,W0612
-
 '''
 
 yolklib.py
@@ -41,6 +38,8 @@ class Distributions:
 
     def get_distributions(self, show, pkg_name="", version=""):
         """List installed packages"""
+        #pylint: disable-msg=W0612
+        #'name' is a placeholder for the sorted list
         for name, dist in self.get_alpha(show, pkg_name, version):
             ver = dist.version
             for package in self.environment[dist.project_name]:
@@ -86,9 +85,6 @@ class Distributions:
         """Return case-sensitive package name given any-case package name"""
         if len(self.environment[package_name]):
             return self.environment[package_name][0].project_name
-        else:
-            return
-
 
     def get_highest_installed(self, project_name):
         """Return highest version of installed package"""
