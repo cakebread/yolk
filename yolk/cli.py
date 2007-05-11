@@ -27,6 +27,7 @@ import optparse
 import pkg_resources
 import webbrowser
 from distutils.sysconfig import get_python_lib
+import logging
 
 from yolk import __version__
 from yolk.metadata import get_metadata
@@ -42,7 +43,7 @@ class Usage(Exception):
 
     def __init__(self, msg):
         """init"""
-        print >> sys.stderr, "%s" % msg
+        logger.error("%s" % msg)
         sys.exit(2)
 
 
@@ -97,8 +98,7 @@ def get_plugin(method, options):
         plugin.configure(options, None)
         if plugin.enabled:
             if not hasattr(plugin, method):
-                print >> sys.stderr, \
-                        "Error: plugin has no method: %s" % method
+                logger.error("Error: plugin has no method: %s" % method)
                 plugin = None
             else:
                 all_plugins.append(plugin)
@@ -150,7 +150,7 @@ def show_distributions(show, project_name, version, options):
         else:
             pkg_spec = "%s" % project_name
 
-        print >> sys.stderr, "%s is not installed." % pkg_spec
+        logger.error("%s is not installed." % pkg_spec)
         return 2
     elif show == "all" and results and fields:
         print "Versions with '*' are non-active."
@@ -230,8 +230,8 @@ You can also specify a package name and version:
     pkgs = pkg_resources.Environment()
 
     if not len(pkgs[project_name]):
-        print >> sys.stderr, "Can't find package for %s" % project_name
-        sys.exit(2)
+        logger.error("Can't find package for %s" % project_name)
+        return 2
 
     for pkg in pkgs[project_name]:
         if not ver:
@@ -248,9 +248,9 @@ You can also specify a package name and version:
                     print "  " + str(pkg._dep_map.values()[0][i - 1])
                 i -= 1
         else:
-            print >> sys.stderr, \
-                "No dependency information was supplied with the package."
-            sys.exit(2)
+            logger.error(\
+                    "No dependency information was supplied with the package.")
+            return 2
 
 
 #PyPI functions
@@ -310,9 +310,10 @@ def show_pkg_metadata_pypi(package_name, version):
                     print "%s: %s" % (key, metadata[key])
         
     else:
-        print >> sys.stderr, "I'm afraid we have no %s at The Cheese Shop. Perhaps a little red Leicester?" % \
-            package_name
-        sys.exit(2)
+        logger.error(\
+                "I'm afraid we have no %s at The Cheese Shop. \
+                \nPerhaps a little red Leicester?" % package_name)
+        return 2
 
 
 def get_all_versions_pypi(package_name, use_cached_pkglist=False):
@@ -327,9 +328,10 @@ def get_all_versions_pypi(package_name, use_cached_pkglist=False):
     if versions:
         print_pkg_versions(pypi_project_name, versions)
     else:
-        print >> sys.stderr, "I'm afraid we have no %s at The Cheese Shop. Perhaps a little red Leicester?" % \
-            package_name
-        sys.exit(2)
+        logger.error(\
+                "I'm afraid we have no %s at The Cheese Shop. \
+                \nPerhaps a little red Leicester?" % package_name)
+        return 2
 
 
 def parse_search_spec(spec):
@@ -468,7 +470,8 @@ def show_entry_map(dist):
     try:
         pprinter.pprint(pkg_resources.get_entry_map(dist))
     except pkg_resources.DistributionNotFound:
-        print "Distribution not found: %s" % dist
+        logger.error("Distribution not found: %s" % dist)
+        return 2
 
 def show_entry_points(module):
     """Show entry points for a module"""
@@ -485,7 +488,8 @@ def show_entry_points(module):
         except ImportError:
             pass
     if not found:
-        print "No entry points found for %s" % module
+        logger.error("No entry points found for %s" % module)
+        return 2
 
 def setup_opt_parser():
     """Setup the optparser"""
@@ -608,14 +612,12 @@ def main():
     if not options.search and (len(sys.argv) == 1 or len(remaining_args) >
                                2):
         opt_parser.print_help()
-        sys.exit(2)
+        return 2
 
     if options.entry_points:
-        show_entry_points(options.entry_points)
-        sys.exit()
+        return show_entry_points(options.entry_points)
     if options.entry_map:
-        show_entry_map(options.entry_map)
-        sys.exit()
+        return show_entry_map(options.entry_map)
 
     #Options that depend on querying installed packages, not PyPI.
     #We find the proper case for package names if they are installed,
@@ -627,45 +629,51 @@ def main():
     if remaining_args:
         (package, version) = parse_pkg_ver(remaining_args, want_installed)
         if want_installed and not package:
-            print >> sys.stderr, "%s is not installed." % remaining_args[0]
-            sys.exit(2)
+            logger.error("%s is not installed." % remaining_args[0])
+            return 2
     else:
         package = version = None
 
     if options.search:
-        pypi_search(options.search, remaining_args)
+        return pypi_search(options.search, remaining_args)
     elif options.version:
         print "Version %s" % __version__.VERSION
+        return
     elif options.depends:
-        show_deps(remaining_args)
+        return show_deps(remaining_args)
     elif options.all:
         if options.active or options.nonactive:
             opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
-        show_distributions("all", package, version, options)
+        return show_distributions("all", package, version, options)
     elif options.active:
         if options.all or options.nonactive:
             opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
-
-        show_distributions("active", package, version, options)
+        return show_distributions("active", package, version, options)
     elif options.nonactive:
         if options.active or options.all:
             opt_parser.error("Choose either -l, -n or -a, not combinations of those.")
-        show_distributions("nonactive", package, version, options)
+        return show_distributions("nonactive", package, version, options)
     elif options.versions_available:
-        get_all_versions_pypi(package, False)
+        return get_all_versions_pypi(package, False)
     elif options.browse_website:
-        browse_website(package)
+        return browse_website(package)
     elif options.download_links:
-        show_download_links(package, version, options.file_type)
+        return show_download_links(package, version, options.file_type)
     elif options.rss_feed:
-        get_rss_feed()
+        return get_rss_feed()
     elif options.show_updates:
-        show_updates(package, version)
+        return show_updates(package, version)
     elif options.query_metadata_pypi:
-        show_pkg_metadata_pypi(package, version)
+        return show_pkg_metadata_pypi(package, version)
     else:
         opt_parser.print_help()
         return 2
+
+logger = logging.getLogger("yolk")
+logger.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+logger.addHandler(console_handler)
 
 if __name__ == "__main__":
     sys.exit(main())
