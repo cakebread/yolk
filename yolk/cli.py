@@ -682,11 +682,8 @@ def main():
 
 LOGGER = logging.getLogger("yolk")
 LOGGER.setLevel(logging.DEBUG)
-#pylint: disable-msg=C0103
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.DEBUG)
-LOGGER.addHandler(console_handler)
-del console_handler
+LOGGER.addHandler(logging.StreamHandler())
+LOGGER.setLevel(logging.DEBUG)
 
 if __name__ == "__main__":
     sys.exit(main())
