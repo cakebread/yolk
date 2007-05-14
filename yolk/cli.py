@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=W0613,W0612,W0212,W0511,R0912,C0322,W0704
+# W0511 = XXX (my own todo's)
 
 """
 
@@ -197,7 +198,7 @@ def print_metadata(metadata, develop, active, options, installed_by):
                                 development_status)
     else:
 
-        #XXX Need intelligent justification
+        # Need intelligent justification
 
         print metadata['Name'].ljust(15) + " - " + version.ljust(12) + \
             " - " + status
@@ -304,7 +305,7 @@ def browse_website(package_name, browser=None):
     print "No homepage URL found."
 
 
-def show_pkg_metadata_pypi(package_name, version):
+def show_pkg_metadata_pypi(package_name, version, fields):
     """Show pkg metadata queried from PyPI"""
     pypi = CheeseShop()
     (pypi_project_name, versions) = \
@@ -315,7 +316,8 @@ def show_pkg_metadata_pypi(package_name, version):
             metadata = pypi.release_data(pypi_project_name, ver)
             if metadata:
                 for key in metadata.keys():
-                    print "%s: %s" % (key, metadata[key])
+                    if not fields or (fields and fields==key):
+                        print "%s: %s" % (key, metadata[key])
         
     else:
         LOGGER.error(\
@@ -541,7 +543,7 @@ def setup_opt_parser():
     group_local.add_option("-f", "--fields", action="store", dest=
                            "fields", default=False, help=
                            'Show specific metadata fields. ' +
-                           '(use with -l -a or -n)')
+                           '(use with -m or -M)')
 
     group_local.add_option("-d", "--depends", action='store_true', dest=
                            "depends", default=False, help=
@@ -573,12 +575,12 @@ def setup_opt_parser():
 
     group_pypi.add_option("-L", "--latest", action='store_true', dest=
                           "rss_feed", default=False, help=
-                          "Show last 20 updates on PyPI.")
+                          "Show last 20 releases on PyPI.")
 
     group_pypi.add_option("-M", "--query-metadata", action='store_true',
                           dest="query_metadata_pypi", default=False,
                           metavar="PKG_SPEC", help=
-                          "Show metadata for a package listed on PyPI. (Use with PKG_SPEC)")
+                          "Show metadata for a package listed on PyPI. Use -f to show particular fields. (Use with PKG_SPEC)")
 
     group_pypi.add_option("-S", "", action="store", dest="search",
                           default=False, help=
@@ -675,7 +677,7 @@ def main():
     elif options.show_updates:
         return show_updates(package)
     elif options.query_metadata_pypi:
-        return show_pkg_metadata_pypi(package, version)
+        return show_pkg_metadata_pypi(package, version, options.fields)
     else:
         opt_parser.print_help()
         return 2
