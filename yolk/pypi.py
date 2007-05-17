@@ -194,6 +194,9 @@ class CheeseShop:
         
 def filter_url(pkg_type, url):
     """Returns URL of specified file type, else None"""
+    #Remove Source Forge cruft
+    if "?modtime" in url:
+        url = url.split("?")[0]
     #Remove MD5 checksum
     if "#md5=" in url:
         url = url.split("#")[0]

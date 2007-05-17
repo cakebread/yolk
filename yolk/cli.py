@@ -106,7 +106,7 @@ def get_plugin(method, options):
         plugin.configure(options, None)
         if plugin.enabled:
             if not hasattr(plugin, method):
-                LOGGER.error("Error: plugin has no method: %s" % method)
+                LOGGER.warn("Error: plugin has no method: %s" % method)
                 plugin = None
             else:
                 all_plugins.append(plugin)
@@ -268,17 +268,14 @@ You can also specify a package name and version:
 
 def show_download_links(package_name, version, file_type):
     """Query PyPI for pkg download URI for a packge"""
-    pypi = CheeseShop()
 
-    #Try Cheese Shop first
-    url = None
-    for url in pypi.get_download_urls(package_name, version, file_type):
-        print url
-
-    #Try setuptools if there is no link on Cheese Shop
+    #Use setuptools monkey-patch to grab url
+    for url in get_download_uri(file_type, package_name, version):
+        print "%s" % url
+    #This should never happen because setuptools checks Cheese Shop?
     if not url:
-        url = get_download_uri(file_type, package_name, version)
-        if url:
+        pypi = CheeseShop()
+        for url in pypi.get_download_urls(package_name, version, file_type):
             print url
 
 def browse_website(package_name, browser=None):
