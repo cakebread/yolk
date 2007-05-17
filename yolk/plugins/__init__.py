@@ -70,7 +70,7 @@ import pkg_resources
 from warnings import warn
 from yolk.plugins.base import Plugin
 
-LOG = logging.getLogger(__name__)
+#LOG = logging.getLogger(__name__)
 
 def call_plugins(plugins, method, *arg, **kw):
     """Call all method on plugins in list, that define it, with provided
@@ -80,7 +80,7 @@ def call_plugins(plugins, method, *arg, **kw):
         func = getattr(plug, method, None)
         if func is None:
             continue
-        LOG.debug("call plugin %s: %s", plug.name, method)
+        #LOG.debug("call plugin %s: %s", plug.name, method)
         result = func(*arg, **kw)
         if result is not None:
             return result
@@ -90,7 +90,7 @@ def load_plugins(builtin=True, others=True):
     """Load plugins, either builtin, others, or both.
     """
     for entry_point in pkg_resources.iter_entry_points('yolk.plugins'):
-        LOG.debug("load plugin %s" % entry_point)
+        #LOG.debug("load plugin %s" % entry_point)
         try:
             plugin = entry_point.load()
         except KeyboardInterrupt:
