@@ -185,11 +185,11 @@ class CheeseShop:
             if metadata and metadata.has_key('download_url') and \
                         metadata['download_url'] != "UNKNOWN" and \
                         metadata['download_url'] != None:
-                    if metadata['download_url'] not in all_urls:
-                        if pkg_type != "all":
-                            url = filter_url(pkg_type, metadata['download_url'])
-                            if url:
-                                all_urls.append(url)
+                if metadata['download_url'] not in all_urls:
+                    if pkg_type != "all":
+                        url = filter_url(pkg_type, metadata['download_url'])
+                        if url:
+                            all_urls.append(url)
         return all_urls
         
 def filter_url(pkg_type, url):
