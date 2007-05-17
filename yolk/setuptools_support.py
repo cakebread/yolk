@@ -49,14 +49,27 @@ class MyPackageIndex(PackageIndex):
 
 def get_download_uri(file_type, package_name, version=None):
     """Use setuptools to search for a package's URI"""
+    if not file_type:
+        #Give them source by default
+        dist_type = [True]
+    elif file_type == "source":
+        dist_type = [True]
+    elif file_type == "binary":
+        dist_type = [False]
+    elif file_type == "all":
+        #Binary and source
+        dist_type = [True, False]
+
     if version:
         pkg_spec = "%s==%s" % (package_name, version)
     else:
         pkg_spec = package_name
     req = pkg_resources.Requirement.parse(pkg_spec)
     pkg_index = MyPackageIndex()
-    try:
-        pkg_index.fetch_distribution(req, None)
-    except DownloadURI, url:
-        return filter_url(file_type, url.value)
-
+    output = []
+    for dist in dist_type:
+        try:
+            pkg_index.fetch_distribution(req, None, True, dist)
+        except DownloadURI, url:
+            output.append(filter_url(file_type, url.value))
+    return output
