@@ -14,7 +14,19 @@ import urllib
 import os
 import sys
 
-from cElementTree import iterparse
+
+if sys.version_info[0] == 2 and sys.version_info[1] == 5:
+    #Python >=2.5 has elementtree 
+    from xml.etree.cElementTree import iterparse
+else:
+    try:
+        #Python <2.5 has elementtree as 3rd party module
+        from cElementTree import iterparse
+    except ImportError:
+        print "You need to install cElementTree"
+        sys.exit(2)
+
+
 
 
 from yolk.pypi import CheeseShop
