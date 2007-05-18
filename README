@@ -63,6 +63,16 @@ These options query PyPI::
 
 Changes
 -------
+**0.1.0**: You can now use -f with -M
+
+           More accurate URL's with -D using setuptools
+
+           Ability to check for a single package with -U
+
+           Uses std Python logging module
+
+           Fixed bug so we have correct exit codes
+
 **0.0.7**: New options: --entry-map and -entry-points
            
            Improved results with --download-links
@@ -78,14 +88,21 @@ Changes
 
 **0.0.6**: Fix Windows problem which showed all pkgs in develop mode
            on some systems.
+
            Fix bad interpreter shebang in rss_feed.py example
+
            Start using nose unit tests from setup.py
+
            Use restructuredtext in docstrings
 
+
 **0.0.5**: Show packages installed in 'development' mode.
+
            Improved output of -l, -n and -a. You can get the previous (<=0.0.4)
            output by adding '-f Summary'
+
            More sanity checking for various options.
+
            Don't throw exception if there is no package metadata
 
 **0.0.4**: Added -U option to query PyPI for new versions of packages you have 
