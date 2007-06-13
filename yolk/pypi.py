@@ -201,6 +201,10 @@ def filter_url(pkg_type, url):
     if "#md5=" in url:
         url = url.split("#")[0]
 
+    #pkg_spec==dev (svn)
+    if url.endswith("-dev"):
+        url = url.split("#egg=")[0]
+
     if pkg_type == "all":
         return url
 

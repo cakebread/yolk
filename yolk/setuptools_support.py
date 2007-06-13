@@ -71,5 +71,7 @@ def get_download_uri(file_type, package_name, version=None):
         try:
             pkg_index.fetch_distribution(req, None, True, dist)
         except DownloadURI, url:
-            output.append(filter_url(file_type, url.value))
+            uri = filter_url(file_type, url.value)
+            if uri not in output:
+                uri = output.append(uri)
     return output
