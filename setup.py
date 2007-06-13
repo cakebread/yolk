@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 from yolk import __version__
 
