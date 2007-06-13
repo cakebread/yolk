@@ -266,11 +266,6 @@ def show_download_links(package_name, version, file_type):
     for url in get_download_uri(file_type, package_name, version):
         if url:
             print "%s" % url
-    #This should never happen because setuptools checks Cheese Shop?
-    #if not url:
-    #    pypi = CheeseShop()
-    #    for url in pypi.get_download_urls(package_name, version, file_type):
-    #        print url
 
 def browse_website(package_name, browser=None):
     """Launch web browser at project's homepage"""
