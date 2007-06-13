@@ -38,15 +38,6 @@ from yolk.setuptools_support import get_download_uri
 from yolk.plugins import load_plugins
 
 
-class Usage(Exception):
-
-    """Usage exception"""
-
-    def __init__(self, msg):
-        """init"""
-        LOGGER.error("%s" % msg)
-        sys.exit(2)
-
 
 #Functions for obtaining info about packages installed by setuptools
 ##############################################################################
@@ -228,7 +219,8 @@ def show_deps(pkg_ver):
             '''I need at least a package name.
 You can also specify a package name and version:
   yolk -d kid==0.8'''
-        raise Usage(msg)
+        LOGGER.error(msg)
+        return 2
 
     try:
         (project_name, ver) = pkg_ver[0].split('=')
@@ -371,7 +363,8 @@ def parse_search_spec(spec):
       """
 
     if not spec:
-        raise Usage(usage)
+        LOGGER.error(usage)
+        return (None, None)
 
     try:
         spec = (" ").join(spec)
@@ -396,7 +389,8 @@ def parse_search_spec(spec):
         if second:
             spec[key2] = term2
     except:
-        raise Usage(usage)
+        LOGGER.error(usage)
+        spec = operator = None
     return (spec, operator)
 
 
@@ -408,6 +402,8 @@ def pypi_search(arg, spec):
 
     spec.insert(0, arg.strip())
     (spec, operator) = parse_search_spec(spec)
+    if not spec:
+        return 2
     for pkg in pypi.search(spec, operator):
         if pkg['summary']:
             summary = pkg['summary'].encode('utf-8')
@@ -464,17 +460,26 @@ def print_pkg_versions(package_name, versions):
         print "%s %s" % (package_name, ver)
 
 def validate_pypi_opts(opt_parser):
-    """Check for sane parse options"""
+    """
+    Check for sane pkg_spec parse options
+    returns True if sane
+    returns False if insane
+    
+    """
 
     (options, remaining_args) = opt_parser.parse_args()
     if options.versions_available or options.query_metadata_pypi or \
         options.download_links or options.browse_website:
         if not remaining_args:
-            raise Usage, \
+            usage = \
                 """You must specify a package spec
 Examples:
   PackageName
   PackageName==2.0"""
+            LOGGER.error(usage)
+            return False
+        else:
+            return True
 
 
 def show_entry_map(dist):
@@ -622,7 +627,8 @@ def main():
     opt_parser = setup_opt_parser()
     (options, remaining_args) = opt_parser.parse_args()
 
-    validate_pypi_opts(opt_parser)
+    if not validate_pypi_opts(opt_parser):
+        return 2
     if not options.search and (len(sys.argv) == 1 or len(remaining_args) >
                                2):
         opt_parser.print_help()
