@@ -309,9 +309,8 @@ def show_pkg_metadata_pypi(package_name, version, fields):
     (pypi_project_name, versions) = \
             pypi.query_versions_pypi(package_name, False)
 
-    if versions:
-        for ver in versions:
-            metadata = pypi.release_data(pypi_project_name, ver)
+    if versions and version in versions:
+            metadata = pypi.release_data(pypi_project_name, version)
             if metadata:
                 for key in metadata.keys():
                     if not fields or (fields and fields==key):
@@ -324,7 +323,7 @@ def show_pkg_metadata_pypi(package_name, version, fields):
         return 2
 
 
-def get_all_versions_pypi(package_name, use_cached_pkglist=False):
+def get_all_versions_pypi(package_name, version, use_cached_pkglist=False):
     """Fetch list of available versions for a package from The Cheese Shop"""
     pypi = CheeseShop()
     (pypi_project_name, versions) = \
@@ -333,13 +332,17 @@ def get_all_versions_pypi(package_name, use_cached_pkglist=False):
     #pypi_project_name may != package_name
     #it returns the name with correct case
     #i.e. You give beautifulsoup but PyPI knows it as BeautifulSoup
+    if version:
+        spec = "%s==%s" % (package_name, version)
+    else:
+        spec = package_name
 
-    if versions:
-        print_pkg_versions(pypi_project_name, versions)
+    if versions and version in versions:
+            print_pkg_versions(pypi_project_name, [version])
     else:
         LOGGER.error(\
                 "I'm afraid we have no %s at The Cheese Shop. \
-                \nPerhaps a little red Leicester?" % package_name)
+                \nPerhaps a little red Leicester?" % spec)
         return 2
 
 
@@ -665,7 +668,7 @@ def main():
             opt_parser.error("Choose either -l, -n or -a")
         return show_distributions("nonactive", package, version, options)
     elif options.versions_available:
-        return get_all_versions_pypi(package, False)
+        return get_all_versions_pypi(package, version, False)
     elif options.browse_website:
         return browse_website(package)
     elif options.download_links:
