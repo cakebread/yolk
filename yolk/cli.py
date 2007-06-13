@@ -311,7 +311,7 @@ def show_pkg_metadata_pypi(package_name, version, fields):
         return 2
 
 
-def get_all_versions_pypi(package_name, version, use_cached_pkglist=False):
+def get_all_versions_pypi(package_name, my_version, use_cached_pkglist=False):
     """Fetch list of available versions for a package from The Cheese Shop"""
     pypi = CheeseShop()
     (pypi_project_name, versions) = \
@@ -320,13 +320,15 @@ def get_all_versions_pypi(package_name, version, use_cached_pkglist=False):
     #pypi_project_name may != package_name
     #it returns the name with correct case
     #i.e. You give beautifulsoup but PyPI knows it as BeautifulSoup
-    if version:
-        spec = "%s==%s" % (package_name, version)
+    if my_version:
+        spec = "%s==%s" % (package_name, my_version)
     else:
         spec = package_name
 
-    if versions and version in versions:
-            print_pkg_versions(pypi_project_name, [version])
+    if versions and my_version in versions:
+        print_pkg_versions(pypi_project_name, [my_version])
+    elif not my_version:
+        print_pkg_versions(pypi_project_name, versions)
     else:
         LOGGER.error(\
                 "I'm afraid we have no %s at The Cheese Shop. \
