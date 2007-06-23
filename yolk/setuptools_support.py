@@ -47,18 +47,15 @@ class MyPackageIndex(PackageIndex):
         raise DownloadURI(spec)
 
 
-def get_download_uri(file_type, package_name, version=None):
-    """Use setuptools to search for a package's URI"""
-    if not file_type:
-        #Give them source by default
-        dist_type = [True]
-    elif file_type == "source":
-        dist_type = [True]
-    elif file_type == "binary":
-        dist_type = [False]
-    elif file_type == "all":
-        #Binary and source
-        dist_type = [True, False]
+def get_download_uri(package_name, version, source):
+    """
+    Use setuptools to search for a package's URI
+    
+    @returns: list of URI strings 
+    """
+    tmpdir = None
+    force_scan = True
+    develop_ok = False
 
     if version:
         pkg_spec = "%s==%s" % (package_name, version)
@@ -67,11 +64,12 @@ def get_download_uri(file_type, package_name, version=None):
     req = pkg_resources.Requirement.parse(pkg_spec)
     pkg_index = MyPackageIndex()
     output = []
-    for dist in dist_type:
-        try:
-            pkg_index.fetch_distribution(req, None, True, dist)
-        except DownloadURI, url:
-            uri = filter_url(file_type, url.value)
-            if uri not in output:
-                uri = output.append(uri)
+    try:
+        pkg_index.fetch_distribution(req, tmpdir, force_scan, source, 
+                develop_ok)
+    except DownloadURI, url:
+        #uri = filter_url(file_type, url.value)
+        if url.value not in output:
+            #Remove #egg=pkg-dev
+            output.append(url.value.split("#")[0])
     return output

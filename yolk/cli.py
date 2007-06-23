@@ -258,12 +258,33 @@ You can also specify a package name and version:
 ##############################################################################
 
 
-def show_download_links(package_name, version, file_type):
+def show_download_links(pkg_name, version, file_type):
     """Query PyPI for pkg download URI for a packge"""
+    source = True
+    develop_ok = False
 
+    if file_type == "svn":
+        version = "dev"
+        print_download_uri(pkg_name, version, source)
+    elif file_type == "source":
+        print_download_uri(pkg_name, version, source)
+    elif file_type == "binary":
+        source = False
+        print_download_uri(pkg_name, version, source)
+    elif file_type == "all":
+        #Search for source, binary and svn
+        source = True
+        print_download_uri(pkg_name, version, source)
+        source = False
+        print_download_uri(pkg_name, version, source)
+        source = True
+        develop_ok = True
+        print_download_uri(pkg_name, version, source)
+
+def print_download_uri(pkg_name, version, source):
     url = None
     #Use setuptools monkey-patch to grab url
-    for url in get_download_uri(file_type, package_name, version):
+    for url in get_download_uri(pkg_name, version, source):
         if url:
             print "%s" % url
 
@@ -477,6 +498,7 @@ Examples:
             return False
         else:
             return True
+    return True
 
 
 def show_entry_map(dist):
@@ -592,8 +614,8 @@ def setup_opt_parser():
                           metavar='SEARCH_SPEC <AND/OR SEARCH_SPEC>')
 
     group_pypi.add_option("-T", "--file-type", action="store", dest=
-                          "file_type", default="all", help=
-                          "You may specify 'source', 'binary' or 'all' when using -D.")
+                          "file_type", default="source", help=
+                          "You may specify 'source', 'binary', 'svn' or 'all' when using -D.")
 
     group_pypi.add_option("-U", "--show-updates", action='store_true',
                           dest="show_updates", default=False, help=
