@@ -317,14 +317,17 @@ def show_pkg_metadata_pypi(package_name, version, fields):
     pypi = CheeseShop()
     (pypi_project_name, versions) = \
             pypi.query_versions_pypi(package_name, False)
+    if version and version in versions:
+        metadata = pypi.release_data(pypi_project_name, version)
+    else:
+        #Give highest version
+        metadata = pypi.release_data(pypi_project_name, versions[0])
 
-    if versions and version in versions:
-            metadata = pypi.release_data(pypi_project_name, version)
-            if metadata:
-                for key in metadata.keys():
-                    if not fields or (fields and fields==key):
-                        print "%s: %s" % (key, metadata[key])
-        
+    if metadata:
+        for key in metadata.keys():
+            if not fields or (fields and fields==key):
+                print "%s: %s" % (key, metadata[key])
+
     else:
         LOGGER.error(\
                 "I'm afraid we have no %s at The Cheese Shop. \
