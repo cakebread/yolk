@@ -149,8 +149,10 @@ def show_distributions(show, project_name, version, options):
             pkg_spec = "%s==%s" % (project_name, version)
         else:
             pkg_spec = "%s" % project_name
-
-        LOGGER.error("%s is not installed." % pkg_spec)
+        if show == "all":
+            LOGGER.error("There are no versions of %s installed." % pkg_spec)
+        else:
+            LOGGER.error("There are no %s versions of %s installed." % (show, pkg_spec))
         return 2
     elif show == "all" and results and fields:
         print "Versions with '*' are non-active."
