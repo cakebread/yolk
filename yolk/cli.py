@@ -192,7 +192,8 @@ def show_distributions(show, project_name, version, options):
         if show == "all":
             LOGGER.error("There are no versions of %s installed." % pkg_spec)
         else:
-            LOGGER.error("There are no %s versions of %s installed." % (show, pkg_spec))
+            LOGGER.error("There are no %s versions of %s installed." % \
+                    (show, pkg_spec))
         return 2
     elif show == "all" and results and fields:
         print "Versions with '*' are non-active."
@@ -398,7 +399,7 @@ def browse_website(pkg_name, browser=None):
     pypi = CheeseShop()
     #Get verified name from pypi.
 
-    (pypi_project_name, versions) = pypi.query_versions_pypi(package_name)
+    (pypi_project_name, versions) = pypi.query_versions_pypi(pkg_name)
     if len(versions):
         metadata = pypi.release_data(pypi_project_name, versions[0])
         if metadata.has_key("home_page"):
@@ -431,7 +432,7 @@ def show_pkg_metadata_pypi(pkg_name, version, fields):
     """
     pypi = CheeseShop()
     (pypi_project_name, versions) = \
-            pypi.query_versions_pypi(package_name, False)
+            pypi.query_versions_pypi(pkg_name, False)
     if version and version in versions:
         metadata = pypi.release_data(pypi_project_name, version)
     else:
@@ -445,7 +446,7 @@ def show_pkg_metadata_pypi(pkg_name, version, fields):
     else:
         LOGGER.error(\
                 "I'm afraid we have no %s at The Cheese Shop. \
-                \nPerhaps a little red Leicester?" % package_name)
+                \nPerhaps a little red Leicester?" % pkg_name)
         return 2
 
 

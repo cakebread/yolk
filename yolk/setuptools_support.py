@@ -15,7 +15,6 @@ License  : GNU General Public License Version 2
 from setuptools.package_index import PackageIndex
 import pkg_resources
 
-from yolk.pypi import filter_url
 
 
 __docformat__ = 'restructuredtext'
@@ -67,7 +66,6 @@ def get_download_uri(package_name, version, source):
         pkg_index.fetch_distribution(req, tmpdir, force_scan, source, 
                 develop_ok)
     except DownloadURI, url:
-        #uri = filter_url(file_type, url.value)
         if url.value not in output:
             #Remove #egg=pkg-dev
             output.append(url.value.split("#")[0])
