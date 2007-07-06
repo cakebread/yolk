@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 # pylint: disable-msg=W0212
 # W0212 Access to a protected member _headers of a client class
 
@@ -25,7 +24,15 @@ import email
 
 
 def get_metadata(dist):
-    """Return dictionary of metadata for given dist"""
+    """
+    Return dictionary of metadata for given dist
+
+    @param dist: distribution
+    @type dist: pkg_resources Distribution object 
+
+    @returns: dict of metadata or None
+    
+    """
     if not dist.has_metadata('PKG-INFO'):
         return
 

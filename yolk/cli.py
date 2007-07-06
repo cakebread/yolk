@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # pylint: disable-msg=W0613,W0612,W0212,W0511,R0912,C0322,W0704
 # W0511 = XXX (my own todo's)
 
@@ -44,18 +42,34 @@ from yolk.plugins import load_plugins
 
 
 def get_pkglist():
-    """Return list of all pkg names"""
+    """
+    Return list of all installed packages
+
+    Note: It returns one project name per pkg no matter how many versions
+    of a particular package is installed
+     
+    @returns: list of project name strings for every installed pkg
+    
+    """
 
     dists = Distributions()
-    pkgs = []
+    projects = []
     for (dist, active) in dists.get_distributions("all"):
-        if dist.project_name not in pkgs:
-            pkgs.append(dist.project_name)
-    return pkgs
+        if dist.project_name not in projects:
+            projects.append(dist.project_name)
+    return projects
 
 
 def show_updates(package_name=""):
-    """Check installed packages for available updates on PyPI"""
+    """
+    Check installed packages for available updates on PyPI
+
+    @param package_name: optional package name to check; checks every
+                         installed pacakge if none specified
+    @type package_name: string
+
+    @returns: None
+    """
     pypi = CheeseShop()
     dists = Distributions()
     if package_name:
@@ -89,7 +103,18 @@ def show_updates(package_name=""):
 
 
 def get_plugin(method, options):
-    """Return plugin object if CLI option is activated and method exists"""
+    """
+    Return plugin object if CLI option is activated and method exists
+
+    @param method: name of plugin's method we're calling
+    @type method: string
+
+    @param options: opt_parser options
+    @type options: list of opt_parser.parse_args
+
+    @returns: list of plugins with `method`
+
+    """
     all_plugins = []
     for entry_point in pkg_resources.iter_entry_points('yolk.plugins'):
         plugin_obj = entry_point.load()
@@ -104,7 +129,22 @@ def get_plugin(method, options):
     return all_plugins
 
 def show_distributions(show, project_name, version, options):
-    """Show list of installed activated OR non-activated packages"""
+    """
+    Show list of installed activated OR non-activated packages
+    @param show: type of pkgs to show (all, active or nonactive)
+    @type show: string
+
+    @param project_name: pkg_resources Distribution project name to query
+    @type project_name: string
+
+    @param version: pkg_resources Distribution version
+    @type version: string
+
+    @param options: opt_parser options
+    @type options: list of opt_parser.parse_args
+
+    @returns: None or 2 if error 
+    """
     show_metadata = options.metadata
     fields = options.fields
 
@@ -160,7 +200,27 @@ def show_distributions(show, project_name, version, options):
 
 
 def print_metadata(metadata, develop, active, options, installed_by):
-    """Print out formatted metadata"""
+    """
+    Print out formatted metadata
+    @param metadata: package's metadata
+    @type metadata:  pkg_resources Distribution obj
+
+    @param develop: path to pkg if its deployed in development mode
+    @type develop: string
+
+    @param active: show if package is activated or not
+    @type active: boolean
+
+    @param options: opt_parser options
+    @type options: list of opt_parser.parse_args
+
+    @param installed_by: Shows if pkg was installed by a package manager other
+                         than setuptools
+    @type installed_by: string
+
+    @returns: None
+    
+    """
     show_metadata = options.metadata
     fields = options.fields
 
@@ -214,7 +274,14 @@ def print_metadata(metadata, develop, active, options, installed_by):
 
 
 def show_deps(pkg_ver):
-    """Show dependencies for package(s)"""
+    """
+    Show dependencies for package(s)
+
+    @param pkg_ver: setuptools pkgspec (e.g. kid>=0.8)
+    @type pkg_ver: string
+    
+    @returns: None or 2 if error 
+    """
 
     if not pkg_ver:
         msg = \
@@ -261,9 +328,22 @@ You can also specify a package name and version:
 
 
 def show_download_links(pkg_name, version, file_type):
-    """Query PyPI for pkg download URI for a packge"""
+    """
+    Query PyPI for pkg download URI for a packge
+
+    @param pkg_name: pkg_resources Distribution project name to query
+    @type pkg_name: string
+
+    @param version: pkg_resources Distribution version
+    @type version: string
+
+    @param file_type: svn, source, binary, all (show all 3)
+    @param file_type: string
+
+    @returns: None
+    
+    """
     source = True
-    develop_ok = False
 
     if file_type == "svn":
         version = "dev"
@@ -280,18 +360,40 @@ def show_download_links(pkg_name, version, file_type):
         source = False
         print_download_uri(pkg_name, version, source)
         source = True
-        develop_ok = True
         print_download_uri(pkg_name, version, source)
 
 def print_download_uri(pkg_name, version, source):
+    """
+    @param pkg_name: pkg_resources Distribution project name to query
+    @type pkg_name: string
+
+    @param version: pkg_resources Distribution version
+    @type version: string
+
+    @param source: download source or binary
+    @type source: boolean
+
+    @returns: None
+
+    """
     url = None
     #Use setuptools monkey-patch to grab url
     for url in get_download_uri(pkg_name, version, source):
         if url:
             print "%s" % url
 
-def browse_website(package_name, browser=None):
-    """Launch web browser at project's homepage"""
+def browse_website(pkg_name, browser=None):
+    """
+    Launch web browser at project's homepage
+    
+    @param pkg_name: pkg_resources Distribution project name
+    @type pkg_name: string
+
+    @param browser: name of web browser to use if not system default    
+    @type browser: string
+
+    @returns None
+    """
 
     pypi = CheeseShop()
     #Get verified name from pypi.
@@ -305,17 +407,28 @@ def browse_website(package_name, browser=None):
                 browser = webbrowser.Konqueror()
             else:
                 browser = webbrowser.get()
-            try:
-                browser.open(metadata["home_page"], 2)
-            except AttributeError:
                 browser.open(metadata["home_page"], 2)
             return
 
     print "No homepage URL found."
 
 
-def show_pkg_metadata_pypi(package_name, version, fields):
-    """Show pkg metadata queried from PyPI"""
+def show_pkg_metadata_pypi(pkg_name, version, fields):
+    """
+    Show pkg metadata queried from PyPI
+
+    @param pkg_name: pkg_resources Distribution project name to query
+    @type pkg_name: string
+
+    @param version: pkg_resources Distribution version
+    @type version: string
+
+    @param fields: particular fields to show or "" for all
+    @type fields: string
+    
+    @returns: None or 2 if error 
+    
+    """
     pypi = CheeseShop()
     (pypi_project_name, versions) = \
             pypi.query_versions_pypi(package_name, False)
@@ -329,7 +442,6 @@ def show_pkg_metadata_pypi(package_name, version, fields):
         for key in metadata.keys():
             if not fields or (fields and fields==key):
                 print "%s: %s" % (key, metadata[key])
-
     else:
         LOGGER.error(\
                 "I'm afraid we have no %s at The Cheese Shop. \
@@ -337,19 +449,33 @@ def show_pkg_metadata_pypi(package_name, version, fields):
         return 2
 
 
-def get_all_versions_pypi(package_name, my_version, use_cached_pkglist=False):
-    """Fetch list of available versions for a package from The Cheese Shop"""
+def get_all_versions_pypi(pkg_name, my_version, use_cached_pkglist=False):
+    """
+    Fetch list of available versions for a package from The Cheese Shop
+
+    @param pkg_name: pkg_resources Distribution project name to query
+    @type pkg_name: string
+
+    @param my_version: pkg_resources Distribution version
+    @type my_version: string
+
+    @param use_cached_pkglist: use a pkg list stored on disk to avoid network
+                               usage
+    @type use_cached_pkglist: boolean
+
+    @returns: None or 2 if false
+    """
     pypi = CheeseShop()
     (pypi_project_name, versions) = \
-            pypi.query_versions_pypi(package_name, use_cached_pkglist)
+            pypi.query_versions_pypi(pkg_name, use_cached_pkglist)
 
-    #pypi_project_name may != package_name
+    #pypi_project_name may != pkg_name
     #it returns the name with correct case
     #i.e. You give beautifulsoup but PyPI knows it as BeautifulSoup
     if my_version:
-        spec = "%s==%s" % (package_name, my_version)
+        spec = "%s==%s" % (pkg_name, my_version)
     else:
-        spec = package_name
+        spec = pkg_name
 
     if versions and my_version in versions:
         print_pkg_versions(pypi_project_name, [my_version])
@@ -363,7 +489,19 @@ def get_all_versions_pypi(package_name, my_version, use_cached_pkglist=False):
 
 
 def parse_search_spec(spec):
-    """Parse search args and return spec dict for PyPI"""
+    """
+    Parse search args and return spec dict for PyPI
+
+
+    @param spec: Cheese Shop package search spec
+                 e.g.
+                 name=Cheetah
+                 license=ZPL
+                 license=ZPL AND name=Cheetah
+    @type spec: string
+    
+    @returns:  
+    """
 
     usage = \
         """You can search PyPI by the following:
@@ -396,7 +534,6 @@ def parse_search_spec(spec):
         if " AND " in spec:
             (first, second) = spec.split('AND')
         elif " OR " in spec:
-
             (first, second) = spec.split('OR')
             operator = 'OR'
         else:
@@ -417,13 +554,25 @@ def parse_search_spec(spec):
     return (spec, operator)
 
 
-def pypi_search(arg, spec):
-    """Search PyPI by metadata keyword
-    e.g. yolk -S name=yolk
+def pypi_search(spec):
+    """
+    Search PyPI by metadata keyword
+    e.g. yolk -S name=yolk AND license=GPL
+
+    @param spec: Cheese Shop search spec
+    @type spec: list of strings
+    
+    spec could like like any of these:
+      ["name=yolk"]
+      ["license=GPL"]
+      ["name=yolk", "AND", "license=GPL"]
+
+    @returns: None
+
+
     """
     pypi = CheeseShop()
 
-    spec.insert(0, arg.strip())
     (spec, operator) = parse_search_spec(spec)
     if not spec:
         return 2
@@ -439,7 +588,12 @@ def pypi_search(arg, spec):
 
 
 def get_rss_feed():
-    """Show last 20 package updates from PyPI RSS feed"""
+    """
+    Show last 20 package updates from PyPI RSS feed
+    
+    @returns: None
+    
+    """
 
     pypi = CheeseShop()
     rss = pypi.get_rss()
@@ -457,7 +611,18 @@ def get_rss_feed():
 
 
 def parse_pkg_ver(package_spec, installed):
-    """Return tuple with package_name and version from CLI args"""
+    """
+    Return tuple with package_name and version from CLI args
+
+    @param package_spec:
+    @type package_spec:
+    
+    @param installed: whether package is installed or not
+    @type installed: boolean
+
+    @returns: tuple(pkg_name, version) 
+    
+    """
 
     arg_str = ("").join(package_spec)
     if "==" not in arg_str:
@@ -476,17 +641,28 @@ def parse_pkg_ver(package_spec, installed):
         package_name = dists.case_sensitive_name(package_name)
     return (package_name, version)
 
-def print_pkg_versions(package_name, versions):
-    """Print list of versions available for a package"""
+def print_pkg_versions(pkg_name, versions):
+    """
+    Print list of versions available for a package
+
+    @param pkg_name: pkg_resources Distribution project name to query
+    @type pkg_name: string
+
+    @param version: pkg_resources Distribution version
+    @type version: string
+
+    @returns: None
+
+    """
 
     for ver in versions:
-        print "%s %s" % (package_name, ver)
+        print "%s %s" % (pkg_name, ver)
 
 def validate_pypi_opts(opt_parser):
     """
     Check for sane pkg_spec parse options
-    returns True if sane
-    returns False if insane
+
+    @returns: True if sane, False if insane
     
     """
 
@@ -507,7 +683,14 @@ Examples:
 
 
 def show_entry_map(dist):
-    """Show entry map for a distribution"""
+    """
+    Show entry map for a distribution
+    
+    @param dist: `Distribution`
+    @param type: pkg_resources Distribution object
+    
+    @returns: None or 2 if error
+    """
     pprinter = pprint.PrettyPrinter()
     try:
         pprinter.pprint(pkg_resources.get_entry_map(dist))
@@ -516,7 +699,15 @@ def show_entry_map(dist):
         return 2
 
 def show_entry_points(module):
-    """Show entry points for a module"""
+    """
+    Show entry points for a module
+    
+    @param module: module name
+    @type type: string
+
+    @returns: None or 2 if error
+    
+    """
     found = False
     for entry_point in pkg_resources.iter_entry_points(module):
         found = True
@@ -534,7 +725,12 @@ def show_entry_points(module):
         return 2
 
 def setup_opt_parser():
-    """Setup the optparser"""
+    """
+    Setup the optparser
+
+    @returns: opt_parser.OptionParser
+    
+    """
 
     usage = "usage: %prog [options]"
     opt_parser = optparse.OptionParser(usage=usage)
@@ -646,7 +842,11 @@ def setup_opt_parser():
 
 
 def main():
-    """Parse options and perform actions"""
+    """
+    Parse options and perform actions
+    
+    @returns: 2 if error for sys.exit
+    """
 
     opt_parser = setup_opt_parser()
     (options, remaining_args) = opt_parser.parse_args()
@@ -680,7 +880,11 @@ def main():
         package = version = None
 
     if options.search:
-        return pypi_search(options.search, remaining_args)
+        #Add remainging cli arguments to options.search
+        spec = remaining_args
+        search_arg = options.search
+        spec.insert(0, search_arg.strip())
+        return pypi_search(spec)
     elif options.version:
         print "Version %s" % __version__.VERSION
         return
