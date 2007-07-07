@@ -63,6 +63,10 @@ These options query PyPI::
 
 Changes
 -------
+**0.2.0**: Added 'svn' type for -T
+
+           A kablillion bug fixes
+
 **0.1.0**: You can now use -f with -M
 
            More accurate URL's with -D using setuptools
