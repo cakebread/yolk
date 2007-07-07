@@ -184,7 +184,7 @@ def show_distributions(show, project_name, version, options):
         else:
             print dist + " has no metadata"
         results = True
-    if not results:
+    if not results and project_name:
         if version:
             pkg_spec = "%s==%s" % (project_name, version)
         else:
