@@ -6,12 +6,6 @@ from setuptools import setup
 from yolk import __version__
 
 
-#ElementTree does not use setuptools in its setup.py. Because virtually every
-#distro except Windows has an elementree package available already in their
-#package system, we see if its installed and if so, don't add it to 
-#install_requires, avoiding double-installation because setuptools can't find
-#a version of it installed by distutils.
-
 
 setup(name="yolk",
     license = "GPL-2",
