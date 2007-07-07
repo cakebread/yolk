@@ -10,7 +10,7 @@ from yolk import __version__
 setup(name="yolk",
     license = "GPL-2",
     version=__version__.VERSION,
-    description="Library and command-line tool for listing packages installed by setuptools, their metadata and dependencies and PyPI querying.",
+    description="Command-line tool for listing packages installed by setuptools, their metadata and dependencies and PyPI querying.",
     long_description=open("README", "r").read(),
     maintainer="Rob Cakebread",
     author="Rob Cakebread",
