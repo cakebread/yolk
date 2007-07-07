@@ -115,6 +115,7 @@ Changes
 Requirements
 ------------
 
-setuptools
-elementtree (Optional, for fetching PyPI RSS feed)
+* setuptools
+
+* elementtree (For RSS feed option extra_requires [RSS])
 

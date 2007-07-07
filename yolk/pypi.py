@@ -28,15 +28,19 @@ import sys
 from yolk import __version__
 
 
+XMLRPC = True
 #Python >=2.5 has elementtree 
 if sys.version_info[0] == 2 and sys.version_info[1] == 5:
     from xml.etree.ElementTree import parse
 else:
     #For Python <=2.4
-    try:
-        from cElementTree import parse
-    except ImportError:
-        from elementtree.ElementTree import parse
+    try: 
+        from elementtree.ElementTree import parse 
+    except ImportError: 
+        #If there is absolutely no version of elementtree available 
+        #this disables reading RSS feed (-L option). 
+        XMLRPC = False
+
 
 PYPI_SERVER = xmlrpclib.Server('http://cheeseshop.python.org/pypi')
 PYPI_URL = 'http://www.python.org/pypi?:action=rss'
@@ -54,6 +58,9 @@ class CheeseShop:
 
     def get_rss(self):
         """Fetch last 20 package release items from PyPI RSS feed"""
+        if not XMLRPC:
+            print >> sys.stderr, "You need to install cElementTree to use -L"
+            sys.exit(2)
         rss = {}
         request = urllib2.Request(PYPI_URL)
         request.add_header('User-Agent', "yolk/%s (Python-urllib)" % VERSION)

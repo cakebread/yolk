@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-import sys
 
 from setuptools import setup
 
@@ -13,19 +12,6 @@ from yolk import __version__
 #install_requires, avoiding double-installation because setuptools can't find
 #a version of it installed by distutils.
 
-
-install_requires=["setuptools"]
-
-#Python >=2.5 has elementtree 
-if sys.version_info[0] == 2 and sys.version_info[1] == 5:
-    #cElementTree is in stdlib, safe to add to install_requires
-    install_requires.append("cElementTree")
-else:
-    #For Python <=2.4
-    try:
-        from elementtree.ElementTree import parse
-    except ImportError:
-        install_requires.append("cElementTree")
 
 setup(name="yolk",
     license = "GPL-2",
@@ -43,7 +29,8 @@ setup(name="yolk",
                  "Programming Language :: Python",
                  "Topic :: Software Development :: Libraries :: Python Modules",
                  ],
-    install_requires=install_requires,
+    install_requires=["setuptools"],
+    extras_require={'RSS': ["cElementTree"],},
     tests_require=["nose"],
     packages=['yolk', 'yolk.plugins'],
     package_dir={'yolk':'yolk'},
