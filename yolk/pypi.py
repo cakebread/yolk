@@ -25,7 +25,6 @@ import urllib2
 import os
 import sys
 
-from yolk import __version__
 
 
 XMLRPC = True
@@ -44,7 +43,6 @@ else:
 
 PYPI_SERVER = xmlrpclib.Server('http://cheeseshop.python.org/pypi')
 PYPI_URL = 'http://www.python.org/pypi?:action=rss'
-VERSION = __version__.VERSION
 
 
 class CheeseShop:

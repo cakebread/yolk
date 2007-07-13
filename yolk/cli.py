@@ -18,6 +18,7 @@ License : GNU General Public License Version 2 (See COPYING)
 """
 
 __docformat__ = 'restructuredtext'
+__revision__ = '$Revision$'[11:-1].strip()
 
 import pprint
 import os
@@ -34,6 +35,34 @@ from yolk.yolklib import get_highest_version, Distributions
 from yolk.pypi import CheeseShop
 from yolk.setuptools_support import get_download_uri
 from yolk.plugins import load_plugins
+from yolk.__init__ import __version__ as VERSION
+
+
+
+class StdOut:
+    """Filter stdout from specific modules"""
+    def __init__(self, stream, modulenames):
+        self.stdout = stream
+        self.modulenames = modulenames
+
+    def __getattr__(self, attribute):
+        if not self.__dict__.has_key(attribute) or attribute == '__doc__':
+            return getattr(self.stdout, attribute)
+        return self.__dict__[attribute]
+
+    def write(self, inline):
+        if sys._getframe(1).f_globals.get('__name__') in self.modulenames:
+            pass
+        else:
+            self.stdout.write(inline)
+
+    def writelines(self, inline):
+        for line in inlines:
+            self.write(line)
+
+#Squelch output from setuptools
+sys.stdout = StdOut(sys.stdout, ['distutils.log'])
+sys.stderr = StdOut(sys.stderr, ['distutils.log'])
 
 
 
@@ -887,7 +916,7 @@ def main():
         spec.insert(0, search_arg.strip())
         return pypi_search(spec)
     elif options.version:
-        print "Version %s" % __version__.VERSION
+        print "yolk version %s (rev. %s)" % (VERSION, __revision__)
         return
     elif options.depends:
         return show_deps(remaining_args)

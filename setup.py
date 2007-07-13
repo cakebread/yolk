@@ -3,18 +3,18 @@
 
 from setuptools import setup
 
-from yolk import __version__
+from yolk.__init__ import __version__ as VERSION
 
 
 
 setup(name="yolk",
     license = "GPL-2",
-    version=__version__.VERSION,
+    version=VERSION,
     description="Command-line tool for listing packages installed by setuptools, their metadata and dependencies and PyPI querying.",
     long_description=open("README", "r").read(),
     maintainer="Rob Cakebread",
     author="Rob Cakebread",
-    author_email="gentoodev a t gmail . com",
+    author_email="gentoodev@gmail.com",
     url="http://tools.assembla.com/yolk/",
     keywords="PyPI setuptools cheeseshop distutils eggs package management",
     classifiers=["Development Status :: 3 - Alpha",
