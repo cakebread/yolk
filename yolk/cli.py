@@ -28,6 +28,8 @@ import pkg_resources
 import webbrowser
 from distutils.sysconfig import get_python_lib
 import logging
+from urllib import urlretrieve
+from urlparse import urlparse
 
 from yolk import __version__
 from yolk.metadata import get_metadata
@@ -391,6 +393,84 @@ def show_download_links(pkg_name, version, file_type):
         print_download_uri(pkg_name, version, source)
         source = True
         print_download_uri(pkg_name, version, source)
+
+def fetch(pkg_name, version, directory, file_type="source"):
+    """
+    Download a package
+
+    @param pkg_name: pkg_resources Distribution project name to query
+    @type pkg_name: string
+
+    @param version: pkg_resources Distribution version
+    @type version: string
+
+    @param file_type: svn, source, binary, all (use any available)
+    @param file_type: string
+
+    @returns: None
+    
+    """
+    source = True
+
+    if file_type == "svn":
+        version = "dev"
+        print_download_uri(pkg_name, version, source)
+    elif file_type == "source":
+        uri = get_download_uri(pkg_name, version, source)[0]
+        if uri:
+            fetch_uri(pkg_name, version, directory, uri)
+        else:
+            LOGGER.error("No URI found for package: %s %s" % (pkg_name, version))
+            return 2
+
+    #elif file_type == "binary":
+    #    #source = False
+    #    #print_download_uri(pkg_name, version, source)
+    #    print "binary!"
+    #elif file_type == "all":
+    #    #Search for source, binary and svn
+    #    source = True
+    #    fetch_download_uri(pkg_name, version, source)
+    #    source = False
+    #    fetch_download_uri(pkg_name, version, source)
+    #    source = True
+    #    fetch_download_uri(pkg_name, version, source)
+
+def fetch_uri(pkg_name, version, directory, uri):
+    """
+    Use ``urllib.urlretrieve`` to download package to file in sandbox dir.
+    """
+    filename = os.path.basename(urlparse(uri).path)
+    if os.path.exists(filename):
+        LOGGER.error("ERROR: File exists: " + filename)
+        sys.exit(2)
+
+    try:
+        downloaded_filename, headers = urlretrieve(uri, filename)
+        print "Downloaded ./" + filename
+    except IOError, e:
+        LOGGER.error("Error downloading package %s from URL %s"  % (filename, uri))
+        LOGGER.error(str(e))
+        sys.exit(2)
+
+    if headers.gettype() in ["text/html"]:
+        f = open(downloaded_filename)
+        if re.search("404 Not Found", "".join(f.readlines())):
+            f.close()
+            LOGGER.error("Got '404 Not Found' error while trying to download package ... exiting")
+            sys.exit(2)
+        f.close()
+
+
+
+def fetch_svn(svn_uri, directory):
+    """
+    Fetch subversion repository
+    """
+    if directory == ".":
+        #Don't download source to current directory
+        directory = pkg_name
+        #XXX mkdir directory
 
 def print_download_uri(pkg_name, version, source):
     """
@@ -825,6 +905,11 @@ def setup_opt_parser():
                           default=False, help=
                           "Show download URL's for package listed on PyPI. (Use with PKG_SPEC)")
 
+    group_pypi.add_option("-F", "--fetch-package", action='store_true',
+                          metavar="PKG_SPEC", dest="fetch",
+                          default=False, help=
+                          "Download package source or egg. You can specify type with -T (Use with PKG_SPEC)")
+
     group_pypi.add_option("-H", "--browse-homepage", action='store_true',
                           metavar="PKG_SPEC", dest="browse_website",
                           default=False, help=
@@ -915,6 +1000,9 @@ def main():
         search_arg = options.search
         spec.insert(0, search_arg.strip())
         return pypi_search(spec)
+    elif options.fetch:
+        directory = "."
+        return fetch(package, version, directory, options.file_type)
     elif options.version:
         print "yolk version %s (rev. %s)" % (VERSION, __revision__)
         return
