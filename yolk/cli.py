@@ -410,31 +410,30 @@ def fetch(pkg_name, version, directory, file_type="source"):
     @returns: None
     
     """
-    source = True
 
     if file_type == "svn":
         version = "dev"
-        print_download_uri(pkg_name, version, source)
-    elif file_type == "source":
-        uri = get_download_uri(pkg_name, version, source)[0]
-        if uri:
-            fetch_uri(pkg_name, version, directory, uri)
+        source = True
+        svn_uri = get_download_uri(pkg_name, version, source)[0]
+        if svn_uri:
+            directory = pkg_name + "_svn"
+            fetch_svn(svn_uri, directory)
+            return
         else:
-            LOGGER.error("No URI found for package: %s %s" % (pkg_name, version))
-            return 2
+            LOGGER.error("ERROR: No subversion repository found for %s" % pkg_name)
+            sys.exit(2)
+    elif file_type == "source":
+        source = True
+    elif file_type == "binary":
+        source = False
 
-    #elif file_type == "binary":
-    #    #source = False
-    #    #print_download_uri(pkg_name, version, source)
-    #    print "binary!"
-    #elif file_type == "all":
-    #    #Search for source, binary and svn
-    #    source = True
-    #    fetch_download_uri(pkg_name, version, source)
-    #    source = False
-    #    fetch_download_uri(pkg_name, version, source)
-    #    source = True
-    #    fetch_download_uri(pkg_name, version, source)
+    uri = get_download_uri(pkg_name, version, source)[0]
+
+    if uri:
+        fetch_uri(pkg_name, version, directory, uri)
+    else:
+        LOGGER.error("No URI found for package: %s %s" % (pkg_name, version))
+        return 2
 
 def fetch_uri(pkg_name, version, directory, uri):
     """
@@ -462,15 +461,24 @@ def fetch_uri(pkg_name, version, directory, uri):
         f.close()
 
 
-
 def fetch_svn(svn_uri, directory):
     """
     Fetch subversion repository
+
     """
-    if directory == ".":
-        #Don't download source to current directory
-        directory = pkg_name
-        #XXX mkdir directory
+    if os.path.exists(directory):
+        LOGGER.error("ERROR: Checkout directory exists - %s" % directory)
+        sys.exit(2)
+    try:
+        os.mkdir(directory)
+    except OSError, e:
+        LOGGER.error("ERROR: " + str(e))
+        sys.exit(2)
+    cwd = os.path.realpath(os.curdir)
+    os.chdir(directory)
+    print "Doing subversion checkout for %s" % svn_uri
+    os.system("/usr/bin/svn co %s" % svn_uri)
+    os.chdir(cwd)
 
 def print_download_uri(pkg_name, version, source):
     """
