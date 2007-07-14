@@ -29,22 +29,8 @@ import time
 from yolk.__init__ import __version__ as VERSION
 
 
-XMLRPC = True
-#Python >=2.5 has elementtree 
-if sys.version_info[0] == 2 and sys.version_info[1] == 5:
-    from xml.etree.ElementTree import parse
-else:
-    #For Python <=2.4
-    try: 
-        from elementtree.ElementTree import parse 
-    except ImportError: 
-        #If there is absolutely no version of elementtree available 
-        #this disables reading RSS feed (-L option). 
-        XMLRPC = False
-
 
 PYPI_SERVER = xmlrpclib.Server('http://cheeseshop.python.org/pypi')
-PYPI_URL = 'http://www.python.org/pypi?:action=rss'
 
 
 class CheeseShop:
@@ -54,31 +40,6 @@ class CheeseShop:
     def __init__(self):
         """init"""
         self.yolk_dir = self.get_yolk_dir()
-
-    def get_rss(self):
-        """Fetch last 20 package release items from PyPI RSS feed"""
-        if not XMLRPC:
-            print >> sys.stderr, "You need to install cElementTree to use -L"
-            sys.exit(2)
-        rss = {}
-        request = urllib2.Request(PYPI_URL)
-        request.add_header('User-Agent', "yolk/%s (Python-urllib)" % VERSION)
-        root = parse(urllib2.urlopen(request)).getiterator()
-        #Remove Cheeseshop header
-        for i in range(5):
-            del root[i]
-        for element in root:
-            if element.tag == "title":
-                title = element.text
-            elif element.tag == "description":
-                if element.text:
-                    rss[title] = element.text
-                else:
-                    rss[title] = "No description."
-            elif element.tag == "pubDate":
-                if element.text:
-                    rss[title] = (rss[title], element.text)
-        return rss
 
     def query_versions_pypi(self, package_name, use_cached_pkglist=None):
         """Fetch list of available versions for a package from The CheeseShop"""
