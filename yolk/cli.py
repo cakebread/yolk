@@ -174,6 +174,10 @@ class Yolk(object):
             search_arg = self.options.search
             spec.insert(0, search_arg.strip())
             status = self.pypi_search(spec)
+        elif self.options.changelog:
+            status = self.show_pypi_changelog(self.options.changelog)
+        elif self.options.releases:
+            status = self.show_pypi_releases(self.options.releases)
         elif self.options.fetch:
             directory = "."
             status = self.fetch(directory)
@@ -435,6 +439,44 @@ class Yolk(object):
                     "No dependency information was supplied with the package.")
                 return 2
 
+    def show_pypi_changelog(self, hours):
+        """
+        Show detailed PyPI ChangeLog for the last `hours`
+        """
+        pypi = CheeseShop()
+        try:
+            changelog = pypi.changelog(int(hours))
+        except xmlrpclib.Fault, err_msg:
+            self.logger.error(err_msg)
+            self.logger.error("ERROR: Couldn't retrieve changelog.")
+            return 1
+
+        last_pkg = ''
+        for entry in changelog:
+            pkg = entry[0]
+            if pkg != last_pkg:
+                print "%s %s\n\t%s" % (entry[0], entry[1], entry[3])
+                last_pkg = pkg
+            else:
+                print "\t%s" % entry[3]
+         
+        return 0
+
+    def show_pypi_releases(self, hours):
+        """
+        Show PyPI releases for last the `hours`
+        """
+        pypi = CheeseShop()
+        try:
+            latest_releases = pypi.updated_releases(int(hours))
+        except xmlrpclib.Fault, err_msg:
+            self.logger.error(err_msg)
+            self.logger.error("ERROR: Couldn't retrieve latest releases.")
+            return 1
+
+        for release in latest_releases:
+            print "%s %s" % (release[0], release[1])
+        return 0
 
     def show_download_links(self):
         """
@@ -909,6 +951,11 @@ def setup_opt_parser():
             "PyPI (Cheese Shop) options",
             "The following options query the Python Package Index:")
 
+    group_pypi.add_option("-C", "--changelog", action='store',
+                          dest="changelog",
+                          default=False, help=
+                          "Show detailed ChangeLog for PyPI for last n hours. ")
+
     group_pypi.add_option("-D", "--download-links", action='store_true',
                           metavar="PKG_SPEC", dest="download_links",
                           default=False, help=
@@ -924,9 +971,10 @@ def setup_opt_parser():
                           default=False, help=
                           "Launch web browser at home page for package. (Use with PKG_SPEC)")
 
-    group_pypi.add_option("-L", "--latest", action='store_true', dest=
-                          "rss_feed", default=False, help=
-                          "Show last 20 releases on PyPI.")
+    group_pypi.add_option("-L", "--latest-releases", action='store',
+                          dest="releases",
+                          default=False, help=
+                          "Show PyPI releases for last n hours. ")
 
     group_pypi.add_option("-M", "--query-metadata", action='store_true',
                           dest="query_metadata_pypi", default=False,
@@ -993,6 +1041,7 @@ def print_pkg_versions(project_name, versions):
     """
     for ver in versions:
         print "%s %s" % (project_name, ver)
+
 
 def main():
     """

@@ -73,7 +73,8 @@ def get_download_uri(package_name, version, source):
             clean_url = url.value.split("#")[0]
             #If setuptools is asked for an egg and there isn't one, it will
             #return source if available, which we don't want.
-            if not clean_url.endswith(".egg") and not source:
+            if not source and not clean_url.endswith(".egg") and \
+                    not clean_url.endswith(".EGG"):
                 pass
             else:
                 output.append(clean_url)

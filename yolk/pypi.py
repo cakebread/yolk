@@ -24,6 +24,7 @@ import cPickle
 import urllib2
 import os
 import sys
+import time
 
 from yolk.__init__ import __version__ as VERSION
 
@@ -127,6 +128,14 @@ class CheeseShop:
     def search(self, spec, operator):
         '''Query PYPI via XMLRPC interface using search spec'''
         return PYPI_SERVER.search(spec, operator.lower())
+    
+    def changelog(self, hours):
+        '''Query PYPI via XMLRPC interface using search spec'''
+        return PYPI_SERVER.changelog(get_seconds(hours))
+
+    def updated_releases(self, hours):
+        '''Query PYPI via XMLRPC interface using search spec'''
+        return PYPI_SERVER.updated_releases(get_seconds(hours))
 
     def list_packages(self):
         """Query PYPI via XMLRPC interface for a a list of all package names"""
@@ -191,12 +200,11 @@ class CheeseShop:
         
 def filter_url(pkg_type, url):
     """Returns URL of specified file type, else None"""
-    #Remove Source Forge cruft
-    if "?modtime" in url:
-        url = url.split("?")[0]
-    #Remove MD5 checksum
-    if "#md5=" in url:
-        url = url.split("#")[0]
+    bad_stuff = ["?modtime", "#md5="]
+    for junk in bad_stuff:
+        if junk in url:
+            url = url.split(junk)[0]
+            break
 
     #pkg_spec==dev (svn)
     if url.endswith("-dev"):
@@ -212,6 +220,18 @@ def filter_url(pkg_type, url):
                 return url
 
     elif pkg_type == "egg":
-        if url.lower().endswith(".egg") or url.lower().endswith(".exe"):
+        if url.lower().endswith(".egg"):
             return url
+
+def get_seconds(hours):
+    """
+    Get number of seconds since epoc from now - hours
+
+    @param hours: Number of hours back in time we are checking
+    @type hours: int
+
+    Return integer for number of seconds for hours
+
+    """
+    return int(time.time() - (60 * 60) * hours)
 
