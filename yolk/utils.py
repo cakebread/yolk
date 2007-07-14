@@ -52,7 +52,7 @@ def command_successful(cmd):
     Returns True if command exited normally, False otherwise.
 
     """
-    rc, output = run_command(cmd)
-    return rc == 0
+    return_code, output = run_command(cmd)
+    return return_code == 0
 
 

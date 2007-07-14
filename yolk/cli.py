@@ -30,6 +30,7 @@ import optparse
 import pkg_resources
 import webbrowser
 import logging
+import xmlrpclib.Fault as XMLRPCFault
 from distutils.sysconfig import get_python_lib
 from urllib import urlretrieve
 from urlparse import urlparse
@@ -204,8 +205,6 @@ class Yolk(object):
             status = self.browse_website()
         elif self.options.download_links:
             status = self.show_download_links()
-        elif self.options.rss_feed:
-            status = get_rss_feed()
         elif self.options.show_updates:
             status = self.show_updates()
         elif self.options.query_metadata_pypi:
@@ -446,7 +445,7 @@ class Yolk(object):
         pypi = CheeseShop()
         try:
             changelog = pypi.changelog(int(hours))
-        except xmlrpclib.Fault, err_msg:
+        except XMLRPCFault, err_msg:
             self.logger.error(err_msg)
             self.logger.error("ERROR: Couldn't retrieve changelog.")
             return 1
@@ -469,7 +468,7 @@ class Yolk(object):
         pypi = CheeseShop()
         try:
             latest_releases = pypi.updated_releases(int(hours))
-        except xmlrpclib.Fault, err_msg:
+        except XMLRPCFault, err_msg:
             self.logger.error(err_msg)
             self.logger.error("ERROR: Couldn't retrieve latest releases.")
             return 1
@@ -622,7 +621,8 @@ class Yolk(object):
         """
         pypi = CheeseShop()
         if len(self.all_versions):
-            metadata = pypi.release_data(self.project_name, self.all_versions[0])
+            metadata = pypi.release_data(self.project_name, \
+                    self.all_versions[0])
             if metadata.has_key("home_page"):
                 print "Launching browser: %s" % metadata["home_page"]
                 if browser == 'konqueror':
@@ -647,13 +647,15 @@ class Yolk(object):
             metadata = pypi.release_data(self.project_name, self.version)
         else:
             #Give highest version
-            metadata = pypi.release_data(self.project_name, self.all_versions[0])
+            metadata = pypi.release_data(self.project_name, \
+                    self.all_versions[0])
 
         if metadata:
             for key in metadata.keys():
                 if not self.options.fields or (self.options.fields and \
                         self.options.fields==key):
                     print "%s: %s" % (key, metadata[key])
+        return 0
 
     def get_all_versions_pypi(self, my_version, use_cached_pkglist=False):
         """
@@ -678,11 +680,12 @@ class Yolk(object):
             print_pkg_versions(self.project_name, [my_version])
         elif not my_version and self.all_versions:
             print_pkg_versions(self.project_name, self.all_versions)
+        return 0
 
     def parse_search_spec(self, spec):
         """
         Parse search args and return spec dict for PyPI
-
+        * Owwww, my eyes!. Re-write this.
 
         @param spec: Cheese Shop package search spec
                      e.g.
@@ -880,7 +883,8 @@ class Yolk(object):
                     pypi.query_versions_pypi(project_name, False)
 
             if not len(all_versions):
-                self.logger.error("I'm afraid we have no %s at The Cheese Shop. \
+                self.logger.error("\
+                        I'm afraid we have no %s at The Cheese Shop. \
                         \nPerhaps a little red Leicester?" % project_name)
                 sys.exit(2)
         return (project_name, version, all_versions)
@@ -1011,26 +1015,6 @@ def setup_opt_parser():
             pass
 
     return opt_parser
-
-def get_rss_feed():
-    """
-    Show last 20 package updates from PyPI RSS feed
-    
-    @returns: 0
-    
-    """
-
-    pypi = CheeseShop()
-    rss = pypi.get_rss()
-    items = []
-    for pkg in rss.keys():
-        date = rss[pkg][1][:10]
-        #Show packages grouped by date released
-        if not date in items:
-            items.append(date)
-            print date
-        print "  %s - %s" % (pkg, rss[pkg][0])
-    return 0
 
 def print_pkg_versions(project_name, versions):
     """

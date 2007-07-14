@@ -18,7 +18,7 @@ Summary
 
 Yolk is a Python tool for obtaining information about packages installed by distutils, setuptools and easy_install and packages on PyPI (Python Package Index a.k.a. The Cheese Shop). 
 
-Yolk can list all the packages installed by setuptools on your system, show which packages are active, non-active or in development mode and show you which have newer versions available according to PyPI. 
+Yolk can list all the packages installed your system by >=Python2.5 or packages installed by setuptools if you have <=Python2.4. You can see which packages are active, non-active or in development mode and show you which have newer versions available according to PyPI. 
 
 Usage Examples::
 
@@ -46,14 +46,26 @@ These options query PyPI::
     $ yolk -U
          Finds all packages installed via setuptools then checks PyPI for newer releases. 
 
+    $ yolk -F Paste
+         Download source tarball for latest version of Paste to your current directory
+
+    $ yolk -F Paste -T svn
+         Do a subversion checkout for Paste to a directory named paste_svn in your current directory.
+
+    $ yolk -R 2
+         Show list of CheeseShop releases in the last two hours
+
+    $ yolk -C 2
+         Show detailed list of changes in the CheeseShop in the last two hours
+
     $ yolk -M Paste==1.0 
          Show all the metadata for Paste version 1.0 
 
     $ yolk -M Paste 
-         Show all the metadata for each version of Paste listed on PyPi
+         Show all the metadata for the latest version of Paste listed on PyPi
 
     $ yolk -D cheesecake 
-         Show all URL's for cheesecake packages you can download 
+         Show all (source, egg, svn) URL's for the latest version of cheesecake packages
 
      $ yolk -T source -D cheesecake 
          Show only source code releases for cheesecake 
@@ -63,9 +75,23 @@ These options query PyPI::
 
 Changes
 -------
+**0.3.0**: Added -F option.
+
+           Removed -L RSS feed option because the new `updated_releases` XML-RPC method is much nicer
+
+           Added -C and -L options for new PyPI XML-RPC methods `changelog` and `updated_releases`
+
+           Major refactoring.
+
+           Fixed '-D -T egg' so it won't return source if no egg is available
+
+           
+
+
 **0.2.0**: Added 'svn' type for -T
 
            A kablillion bug fixes
+
 
 **0.1.0**: You can now use -f with -M
 
@@ -76,6 +102,7 @@ Changes
            Uses std Python logging module
 
            Fixed bug so we have correct exit codes
+
 
 **0.0.7**: New options: --entry-map and -entry-points
            
@@ -89,6 +116,7 @@ Changes
            -v is now a new option: --verbose
 
            Many bug fixes.
+
 
 **0.0.6**: Fix Windows problem which showed all pkgs in develop mode
            on some systems.
@@ -108,6 +136,7 @@ Changes
            More sanity checking for various options.
 
            Don't throw exception if there is no package metadata
+
 
 **0.0.4**: Added -U option to query PyPI for new versions of packages you have 
            installed

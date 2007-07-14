@@ -21,13 +21,8 @@ __docformat__ = 'restructuredtext'
 
 import xmlrpclib
 import cPickle
-import urllib2
 import os
-import sys
 import time
-
-from yolk.__init__ import __version__ as VERSION
-
 
 
 PYPI_SERVER = xmlrpclib.Server('http://cheeseshop.python.org/pypi')
