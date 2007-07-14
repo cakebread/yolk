@@ -29,8 +29,8 @@ import sys
 import optparse
 import pkg_resources
 import webbrowser
-from distutils.sysconfig import get_python_lib
 import logging
+from distutils.sysconfig import get_python_lib
 from urllib import urlretrieve
 from urlparse import urlparse
 
@@ -39,14 +39,21 @@ from yolk.yolklib import get_highest_version, Distributions
 from yolk.pypi import CheeseShop
 from yolk.setuptools_support import get_download_uri, get_pkglist
 from yolk.plugins import load_plugins
+from yolk.utils import run_command, command_successful
 from yolk.__init__ import __version__ as VERSION
 
 
 
 class StdOut:
-    """Filter stdout from specific modules"""
+
+    """
+    Filter stdout or stderr from specific modules
+    So far this is just used for pkg_resources
+    """
+
     def __init__(self, stream, modulenames):
         self.stdout = stream
+        #Modules to squelch
         self.modulenames = modulenames
 
     def __getattr__(self, attribute):
@@ -56,11 +63,12 @@ class StdOut:
 
     def write(self, inline):
         """
-        Write a line to stdout. Or not.
+        Write a line to stdout if it isn't in a blacklist
         
+        Try to get the name of the calling module to see if we want
+        to filter it. If there is no calling module, use current
+        frame in case there's a traceback before there is any calling module
         """
-        #Try to get the name of the calling module to see if we want
-        #to filter it.
         frame = inspect.currentframe().f_back
         if frame:
             mod = frame.f_globals.get('__name__') 
@@ -86,8 +94,8 @@ class Yolk(object):
         self.project_name = ""
         #PyPI project version 
         self.version = ""
-        #Package name as given by user - Case may be wrong
-        self.given_project_name = ""
+        #List of all versions not hidden on PyPI
+        self.all_versions = []
         self.options = None
         self.logger = logging.getLogger("yolk")
         self.logger.setLevel(logging.DEBUG)
@@ -100,6 +108,28 @@ class Yolk(object):
         sys.stdout = StdOut(sys.stdout, shut_up)
         sys.stderr = StdOut(sys.stderr, shut_up)
 
+    def get_plugin(self, method):
+        """
+        Return plugin object if CLI option is activated and method exists
+
+        @param method: name of plugin's method we're calling
+        @type method: string
+
+        @returns: list of plugins with `method`
+
+        """
+        all_plugins = []
+        for entry_point in pkg_resources.iter_entry_points('yolk.plugins'):
+            plugin_obj = entry_point.load()
+            plugin = plugin_obj()
+            plugin.configure(self.options, None)
+            if plugin.enabled:
+                if not hasattr(plugin, method):
+                    self.logger.warn("Error: plugin has no method: %s" % method)
+                    plugin = None
+                else:
+                    all_plugins.append(plugin)
+        return all_plugins
 
     def run(self):
         """
@@ -132,13 +162,11 @@ class Yolk(object):
         else:
             want_installed = False
         if remaining_args:
-            (self.project_name, self.version) = \
-                    parse_pkg_ver(remaining_args, want_installed)
+            (self.project_name, self.version, self.all_versions) = \
+                    self.parse_pkg_ver(remaining_args, want_installed)
             if want_installed and not self.project_name:
                 print >> sys.stderr, "%s is not installed." % remaining_args[0]
                 return 2
-        else:
-            self.project_name = self.version = None
 
         if self.options.search:
             #Add remainging cli arguments to options.search
@@ -224,39 +252,16 @@ class Yolk(object):
         return 0
 
 
-    def get_plugin(self, method):
-        """
-        Return plugin object if CLI option is activated and method exists
-
-        @param method: name of plugin's method we're calling
-        @type method: string
-
-        @returns: list of plugins with `method`
-
-        """
-        all_plugins = []
-        for entry_point in pkg_resources.iter_entry_points('yolk.plugins'):
-            plugin_obj = entry_point.load()
-            plugin = plugin_obj()
-            plugin.configure(self.options, None)
-            if plugin.enabled:
-                if not hasattr(plugin, method):
-                    self.logger.warn("Error: plugin has no method: %s" % method)
-                    plugin = None
-                else:
-                    all_plugins.append(plugin)
-        return all_plugins
-
     def show_distributions(self, show):
         """
         Show list of installed activated OR non-activated packages
+
         @param show: type of pkgs to show (all, active or nonactive)
         @type show: string
 
         @returns: None or 2 if error 
         """
         show_metadata = self.options.metadata
-        fields = self.options.fields
 
         #Search for any plugins with active CLI options with add_column() method
         plugins = self.get_plugin("add_column")
@@ -307,7 +312,7 @@ class Yolk(object):
                         % \
                         (show, pkg_spec))
             return 2
-        elif show == "all" and results and fields:
+        elif show == "all" and results and self.options.fields:
             print "Versions with '*' are non-active."
             print "Versions with '!' are deployed in development mode."
 
@@ -381,8 +386,6 @@ class Yolk(object):
                 if field != 'Name' and field != 'Summary':
                     print '    %s: %s' % (field, metadata[field])
 
-
-
     def show_deps(self, pkg_ver):
         """
         Show dependencies for package(s)
@@ -440,25 +443,46 @@ class Yolk(object):
         @returns: None
         
         """
-        source = True
+        #In case they specify version as 'dev' instead of using -T svn,
+        #don't show three svn URI's
+        if self.options.file_type == "all" and self.version == "dev":
+            self.options.file_type = "svn"
 
         if self.options.file_type == "svn":
             version = "dev"
-            self.print_download_uri(source)
-        elif self.options.file_type == "source":
-            self.print_download_uri(source)
-        elif self.options.file_type == "binary":
-            source = False
-            self.print_download_uri(source)
-        elif self.options.file_type == "all":
-            #Search for source, binary and svn
-            source = True
-            self.print_download_uri(source)
-            source = False
-            self.print_download_uri(source)
-            source = True
-            self.print_download_uri(source)
+        else:
+            if self.version:
+                version = self.version
+            else:
+                #version = get_highest_version(self.all_versions)
+                version = self.all_versions[0]
+        if self.options.file_type == "all":
+            #Search for source, egg, and svn
+            self.print_download_uri(version, True)
+            self.print_download_uri(version, False)
+            self.print_download_uri("dev", False, True)
+        else:
+            if self.options.file_type == "source":
+                source = True
+            else:
+                source = False
+            self.print_download_uri(version, source)
         return 0
+
+    def print_download_uri(self, version, source, svn=False):
+        """
+        @param source: download source or egg
+        @type source: boolean
+
+        @returns: None
+
+        """
+
+        url = None
+        #Use setuptools monkey-patch to grab url
+        for url in get_download_uri(self.project_name, version, source):
+            if url:
+                print "%s" % url
 
     def fetch(self, directory):
         """
@@ -485,7 +509,7 @@ class Yolk(object):
                 sys.exit(2)
         elif self.options.file_type == "source":
             source = True
-        elif self.options.file_type == "binary":
+        elif self.options.file_type == "egg":
             source = False
 
         uri = get_download_uri(self.project_name, self.version, source)[0]
@@ -529,6 +553,9 @@ class Yolk(object):
         Fetch subversion repository
 
         """
+        if not command_successful("svn --version"):
+            self.logger.error("ERROR: Do you have subversion installed?")
+            sys.exit(2)
         if os.path.exists(directory):
             self.logger.error("ERROR: Checkout directory exists - %s" \
                     % directory)
@@ -541,22 +568,9 @@ class Yolk(object):
         cwd = os.path.realpath(os.curdir)
         os.chdir(directory)
         print "Doing subversion checkout for %s" % svn_uri
-        os.system("/usr/bin/svn co %s" % svn_uri)
+        status, output = run_command("/usr/bin/svn co %s" % svn_uri)
+        print output
         os.chdir(cwd)
-
-    def print_download_uri(self, source):
-        """
-        @param source: download source or binary
-        @type source: boolean
-
-        @returns: None
-
-        """
-        url = None
-        #Use setuptools monkey-patch to grab url
-        for url in get_download_uri(self.project_name, self.version, source):
-            if url:
-                print "%s" % url
 
     def browse_website(self, browser=None):
         """
@@ -564,14 +578,9 @@ class Yolk(object):
 
         @returns None
         """
-
         pypi = CheeseShop()
-        #Get verified name from pypi.
-
-        (pypi_project_name, versions) = \
-                pypi.query_versions_pypi(self.project_name)
-        if len(versions):
-            metadata = pypi.release_data(pypi_project_name, versions[0])
+        if len(self.all_versions):
+            metadata = pypi.release_data(self.project_name, self.all_versions[0])
             if metadata.has_key("home_page"):
                 print "Launching browser: %s" % metadata["home_page"]
                 if browser == 'konqueror':
@@ -584,35 +593,25 @@ class Yolk(object):
         print "No homepage URL found."
 
 
-    def show_pkg_metadata_pypi(self, fields):
+    def show_pkg_metadata_pypi(self):
         """
         Show pkg metadata queried from PyPI
 
-        @param fields: particular fields to show or "" for all
-        @type fields: string
-        
         @returns: None or 2 if error 
         
         """
         pypi = CheeseShop()
-        (pypi_project_name, versions) = \
-                pypi.query_versions_pypi(self.project_name, False)
-        if self.version and self.version in versions:
-            metadata = pypi.release_data(pypi_project_name, self.version)
+        if self.version and self.version in self.all_versions:
+            metadata = pypi.release_data(self.project_name, self.version)
         else:
             #Give highest version
-            metadata = pypi.release_data(pypi_project_name, versions[0])
+            metadata = pypi.release_data(self.project_name, self.all_versions[0])
 
         if metadata:
             for key in metadata.keys():
-                if not fields or (fields and fields==key):
+                if not self.options.fields or (self.options.fields and \
+                        self.options.fields==key):
                     print "%s: %s" % (key, metadata[key])
-        else:
-            self.logger.error(\
-                    "I'm afraid we have no %s at The Cheese Shop. \
-                    \nPerhaps a little red Leicester?" % self.project_name)
-            return 2
-
 
     def get_all_versions_pypi(self, my_version, use_cached_pkglist=False):
         """
@@ -627,28 +626,16 @@ class Yolk(object):
 
         @returns: None or 2 if false
         """
-        pypi = CheeseShop()
-        (pypi_project_name, versions) = \
-                pypi.query_versions_pypi(self.project_name, use_cached_pkglist)
 
-        #pypi_project_name may != self.project_name
-        #it returns the name with correct case
-        #i.e. You give beautifulsoup but PyPI knows it as BeautifulSoup
         if my_version:
             spec = "%s==%s" % (self.project_name, my_version)
         else:
             spec = self.project_name
 
-        if versions and my_version in versions:
-            print_pkg_versions(pypi_project_name, [my_version])
-        elif not my_version and versions:
-            print_pkg_versions(pypi_project_name, versions)
-        else:
-            self.logger.error(\
-                    "I'm afraid we have no %s at The Cheese Shop. \
-                    \nPerhaps a little red Leicester?" % spec)
-            return 2
-
+        if self.all_versions and my_version in self.all_versions:
+            print_pkg_versions(self.project_name, [my_version])
+        elif not my_version and self.all_versions:
+            print_pkg_versions(self.project_name, self.all_versions)
 
     def parse_search_spec(self, spec):
         """
@@ -815,6 +802,47 @@ class Yolk(object):
             self.logger.error("No entry points found for %s" % module)
             return 2
 
+    def parse_pkg_ver(self, package_spec, want_installed):
+        """
+        Return tuple with project_name and version from CLI args
+
+        @param package_spec:
+        @type package_spec:
+        
+        @param want_installed: whether package we want is installed or not
+        @type want_installed: boolean
+
+        @returns: tuple(project_name, version) 
+        
+        """
+        all_versions = []
+
+        arg_str = ("").join(package_spec)
+        if "==" not in arg_str:
+
+            #No version specified
+
+            project_name = arg_str
+            version = None
+        else:
+            (project_name, version) = arg_str.split("==")
+            project_name = project_name.strip()
+            version = version.strip()
+        #Find proper case for package name
+        if want_installed:
+            dists = Distributions()
+            project_name = dists.case_sensitive_name(project_name)
+        else:
+            pypi = CheeseShop()
+            (project_name, all_versions) = \
+                    pypi.query_versions_pypi(project_name, False)
+
+            if not len(all_versions):
+                self.logger.error("I'm afraid we have no %s at The Cheese Shop. \
+                        \nPerhaps a little red Leicester?" % project_name)
+                sys.exit(2)
+        return (project_name, version, all_versions)
+
 def setup_opt_parser():
     """
     Setup the optparser
@@ -911,8 +939,8 @@ def setup_opt_parser():
                           metavar='SEARCH_SPEC <AND/OR SEARCH_SPEC>')
 
     group_pypi.add_option("-T", "--file-type", action="store", dest=
-                          "file_type", default="source", help=
-                          "You may specify 'source', 'binary', 'svn' or 'all' when using -D.")
+                          "file_type", default="all", help=
+                          "You may specify 'source', 'egg', 'svn' or 'all' when using -D.")
 
     group_pypi.add_option("-U", "--show-updates", action='store_true',
                           dest="show_updates", default=False, help=
@@ -955,37 +983,6 @@ def get_rss_feed():
             print date
         print "  %s - %s" % (pkg, rss[pkg][0])
     return 0
-
-def parse_pkg_ver(package_spec, installed):
-    """
-    Return tuple with project_name and version from CLI args
-
-    @param package_spec:
-    @type package_spec:
-    
-    @param installed: whether package is installed or not
-    @type installed: boolean
-
-    @returns: tuple(project_name, version) 
-    
-    """
-
-    arg_str = ("").join(package_spec)
-    if "==" not in arg_str:
-
-        #No version specified
-
-        project_name = arg_str
-        version = None
-    else:
-        (project_name, version) = arg_str.split("==")
-        project_name = project_name.strip()
-        version = version.strip()
-    if installed:
-        #Find proper case for package name
-        dists = Distributions()
-        project_name = dists.case_sensitive_name(project_name)
-    return (project_name, version)
 
 def print_pkg_versions(project_name, versions):
     """

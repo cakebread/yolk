@@ -170,7 +170,7 @@ class CheeseShop:
             for urls in self.release_urls(package_name, ver):
                 if pkg_type == "source" and urls['packagetype'] == "sdist":
                     all_urls.append(urls['url'])
-                elif pkg_type == "binary" and \
+                elif pkg_type == "egg" and \
                         urls['packagetype'].startswith("bdist"):
                     all_urls.append(urls['url'])
                 elif pkg_type == "all":
@@ -211,7 +211,7 @@ def filter_url(pkg_type, url):
             if url.lower().endswith(extension):
                 return url
 
-    elif pkg_type == "binary":
+    elif pkg_type == "egg":
         if url.lower().endswith(".egg") or url.lower().endswith(".exe"):
             return url
 

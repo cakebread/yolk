@@ -1,27 +1,58 @@
 
 
-class StdoutSquelch(object):
+"""
+
+utils.py
+===========
+
+Misc funcitions
+---------------
+
+"""
+
+__docformat__ = 'restructuredtext'
+
+import os
+import signal
+import time
+from subprocess import Popen, STDOUT
+
+
+
+
+def run_command(cmd, env=None, max_timeout=None):
     """
-    Redirect stdout to /dev/null
-
-    >>> old_stdout = sys.stdout
-    >>> tmp_stdout = StdoutSquelch()
-    #Do stuff where you want no stdout
-    >>> sys.stdout = old_stdout 
-
+    Run command and return its return status code and its output
 
     """
+    arglist = cmd.split()
 
-    def __init__(self, filename=None):
-        pass
+    output = os.tmpfile()
+    try:
+        pipe = Popen(arglist, stdout=output, stderr=STDOUT, env=env)
+    except Exception, errmsg:
+        return 1, errmsg
 
-    def write(self, buf):
-        """bypass stdlib"""
-        pass
+    # Wait only max_timeout seconds.
+    if max_timeout:
+        start = time.time()
+        while pipe.poll() is None:
+            time.sleep(0.1)
+            if time.time() - start > max_timeout:
+                os.kill(pipe.pid, signal.SIGINT)
+                pipe.wait()
+                return 1, "Time exceeded"
 
-    def flush(self):
-        """bypass stdlib"""
-        pass
+    pipe.wait()
+    output.seek(0)
+    return pipe.returncode, output.read()
 
+def command_successful(cmd):
+    """
+    Returns True if command exited normally, False otherwise.
+
+    """
+    rc, output = run_command(cmd)
+    return rc == 0
 
 

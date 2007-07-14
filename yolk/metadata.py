@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # pylint: disable-msg=W0212
 # W0212 Access to a protected member _headers of a client class
 
