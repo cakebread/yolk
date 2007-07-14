@@ -12,9 +12,10 @@ License  : GNU General Public License Version 2
 """
 
 
+from yolk.yolklib import Distributions
+
 from setuptools.package_index import PackageIndex
 import pkg_resources
-
 
 
 __docformat__ = 'restructuredtext'
@@ -70,3 +71,22 @@ def get_download_uri(package_name, version, source):
             #Remove #egg=pkg-dev
             output.append(url.value.split("#")[0])
     return output
+
+def get_pkglist():
+    """
+    Return list of all installed packages
+
+    Note: It returns one project name per pkg no matter how many versions
+    of a particular package is installed
+     
+    @returns: list of project name strings for every installed pkg
+    
+    """
+
+    dists = Distributions()
+    projects = []
+    for (dist, active) in dists.get_distributions("all"):
+        if dist.project_name not in projects:
+            projects.append(dist.project_name)
+    return projects
+

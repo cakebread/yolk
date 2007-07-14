@@ -11,7 +11,7 @@ Desc: Library for getting information about Python packages by querying
       The CheeseShop (PYPI a.k.a. Python Package Index).
 
 
-Author: Rob Cakebread <gentoodev a t gmail.com>
+Author: Rob Cakebread <gentoodev@gmail.com>
 
 License  : GNU General Public License Version 2
 
@@ -25,6 +25,7 @@ import urllib2
 import os
 import sys
 
+from yolk.__init__ import __version__ as VERSION
 
 
 XMLRPC = True
@@ -51,7 +52,6 @@ class CheeseShop:
 
     def __init__(self):
         """init"""
-
         self.yolk_dir = self.get_yolk_dir()
 
     def get_rss(self):
