@@ -460,7 +460,7 @@ class Yolk(object):
             #Search for source, egg, and svn
             self.print_download_uri(version, True)
             self.print_download_uri(version, False)
-            self.print_download_uri("dev", False, True)
+            self.print_download_uri("dev", True, True)
         else:
             if self.options.file_type == "source":
                 source = True

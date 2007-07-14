@@ -52,6 +52,7 @@ def get_download_uri(package_name, version, source):
     
     @returns: list of URI strings 
     """
+    #print package_name, version, source
     tmpdir = None
     force_scan = True
     develop_ok = False
@@ -69,7 +70,13 @@ def get_download_uri(package_name, version, source):
     except DownloadURI, url:
         if url.value not in output:
             #Remove #egg=pkg-dev
-            output.append(url.value.split("#")[0])
+            clean_url = url.value.split("#")[0]
+            #If setuptools is asked for an egg and there isn't one, it will
+            #return source if available, which we don't want.
+            if not clean_url.endswith(".egg") and not source:
+                pass
+            else:
+                output.append(clean_url)
     return output
 
 def get_pkglist():
