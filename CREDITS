@@ -1,14 +1,15 @@
 
 
-Original author:
-    Rob Cakebread <gentoodev a t gmail . com>
+Author:
+    Rob Cakebread <gentoodev@gmail.com>
 
 
 Credit due:
 
-The plugin code for yolk is heavily based on code by Jason Pellerin
-<jpellerin+nose a t gmail d o t com> from nose which is released
-under the terms of the GNU Library or Lesser General Public License (LGPL)
+The plugin code for yolk is heavily based on code by Jason Pellerin <jpellerin+nose a t gmail d o t com> from nose which is released under the terms of the GNU Library or Lesser General Public License (LGPL)
 See: http://somethingaboutorange.com/mrl/projects/nose/
 
+A couple functions in utils.py are heavily inspired by a couple functions from Cheesecake by Grig Gheorghiu Email: <grig at gheorghiu dot net>
 
+The StdOut class was modified to use ideas from Michael Foord's <fuzzyman@gmail.com> blog post
+about StdOut which I need a URL for next time I update this.
