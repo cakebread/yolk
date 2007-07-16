@@ -8,6 +8,7 @@ utils.py
 Misc funcitions
 ---------------
 
+run_command borrowed from Cheesecake - See CREDITS. 
 """
 
 __docformat__ = 'restructuredtext'
@@ -18,6 +19,12 @@ import time
 from subprocess import Popen, STDOUT
 
 
+
+def get_yolk_dir():
+    """
+    Return location we store config files and data
+    """
+    return os.path.abspath("%s/.yolk" % os.path.expanduser("~"))
 
 
 def run_command(cmd, env=None, max_timeout=None):

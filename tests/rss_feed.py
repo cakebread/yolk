@@ -59,7 +59,7 @@ def test_api(pypi_xml):
         if elem.tag == "title":
             if not elem.text.startswith('Cheese Shop recent updates'):
                 pkg_name, ver = get_pkg_ver(elem.text, False)
-                (pypi_pkg_name, versions) = PyPI.query_versions_pypi(pkg_name, True)
+                (pypi_pkg_name, versions) = PyPI.query_versions_pypi(pkg_name)
                 try:
                     assert versions[0] == ver
                     print "Testing %s... passed" % elem.text

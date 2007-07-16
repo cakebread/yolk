@@ -50,7 +50,7 @@ def get_download_uri(package_name, version, source):
     """
     Use setuptools to search for a package's URI
     
-    @returns: list of URI strings 
+    @returns: URI string
     """
     #print package_name, version, source
     tmpdir = None
@@ -63,22 +63,19 @@ def get_download_uri(package_name, version, source):
         pkg_spec = package_name
     req = pkg_resources.Requirement.parse(pkg_spec)
     pkg_index = MyPackageIndex()
-    output = []
     try:
         pkg_index.fetch_distribution(req, tmpdir, force_scan, source, 
                 develop_ok)
     except DownloadURI, url:
-        if url.value not in output:
-            #Remove #egg=pkg-dev
-            clean_url = url.value.split("#")[0]
-            #If setuptools is asked for an egg and there isn't one, it will
-            #return source if available, which we don't want.
-            if not source and not clean_url.endswith(".egg") and \
-                    not clean_url.endswith(".EGG"):
-                pass
-            else:
-                output.append(clean_url)
-    return output
+        #Remove #egg=pkg-dev
+        clean_url = url.value.split("#")[0]
+        #If setuptools is asked for an egg and there isn't one, it will
+        #return source if available, which we don't want.
+        if not source and not clean_url.endswith(".egg") and \
+                not clean_url.endswith(".EGG"):
+            return
+        else:
+            return clean_url
 
 def get_pkglist():
     """

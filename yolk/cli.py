@@ -30,7 +30,7 @@ import optparse
 import pkg_resources
 import webbrowser
 import logging
-import xmlrpclib.Fault as XMLRPCFault
+from xmlrpclib import Fault as XMLRPCFault
 from distutils.sysconfig import get_python_lib
 from urllib import urlretrieve
 from urlparse import urlparse
@@ -99,15 +99,13 @@ class Yolk(object):
         self.all_versions = []
         self.options = None
         self.logger = logging.getLogger("yolk")
-        self.logger.setLevel(logging.DEBUG)
-        self.logger.addHandler(logging.StreamHandler())
-        self.logger.setLevel(logging.DEBUG)
 
         #Squelch output from setuptools
         #Add future offenders to this list.
         shut_up = ['distutils.log']
         sys.stdout = StdOut(sys.stdout, shut_up)
         sys.stderr = StdOut(sys.stderr, shut_up)
+        self.pypi = None
 
     def get_plugin(self, method):
         """
@@ -132,6 +130,22 @@ class Yolk(object):
                     all_plugins.append(plugin)
         return all_plugins
 
+    def set_log_level(self):
+        """
+        Set log level according to command-line options
+
+        @returns: logger object
+        """
+
+        if self.options.debug:
+            self.logger.setLevel(logging.DEBUG)
+        elif self.options.quiet:
+            self.logger.setLevel(logging.ERROR)
+        else:
+            self.logger.setLevel(logging.INFO)
+        self.logger.addHandler(logging.StreamHandler())
+        return self.logger
+
     def run(self):
         """
         Perform actions based on CLI options
@@ -140,9 +154,11 @@ class Yolk(object):
         """
         opt_parser = setup_opt_parser()
         (self.options, remaining_args) = opt_parser.parse_args()
+        logger = self.set_log_level()
 
-        if not self.validate_pypi_opts(opt_parser):
-            return 2
+        pkg_spec = validate_pypi_opts(opt_parser)
+        if not pkg_spec:
+            pkg_spec = remaining_args
         if not self.options.search and (len(sys.argv) == 1 or\
                 len(remaining_args) > 2):
             opt_parser.print_help()
@@ -156,25 +172,24 @@ class Yolk(object):
         #Options that depend on querying installed packages, not PyPI.
         #We find the proper case for package names if they are installed,
         #otherwise PyPI returns the correct case.
-        if self.options.depends or self.options.all or self.options.active \
-                or self.options.nonactive  or \
-                (self.options.show_updates and remaining_args):
+        if self.options.depends or self.options.all or \
+                self.options.active or self.options.nonactive  or \
+                (self.options.show_updates and pkg_spec):
             want_installed = True
         else:
             want_installed = False
-        if remaining_args:
+        if not want_installed or self.options.show_updates:
+            self.pypi = CheeseShop(self.options.debug)
+            #XXX: We should return 2 here if we couldn't create xmlrpc server
+        if pkg_spec:
             (self.project_name, self.version, self.all_versions) = \
-                    self.parse_pkg_ver(remaining_args, want_installed)
+                    self.parse_pkg_ver(pkg_spec, want_installed)
             if want_installed and not self.project_name:
-                print >> sys.stderr, "%s is not installed." % remaining_args[0]
+                logger.error("%s is not installed." % pkg_spec[0])
                 return 2
 
         if self.options.search:
-            #Add remainging cli arguments to options.search
-            spec = remaining_args
-            search_arg = self.options.search
-            spec.insert(0, search_arg.strip())
-            status = self.pypi_search(spec)
+            status = self.pypi_search(pkg_spec)
         elif self.options.changelog:
             status = self.show_pypi_changelog(self.options.changelog)
         elif self.options.releases:
@@ -186,7 +201,7 @@ class Yolk(object):
             print "yolk version %s (rev. %s)" % (VERSION, __revision__)
             status = 0
         elif self.options.depends:
-            status = self.show_deps(remaining_args)
+            status = self.show_deps()
         elif self.options.all:
             if self.options.active or self.options.nonactive:
                 opt_parser.error("Choose either -l, -n or -a")
@@ -200,7 +215,7 @@ class Yolk(object):
                 opt_parser.error("Choose either -l, -n or -a")
             status = self.show_distributions("nonactive")
         elif self.options.versions_available:
-            status = self.get_all_versions_pypi(False)
+            status = self.get_all_versions_pypi()
         elif self.options.browse_website:
             status = self.browse_website()
         elif self.options.download_links:
@@ -223,7 +238,6 @@ class Yolk(object):
 
         @returns: None
         """
-        pypi = CheeseShop()
         dists = Distributions()
         if self.project_name:
             #Check for a single package
@@ -231,12 +245,12 @@ class Yolk(object):
         else:
             #Check for every installed package
             pkg_list = get_pkglist()
-
+        found = None
         for pkg in pkg_list:
             for (dist, active) in dists.get_distributions("all", pkg,
                     dists.get_highest_installed(pkg)):
                 (project_name, versions) = \
-                        pypi.query_versions_pypi(dist.project_name, True)
+                        self.pypi.query_versions_pypi(dist.project_name)
                 if versions:
 
                     #PyPI returns them in chronological order,
@@ -250,8 +264,11 @@ class Yolk(object):
 
                         if pkg_resources.parse_version(dist.version) < \
                             pkg_resources.parse_version(newest):
+                            found = True
                             print " %s %s (%s)" % (project_name, dist.version,
                                     newest)
+        if not found:
+            self.logger.info("You have the latest version.")
         return 0
 
 
@@ -389,7 +406,7 @@ class Yolk(object):
                 if field != 'Name' and field != 'Summary':
                     print '    %s: %s' % (field, metadata[field])
 
-    def show_deps(self, pkg_ver):
+    def show_deps(self):
         """
         Show dependencies for package(s)
 
@@ -399,52 +416,38 @@ class Yolk(object):
         @returns: None or 2 if error 
         """
 
-        if not pkg_ver:
-            msg = \
-                '''I need at least a package name.
-    You can also specify a package name and version:
-      yolk -d kid==0.8'''
-            self.logger.error(msg)
-            return 2
-
-        try:
-            (project_name, ver) = pkg_ver[0].split('=')
-        except ValueError:
-            project_name = pkg_ver[0]
-            ver = None
-
         pkgs = pkg_resources.Environment()
 
-        if not len(pkgs[project_name]):
-            self.logger.error("Can't find package for %s" % self.project_name)
-            return 2
-
-        for pkg in pkgs[project_name]:
-            if not ver:
+        for pkg in pkgs[self.project_name]:
+            if not self.version:
                 print pkg.project_name, pkg.version
-
-            #XXX accessing protected member. Find better way.
 
             i = len(pkg._dep_map.values()[0])
             if i:
                 while i:
-                    if not ver or ver and pkg.version == ver:
-                        if ver and i == len(pkg._dep_map.values()[0]):
+                    if not self.version or self.version and \
+                            pkg.version == self.version:
+                        if self.version and i == len(pkg._dep_map.values()[0]):
                             print pkg.project_name, pkg.version
                         print "  " + str(pkg._dep_map.values()[0][i - 1])
                     i -= 1
             else:
-                self.logger.error(\
+                self.logger.info(\
                     "No dependency information was supplied with the package.")
-                return 2
+        return 0
 
     def show_pypi_changelog(self, hours):
         """
         Show detailed PyPI ChangeLog for the last `hours`
+
+        @param hours: Number of `hours` to check back
+        @type hours: string
+
+        @returns: 1 if failed to retrieve from XML-RPC server
+
         """
-        pypi = CheeseShop()
         try:
-            changelog = pypi.changelog(int(hours))
+            changelog = self.pypi.changelog(int(hours))
         except XMLRPCFault, err_msg:
             self.logger.error(err_msg)
             self.logger.error("ERROR: Couldn't retrieve changelog.")
@@ -464,10 +467,15 @@ class Yolk(object):
     def show_pypi_releases(self, hours):
         """
         Show PyPI releases for last the `hours`
+
+        @param hours: Number of `hours` to check back
+        @type hours: string
+
+        @returns: 1 if failed to retrieve from XML-RPC server
+
         """
-        pypi = CheeseShop()
         try:
-            latest_releases = pypi.updated_releases(int(hours))
+            latest_releases = self.pypi.updated_releases(int(hours))
         except XMLRPCFault, err_msg:
             self.logger.error(err_msg)
             self.logger.error("ERROR: Couldn't retrieve latest releases.")
@@ -495,7 +503,6 @@ class Yolk(object):
             if self.version:
                 version = self.version
             else:
-                #version = get_highest_version(self.all_versions)
                 version = self.all_versions[0]
         if self.options.file_type == "all":
             #Search for source, egg, and svn
@@ -518,12 +525,20 @@ class Yolk(object):
         @returns: None
 
         """
+        if svn or version == "dev":
+            pkg_type = "subversion"
+            source = True
+        elif source:
+            pkg_type = "source"
+        else:
+            pkg_type = "egg"
 
-        url = None
         #Use setuptools monkey-patch to grab url
-        for url in get_download_uri(self.project_name, version, source):
-            if url:
-                print "%s" % url
+        url = get_download_uri(self.project_name, version, source)
+        if url:
+            print "%s" % url
+        else:
+            self.logger.info("No download URL found for %s" % pkg_type)
 
     def fetch(self, directory):
         """
@@ -538,7 +553,7 @@ class Yolk(object):
         if self.options.file_type == "svn":
             version = "dev"
             svn_uri = get_download_uri(self.project_name, \
-                    self.version, source)[0]
+                    "dev", True)
             if svn_uri:
                 directory = self.project_name + "_svn"
                 self.fetch_svn(svn_uri, directory)
@@ -553,14 +568,14 @@ class Yolk(object):
         elif self.options.file_type == "egg":
             source = False
 
-        uri = get_download_uri(self.project_name, self.version, source)[0]
-
+        uri = get_download_uri(self.project_name, self.version, source)
         if uri:
             self.fetch_uri(directory, uri)
         else:
-            self.logger.error("No URI found for package: %s %s" % \
-                    (self.project_name, self.version))
+            self.logger.error("No %s URI found for package: %s " % \
+                    (self.options.file_type, self.project_name))
             return 2
+
 
     def fetch_uri(self, directory, uri):
         """
@@ -608,10 +623,12 @@ class Yolk(object):
             sys.exit(2)
         cwd = os.path.realpath(os.curdir)
         os.chdir(directory)
-        print "Doing subversion checkout for %s" % svn_uri
+        self.logger.info("Doing subversion checkout for %s" % svn_uri)
         status, output = run_command("/usr/bin/svn co %s" % svn_uri)
-        print output
+        self.logger.info(output)
         os.chdir(cwd)
+        self.logger.info("subversion checkout is in directory './%s'" \
+                % directory)
 
     def browse_website(self, browser=None):
         """
@@ -619,12 +636,13 @@ class Yolk(object):
 
         @returns None
         """
-        pypi = CheeseShop()
         if len(self.all_versions):
-            metadata = pypi.release_data(self.project_name, \
+            metadata = self.pypi.release_data(self.project_name, \
                     self.all_versions[0])
+            self.logger.debug("DEBUG: browser: %s" % browser)
             if metadata.has_key("home_page"):
-                print "Launching browser: %s" % metadata["home_page"]
+                self.logger.info("Launching browser: %s" \
+                        % metadata["home_page"])
                 if browser == 'konqueror':
                     browser = webbrowser.Konqueror()
                 else:
@@ -632,7 +650,7 @@ class Yolk(object):
                     browser.open(metadata["home_page"], 2)
                 return
 
-        print "No homepage URL found."
+        self.logger.error("No homepage URL found.")
 
 
     def show_pkg_metadata_pypi(self):
@@ -642,12 +660,11 @@ class Yolk(object):
         @returns: None or 2 if error 
         
         """
-        pypi = CheeseShop()
         if self.version and self.version in self.all_versions:
-            metadata = pypi.release_data(self.project_name, self.version)
+            metadata = self.pypi.release_data(self.project_name, self.version)
         else:
             #Give highest version
-            metadata = pypi.release_data(self.project_name, \
+            metadata = self.pypi.release_data(self.project_name, \
                     self.all_versions[0])
 
         if metadata:
@@ -657,30 +674,31 @@ class Yolk(object):
                     print "%s: %s" % (key, metadata[key])
         return 0
 
-    def get_all_versions_pypi(self, my_version, use_cached_pkglist=False):
+    def get_all_versions_pypi(self):
         """
-        Fetch list of available versions for a package from The Cheese Shop
+        Query PyPI for a particular version or all versions of a package
 
-        @param my_version: pkg_resources Distribution version
-        @type my_version: string
-
-        @param use_cached_pkglist: use a pkg list stored on disk to avoid network
-                                   usage
-        @type use_cached_pkglist: boolean
-
-        @returns: None or 2 if false
+        @returns: 0 if version(s) found or 1 if none found
         """
 
-        if my_version:
-            spec = "%s==%s" % (self.project_name, my_version)
+        if self.version:
+            spec = "%s==%s" % (self.project_name, self.version)
         else:
             spec = self.project_name
 
-        if self.all_versions and my_version in self.all_versions:
-            print_pkg_versions(self.project_name, [my_version])
-        elif not my_version and self.all_versions:
+        if self.all_versions and self.version in self.all_versions:
+            print_pkg_versions(self.project_name, [self.version])
+            return 0
+        elif not self.version and self.all_versions:
             print_pkg_versions(self.project_name, self.all_versions)
-        return 0
+            return 0
+        else:
+            if self.version:
+                self.logger.error("No pacakge found for version %s" \
+                        % self.version)
+            else:
+                self.logger.error("No pacakge found for %s" % self.project_name)
+            return 1
 
     def parse_search_spec(self, spec):
         """
@@ -755,8 +773,8 @@ class Yolk(object):
 
         @param spec: Cheese Shop search spec
         @type spec: list of strings
-        
-        spec could like like any of these:
+       
+        spec examples:
           ["name=yolk"]
           ["license=GPL"]
           ["name=yolk", "AND", "license=GPL"]
@@ -765,12 +783,14 @@ class Yolk(object):
 
 
         """
-        pypi = CheeseShop()
+        #Add remainging cli arguments to options.search
+        search_arg = self.options.search
+        spec.insert(0, search_arg.strip())
 
         (spec, operator) = self.parse_search_spec(spec)
         if not spec:
             return 2
-        for pkg in pypi.search(spec, operator):
+        for pkg in self.pypi.search(spec, operator):
             if pkg['summary']:
                 summary = pkg['summary'].encode('utf-8')
             else:
@@ -781,58 +801,34 @@ class Yolk(object):
                     summary)
 
 
-    def validate_pypi_opts(self, opt_parser):
+    def show_entry_map(self):
         """
-        Check for sane pkg_spec parse options
-
-        @returns: True if sane, False if insane
+        Show entry map for a package
         
-        """
-
-        (options, remaining_args) = opt_parser.parse_args()
-        if options.versions_available or options.query_metadata_pypi or \
-            options.download_links or options.browse_website:
-            if not remaining_args:
-                usage = \
-                    """You must specify a package spec
-    Examples:
-      PackageName
-      PackageName==2.0"""
-                self.logger.error(usage)
-                return False
-            else:
-                return True
-        return True
-
-
-    def show_entry_map(self, dist):
-        """
-        Show entry map for a distribution
-        
-        @param dist: `Distribution`
-        @param type: pkg_resources Distribution object
+        @param dist: package
+        @param type: srting
         
         @returns: None or 2 if error
         """
         pprinter = pprint.PrettyPrinter()
         try:
-            pprinter.pprint(pkg_resources.get_entry_map(dist))
+            pprinter.pprint(pkg_resources.get_entry_map(self.options.entry_map))
+            return 0
         except pkg_resources.DistributionNotFound:
-            self.logger.error("Distribution not found: %s" % dist)
+            self.logger.error("Distribution not found: %s" \
+                    % self.options.entry_map)
             return 2
 
-    def show_entry_points(self, module):
+    def show_entry_points(self):
         """
         Show entry points for a module
         
-        @param module: module name
-        @type type: string
-
         @returns: None or 2 if error
         
         """
         found = False
-        for entry_point in pkg_resources.iter_entry_points(module):
+        for entry_point in \
+                pkg_resources.iter_entry_points(self.options.entry_points):
             found = True
             try:
                 plugin = entry_point.load()
@@ -844,12 +840,14 @@ class Yolk(object):
             except ImportError:
                 pass
         if not found:
-            self.logger.error("No entry points found for %s" % module)
+            self.logger.error("No entry points found for %s" \
+                    % self.options.entry_points)
             return 2
 
     def parse_pkg_ver(self, package_spec, want_installed):
         """
         Return tuple with project_name and version from CLI args
+        If the user gave the wrong case for the project name, this corrects it
 
         @param package_spec:
         @type package_spec:
@@ -864,9 +862,7 @@ class Yolk(object):
 
         arg_str = ("").join(package_spec)
         if "==" not in arg_str:
-
             #No version specified
-
             project_name = arg_str
             version = None
         else:
@@ -878,14 +874,11 @@ class Yolk(object):
             dists = Distributions()
             project_name = dists.case_sensitive_name(project_name)
         else:
-            pypi = CheeseShop()
             (project_name, all_versions) = \
-                    pypi.query_versions_pypi(project_name, False)
+                    self.pypi.query_versions_pypi(project_name)
 
             if not len(all_versions):
-                self.logger.error("\
-                        I'm afraid we have no %s at The Cheese Shop. \
-                        \nPerhaps a little red Leicester?" % project_name)
+                self.logger.error("I'm afraid we have no %s at The Cheese Shop. Perhaps a little Red Leicester?" % project_name)
                 sys.exit(2)
         return (project_name, version, all_versions)
 
@@ -906,25 +899,29 @@ def setup_opt_parser():
                           "version", default=False, help=
                           "Show yolk version and exit.")
 
-    opt_parser.add_option("-v", "--verbose", action='store_true', dest=
-                          "verbose", default=False, help=
-                          "Be more verbose.")
+    opt_parser.add_option("--debug", action='store_true', dest=
+                          "debug", default=False, help=
+                          "Show debugging information.")
+
+    opt_parser.add_option("-q", "--quiet", action='store_true', dest=
+                          "quiet", default=False, help=
+                          "Show less output.")
     group_local = optparse.OptionGroup(opt_parser,
             "Query installed Python packages",
             "The following options show information about installed Python packages. Activated packages are normal packages on sys.path that can be imported. Non-activated packages need 'pkg_resources.require()' before they can be imported, such as packages installed with 'easy_install --multi-version'. PKG_SPEC can be either a package name or package name and version e.g. Paste==0.9")
 
     group_local.add_option("-l", "--list", action='store_true', dest=
                            "all", default=False, help=
-                           "List packages installed by setuptools. Use PKG_SPEC to narrow results.")
+                           "List all Python packages installed by distutils or setuptools. Use PKG_SPEC to narrow results.")
 
     group_local.add_option("-a", "--activated", action='store_true',
                            dest="active", default=False, help=
-                           'List activated packages installed by ' +
+                           'List activated packages installed by distutils or ' +
                            'setuptools. Use PKG_SPEC to narrow results.')
 
     group_local.add_option("-n", "--non-activated", action='store_true',
                            dest="nonactive", default=False, help=
-                           'List non-activated packages installed by ' +
+                           'List non-activated packages installed by distutils or ' +
                            'setuptools. Use PKG_SPEC to narrow results.')
 
     group_local.add_option("-m", "--metadata", action='store_true', dest=
@@ -937,53 +934,53 @@ def setup_opt_parser():
                            'Show specific metadata fields. ' +
                            '(use with -m or -M)')
 
-    group_local.add_option("-d", "--depends", action='store_true', dest=
-                           "depends", default=False, help=
-                           "Show dependencies for a package installed by " +
-                           "setuptools if they are available. (Use with PKG_SPEC)")
+    group_local.add_option("-d", "--depends", action='store', dest=
+                           "depends", metavar='PKG_SPEC',
+                           help= "Show dependencies for a package installed by " +
+                           "setuptools if they are available.")
 
     group_local.add_option("--entry-points", action='store',
                            dest="entry_points", default=False, help=
-                           'List entry points for a module. e.g. --entry-points yolk.plugins',
+                           'List entry points for a module. e.g. --entry-points nose.plugins',
                             metavar="MODULE")
 
     group_local.add_option("--entry-map", action='store',
                            dest="entry_map", default=False, help=
-                           'List entry map for a distribution. e.g. --entry-map yolk',
+                           'List entry map for a package. e.g. --entry-map yolk',
                            metavar="PACKAGE_NAME")
     group_pypi = optparse.OptionGroup(opt_parser,
             "PyPI (Cheese Shop) options",
             "The following options query the Python Package Index:")
 
     group_pypi.add_option("-C", "--changelog", action='store',
-                          dest="changelog",
+                          dest="changelog", metavar='HOURS',
                           default=False, help=
                           "Show detailed ChangeLog for PyPI for last n hours. ")
 
-    group_pypi.add_option("-D", "--download-links", action='store_true',
+    group_pypi.add_option("-D", "--download-links", action='store',
                           metavar="PKG_SPEC", dest="download_links",
                           default=False, help=
-                          "Show download URL's for package listed on PyPI. (Use with PKG_SPEC)")
+                          "Show download URL's for package listed on PyPI. Use with -T to specify egg, source etc.")
 
-    group_pypi.add_option("-F", "--fetch-package", action='store_true',
+    group_pypi.add_option("-F", "--fetch-package", action='store',
                           metavar="PKG_SPEC", dest="fetch",
                           default=False, help=
-                          "Download package source or egg. You can specify type with -T (Use with PKG_SPEC)")
+                          "Download package source or egg. You can specify a file type with -T")
 
-    group_pypi.add_option("-H", "--browse-homepage", action='store_true',
+    group_pypi.add_option("-H", "--browse-homepage", action='store',
                           metavar="PKG_SPEC", dest="browse_website",
                           default=False, help=
-                          "Launch web browser at home page for package. (Use with PKG_SPEC)")
+                          "Launch web browser at home page for package.")
 
     group_pypi.add_option("-L", "--latest-releases", action='store',
-                          dest="releases",
+                          dest="releases", metavar="HOURS",
                           default=False, help=
                           "Show PyPI releases for last n hours. ")
 
-    group_pypi.add_option("-M", "--query-metadata", action='store_true',
+    group_pypi.add_option("-M", "--query-metadata", action='store',
                           dest="query_metadata_pypi", default=False,
                           metavar="PKG_SPEC", help=
-                          "Show metadata for a package listed on PyPI. Use -f to show particular fields. (Use with PKG_SPEC)")
+                          "Show metadata for a package listed on PyPI. Use -f to show particular fields.")
 
     group_pypi.add_option("-S", "", action="store", dest="search",
                           default=False, help=
@@ -995,14 +992,15 @@ def setup_opt_parser():
                           "You may specify 'source', 'egg', 'svn' or 'all' when using -D.")
 
     group_pypi.add_option("-U", "--show-updates", action='store_true',
-                          dest="show_updates", default=False, help=
-                          "Check PyPI for updates on packages.")
+                          dest="show_updates", metavar='<PKG_NAME>',
+                          default=False, help= 
+                          "Check PyPI for updates on package(s).")
 
     group_pypi.add_option("-V", "--versions-available", action=
-                          'store_true', dest="versions_available",
-                          default=False, help=
-                          "Show available versions for given package " +
-                          "listed on PyPI. (Use with PKG_NAME)")
+                          'store', dest="versions_available",
+                          default=False, metavar='PKG_SPEC',
+                          help="Show available versions for given package " +
+                          "listed on PyPI.")
     opt_parser.add_option_group(group_local)
     opt_parser.add_option_group(group_pypi)
     # add opts from plugins
@@ -1025,6 +1023,26 @@ def print_pkg_versions(project_name, versions):
     """
     for ver in versions:
         print "%s %s" % (project_name, ver)
+
+def validate_pypi_opts(opt_parser):
+    """
+    Check parse options that require pkg_spec
+
+    @returns: pkg_spec
+    
+    """
+
+    (options, remaining_args) = opt_parser.parse_args()
+    options_pkg_specs = [ options.versions_available, 
+            options.query_metadata_pypi,
+            options.download_links,
+            options.browse_website,
+            options.fetch,
+            options.depends,
+            ]
+    for pkg_spec in options_pkg_specs:
+        if pkg_spec:
+            return pkg_spec
 
 
 def main():
