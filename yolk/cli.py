@@ -267,8 +267,10 @@ class Yolk(object):
                             found = True
                             print " %s %s (%s)" % (project_name, dist.version,
                                     newest)
-        if not found:
-            self.logger.info("You have the latest version.")
+        if not found and self.project_name:
+            self.logger.info("You have the latest version installed.")
+        elif not found:
+            self.logger.info("No newer packages found at The Cheese Shop")
         return 0
 
 
