@@ -16,9 +16,9 @@ As of 0.0.7 yolk is in Gentoo's Portage tree.
 Summary
 -------
 
-Yolk is a Python tool for obtaining information about packages installed by distutils, setuptools and easy_install and packages on PyPI (Python Package Index a.k.a. The Cheese Shop). 
+Yolk is a Python tool for obtaining information about packages installed by distutils, setuptools and easy_install and querying packages on PyPI (Python Package Index a.k.a. The Cheese Shop). 
 
-Yolk can list all the packages installed your system by >=Python2.5 or packages installed by setuptools if you have <=Python2.4. You can see which packages are active, non-active or in development mode and show you which have newer versions available according to PyPI. 
+Yolk can list all the packages installed by distutils or setuptools on your system by >=Python2.5 or packages installed by setuptools if you have <=Python2.4. You can see which packages are active, non-active or in development mode and show you which have newer versions available by querying PyPI. 
 
 Usage Examples::
 
@@ -31,8 +31,8 @@ Usage Examples::
     $ yolk -n 
          List only the non-activated (--multi-version) packages installed 
          
-    $ yolk -l -f License,Author nose
-         Show the license and author for the package `nose`
+    $ yolk -l -f License,Author nose==1.0
+         Show the license and author for version 1.0 of the package `nose`
 
     $ yolk --entry-map nose
          Show entry map for the nose package
@@ -43,16 +43,19 @@ Usage Examples::
 
 These options query PyPI::
 
+    $ yolk -U pkg_name
+         Shows if an update for pkg_name is available by querying PyPI
+
     $ yolk -U
-         Finds all packages installed via setuptools then checks PyPI for newer releases. 
+         Checks PyPI to see if any installed Python packages have updates available.
 
     $ yolk -F Paste
          Download source tarball for latest version of Paste to your current directory
 
     $ yolk -F Paste -T svn
-         Do a subversion checkout for Paste to a directory named paste_svn in your current directory.
+         Do a subversion checkout for Paste to a directory named Paste_svn in your current directory.
 
-    $ yolk -R 2
+    $ yolk -L 2
          Show list of CheeseShop releases in the last two hours
 
     $ yolk -C 2
@@ -75,19 +78,21 @@ These options query PyPI::
 
 Changes
 -------
-**0.3.0**: Added -F option.
+**0.3.0**: Added -C and -L options for new PyPI XML-RPC methods `changelog` and `updated_releases`
+
+           Always check package name cache on disk before querying PyPi to see if a package exists and has proper case.
+
+           Added -F option to download source, egg or subversion checkouts.
 
            Removed -L RSS feed option because the new `updated_releases` XML-RPC method is much nicer
 
-           Added -C and -L options for new PyPI XML-RPC methods `changelog` and `updated_releases`
+           Fixed '-D -T egg' so it won't return source if no egg is available
 
            Major refactoring.
 
-           Fixed '-D -T egg' so it won't return source if no egg is available
+           Removed dependency on elementtree 
 
            
-
-
 **0.2.0**: Added 'svn' type for -T
 
            A kablillion bug fixes
