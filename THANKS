@@ -1,3 +1,7 @@
 
 
 Thanks to Phillib J. Eby for help in understanding the resource_pkg API
+
+Thanks to Martin v. Löwis for his work on speeding up The Cheese Shop!
+
+Thanks to Jim Fulton for being persistent in encouraging people to make The Cheese Shop quicker. :-P
