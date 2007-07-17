@@ -53,13 +53,19 @@ def get_pkg_ver(pv, add_quotes=True):
 def test_api(pypi_xml):
     """Basic API tests"""
     print "Testing API"""
+    skipped = 0
+    skipped_msgs = []
     failed = 0
-    failed_msgs =[]
+    failed_msgs = []
     for event, elem in iterparse(pypi_xml):
         if elem.tag == "title":
             if not elem.text.startswith('Cheese Shop recent updates'):
                 pkg_name, ver = get_pkg_ver(elem.text, False)
                 (pypi_pkg_name, versions) = PyPI.query_versions_pypi(pkg_name)
+                if " " in pypi_pkg_name:
+                    skipped +=1
+                    failed_msgs.append("%s %s" \
+                            % (pkg_name, "- space in project name"))
                 try:
                     assert versions[0] == ver
                     print "Testing %s... passed" % elem.text
@@ -70,6 +76,9 @@ def test_api(pypi_xml):
 
     print "%s tests failed." % failed
     for msg in failed_msgs:
+        print "\t%s" % msg
+    print "%s tests skipped." % skipped
+    for msg in skipped_msgs:
         print "\t%s" % msg
 
 def test_cli(pypi_xml):
