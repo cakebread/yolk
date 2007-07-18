@@ -180,19 +180,25 @@ class Yolk(object):
         if not want_installed or self.options.show_updates:
             self.pypi = CheeseShop(self.options.debug)
             #XXX: We should return 2 here if we couldn't create xmlrpc server
+
         if pkg_spec:
             (self.project_name, self.version, self.all_versions) = \
                     self.parse_pkg_ver(want_installed)
             if want_installed and not self.project_name:
                 logger.error("%s is not installed." % pkg_spec[0])
-                return 2
+                return 1
 
+        #I could prefix all these with 'cmd_' and the methods also
+        #and then iterate over the `options` dictionary keys...
         commands = ['show_deps', 'query_metadata_pypi', 'fetch',
                 'versions_available', 'show_updates', 'browse_website',
                 'show_download_links', 'pypi_search', 'show_pypi_changelog',
-                'show_pypi_releases', 'yolk_version', 'show_all', 'show_active',
-                'show_non_active', 'show_entry_map', 'show_entry_points']
+                'show_pypi_releases', 'yolk_version', 'show_all',
+                'show_active', 'show_non_active', 'show_entry_map',
+                'show_entry_points']
 
+        #Run first command it finds, and only the first command, then return
+        #XXX: Check if more than one command was set in options and give error?
         for action in commands:
             if getattr(self.options, action):
                 return getattr(self, action)()
@@ -401,10 +407,7 @@ class Yolk(object):
         """
         Show dependencies for package(s)
 
-        @param pkg_ver: setuptools pkgspec (e.g. kid>=0.8)
-        @type pkg_ver: string
-        
-        @returns: None or 2 if error 
+        @returns: 0 - sucess  1 - No dependency info supplied
         """
 
         pkgs = pkg_resources.Environment()
@@ -425,16 +428,14 @@ class Yolk(object):
             else:
                 self.logger.info(\
                     "No dependency information was supplied with the package.")
+                return 1
         return 0
 
     def show_pypi_changelog(self):
         """
         Show detailed PyPI ChangeLog for the last `hours`
 
-        @param hours: Number of `hours` to check back
-        @type hours: string
-
-        @returns: 1 if failed to retrieve from XML-RPC server
+        @returns: 0 = sucess or 1 if failed to retrieve from XML-RPC server
 
         """
         hours = self.options.show_pypi_changelog
@@ -460,7 +461,7 @@ class Yolk(object):
         """
         Show PyPI releases for the last number of `hours`
 
-        @returns: 1 if failed to retrieve from XML-RPC server
+        @returns: 0 = success or 1 if failed to retrieve from XML-RPC server
 
         """
         hours = int(self.options.show_pypi_releases)
@@ -479,7 +480,7 @@ class Yolk(object):
         """
         Query PyPI for pkg download URI for a packge
 
-        @returns: None
+        @returns: 0
         
         """
         #In case they specify version as 'dev' instead of using -T svn,
@@ -507,15 +508,18 @@ class Yolk(object):
             self.print_download_uri(version, source)
         return 0
 
-    def print_download_uri(self, version, source, svn=False):
+    def print_download_uri(self, version, source):
         """
+        @param version: version number or 'dev' for svn
+        @type version: string
+
         @param source: download source or egg
         @type source: boolean
 
         @returns: None
 
         """
-        if svn or version == "dev":
+        if version == "dev":
             pkg_type = "subversion"
             source = True
         elif source:
@@ -534,7 +538,7 @@ class Yolk(object):
         """
         Download a package
 
-        @returns: None
+        @returns: 0 = success or 1 if failed download
         
         """
         #Default type to download
@@ -547,13 +551,12 @@ class Yolk(object):
                     "dev", True)
             if svn_uri:
                 directory = self.project_name + "_svn"
-                self.fetch_svn(svn_uri, directory)
-                return
+                return self.fetch_svn(svn_uri, directory)
             else:
                 self.logger.error(\
                     "ERROR: No subversion repository found for %s" % \
                     self.project_name)
-                sys.exit(2)
+                return 1
         elif self.options.file_type == "source":
             source = True
         elif self.options.file_type == "egg":
@@ -561,57 +564,74 @@ class Yolk(object):
 
         uri = get_download_uri(self.project_name, self.version, source)
         if uri:
-            self.fetch_uri(directory, uri)
+            return self.fetch_uri(directory, uri)
         else:
             self.logger.error("No %s URI found for package: %s " % \
                     (self.options.file_type, self.project_name))
-            return 2
-
+            return 1
 
     def fetch_uri(self, directory, uri):
         """
         Use ``urllib.urlretrieve`` to download package to file in sandbox dir.
+
+        @param directory: directory to download to
+        @type directory: string
+
+        @param uri: uri to download
+        @type uri: string
+
+        @returns: 0 = success or 1 for failed download
         """
         filename = os.path.basename(urlparse(uri).path)
         if os.path.exists(filename):
             self.logger.error("ERROR: File exists: " + filename)
-            sys.exit(2)
+            return 1
 
         try:
             downloaded_filename, headers = urlretrieve(uri, filename)
-            print "Downloaded ./" + filename
+            self.logger.info("Downloaded ./" + filename)
         except IOError, err_msg:
             self.logger.error("Error downloading package %s from URL %s"  \
                     % (filename, uri))
             self.logger.error(str(err_msg))
-            sys.exit(2)
+            return 1
 
         if headers.gettype() in ["text/html"]:
             dfile = open(downloaded_filename)
             if re.search("404 Not Found", "".join(dfile.readlines())):
                 dfile.close()
                 self.logger.error("'404 Not Found' error")
-                sys.exit(2)
+                return 1
             dfile.close()
+        return 0
 
 
     def fetch_svn(self, svn_uri, directory):
         """
         Fetch subversion repository
+        
+        @param svn_uri: subversion repository uri to check out
+        @type svn_uri: string
+
+        @param directory: directory to download to
+        @type directory: string
+
+        @returns: 0 = success or 1 for failed download
+        
 
         """
         if not command_successful("svn --version"):
             self.logger.error("ERROR: Do you have subversion installed?")
-            sys.exit(2)
+            return 1
         if os.path.exists(directory):
             self.logger.error("ERROR: Checkout directory exists - %s" \
                     % directory)
-            sys.exit(2)
+            return 1
         try:
             os.mkdir(directory)
         except OSError, err_msg:
             self.logger.error("ERROR: " + str(err_msg))
-            sys.exit(2)
+            return 1
         cwd = os.path.realpath(os.curdir)
         os.chdir(directory)
         self.logger.info("Doing subversion checkout for %s" % svn_uri)
@@ -620,12 +640,16 @@ class Yolk(object):
         os.chdir(cwd)
         self.logger.info("subversion checkout is in directory './%s'" \
                 % directory)
+        return 0
 
     def browse_website(self, browser=None):
         """
         Launch web browser at project's homepage
 
-        @returns None
+        @param browser: name of web browser to use
+        @type browser: string
+
+        @returns: 0 if homepage found, 1 if no homepage found
         """
         if len(self.all_versions):
             metadata = self.pypi.release_data(self.project_name, \
@@ -639,16 +663,17 @@ class Yolk(object):
                 else:
                     browser = webbrowser.get()
                     browser.open(metadata["home_page"], 2)
-                return
+                return 0
 
         self.logger.error("No homepage URL found.")
+        return 1
 
 
     def query_metadata_pypi(self):
         """
         Show pkg metadata queried from PyPI
 
-        @returns: None or 2 if error 
+        @returns: 0
         
         """
         if self.version and self.version in self.all_versions:
@@ -679,10 +704,8 @@ class Yolk(object):
 
         if self.all_versions and self.version in self.all_versions:
             print_pkg_versions(self.project_name, [self.version])
-            return 0
         elif not self.version and self.all_versions:
             print_pkg_versions(self.project_name, self.all_versions)
-            return 0
         else:
             if self.version:
                 self.logger.error("No pacakge found for version %s" \
@@ -690,6 +713,7 @@ class Yolk(object):
             else:
                 self.logger.error("No pacakge found for %s" % self.project_name)
             return 1
+        return 0
 
     def parse_search_spec(self, spec):
         """
@@ -703,7 +727,7 @@ class Yolk(object):
                      license=ZPL AND name=Cheetah
         @type spec: string
         
-        @returns:  
+        @returns:  tuple with spec and operator
         """
 
         usage = \
@@ -770,8 +794,7 @@ class Yolk(object):
           ["license=GPL"]
           ["name=yolk", "AND", "license=GPL"]
 
-        @returns: None
-
+        @returns: 0 on success or 1 if mal-formed search spec
 
         """
         spec = self.pkg_spec
@@ -781,7 +804,7 @@ class Yolk(object):
 
         (spec, operator) = self.parse_search_spec(spec)
         if not spec:
-            return 2
+            return 1
         for pkg in self.pypi.search(spec, operator):
             if pkg['summary']:
                 summary = pkg['summary'].encode('utf-8')
@@ -791,7 +814,7 @@ class Yolk(object):
         %s
     """ % (pkg['name'].encode('utf-8'), pkg["version"],
                     summary)
-
+        return 0
 
     def show_entry_map(self):
         """
@@ -800,22 +823,22 @@ class Yolk(object):
         @param dist: package
         @param type: srting
         
-        @returns: None or 2 if error
+        @returns: 0 for success or 1 if error
         """
         pprinter = pprint.PrettyPrinter()
         try:
             pprinter.pprint(pkg_resources.get_entry_map(self.options.entry_map))
-            return 0
         except pkg_resources.DistributionNotFound:
             self.logger.error("Distribution not found: %s" \
                     % self.options.entry_map)
-            return 2
+            return 1
+        return 0
 
     def show_entry_points(self):
         """
         Show entry points for a module
         
-        @returns: None or 2 if error
+        @returns: 0 for success or 1 if error
         
         """
         found = False
@@ -834,11 +857,14 @@ class Yolk(object):
         if not found:
             self.logger.error("No entry points found for %s" \
                     % self.options.show_entry_points)
-            return 2
+            return 1
+        return 0
 
     def yolk_version(self):
         """
         Show yolk's version
+
+        @returns: 0
         """
         self.logger.info("yolk version %s (rev. %s)" % (VERSION, __revision__))
         return 0
@@ -851,7 +877,7 @@ class Yolk(object):
         @param want_installed: whether package we want is installed or not
         @type want_installed: boolean
 
-        @returns: tuple(project_name, version) 
+        @returns: tuple(project_name, version, all_versions) 
         
         """
         all_versions = []
