@@ -97,7 +97,7 @@ class Yolk(object):
         self.version = ""
         #List of all versions not hidden on PyPI
         self.all_versions = []
-        self.pkg_spec = ""
+        self.pkg_spec = []
         self.options = None
         self.logger = logging.getLogger("yolk")
 
@@ -519,6 +519,7 @@ class Yolk(object):
         @returns: None
 
         """
+
         if version == "dev":
             pkg_type = "subversion"
             source = True
@@ -528,7 +529,7 @@ class Yolk(object):
             pkg_type = "egg"
 
         #Use setuptools monkey-patch to grab url
-        url = get_download_uri(self.project_name, version, source)
+        url = get_download_uri(self.project_name, version, source, self.options.pypi_index)
         if url:
             print "%s" % url
         else:
@@ -995,6 +996,11 @@ def setup_opt_parser():
                           metavar="PKG_SPEC", dest="browse_website",
                           default=False, help=
                           "Launch web browser at home page for package.")
+
+    group_pypi.add_option("-I", "--pypi-index", action='store',
+                          dest="pypi_index",
+                          default=False, help=
+                          "Specify PyPI mirror for package index.")
 
     group_pypi.add_option("-L", "--latest-releases", action='store',
                           dest="show_pypi_releases", metavar="HOURS",

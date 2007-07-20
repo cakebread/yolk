@@ -33,6 +33,7 @@ class DownloadURI(Exception):
         """Set value to URI"""
         return repr(self.value)
 
+
 class MyPackageIndex(PackageIndex):
 
     """Over-ride methods so we can obtain the package's URI"""
@@ -46,23 +47,25 @@ class MyPackageIndex(PackageIndex):
         raise DownloadURI(spec)
 
 
-def get_download_uri(package_name, version, source):
+def get_download_uri(package_name, version, source, index_url):
+
     """
     Use setuptools to search for a package's URI
     
     @returns: URI string
     """
-    #print package_name, version, source
     tmpdir = None
     force_scan = True
     develop_ok = False
+    if not index_url:
+        index_url = 'http://cheeseshop.python.org/pypi'
 
     if version:
         pkg_spec = "%s==%s" % (package_name, version)
     else:
         pkg_spec = package_name
     req = pkg_resources.Requirement.parse(pkg_spec)
-    pkg_index = MyPackageIndex()
+    pkg_index = MyPackageIndex(index_url)
     try:
         pkg_index.fetch_distribution(req, tmpdir, force_scan, source, 
                 develop_ok)
