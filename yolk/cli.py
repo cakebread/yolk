@@ -583,7 +583,7 @@ class Yolk(object):
 
         @returns: 0 = success or 1 for failed download
         """
-        filename = os.path.basename(urlparse(uri).path)
+        filename = os.path.basename(urlparse(uri)[2])
         if os.path.exists(filename):
             self.logger.error("ERROR: File exists: " + filename)
             return 1
