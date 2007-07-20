@@ -47,7 +47,7 @@ class MyPackageIndex(PackageIndex):
         raise DownloadURI(spec)
 
 
-def get_download_uri(package_name, version, source, index_url):
+def get_download_uri(package_name, version, source, index_url=None):
 
     """
     Use setuptools to search for a package's URI
