@@ -25,7 +25,9 @@ import logging
 from yolk.utils import get_yolk_dir
 
 
-XML_RPC_SERVER = 'http://cheeseshop.python.org/pypi'
+XML_RPC_SERVER = 'http://pypi.python.org/pypi'
+#XML_RPC_SERVER = 'http://download.zope.org/ppix/'
+#XML_RPC_SERVER = 'http://cheeseshop.python.org/simple'
 
 
 class CheeseShop:
