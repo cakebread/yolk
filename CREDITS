@@ -13,3 +13,5 @@ A couple functions in utils.py are heavily inspired by a couple functions from C
 
 The StdOut class was modified to use ideas from Michael Foord's <fuzzyman@gmail.com> blog post
 about StdOut which I need a URL for next time I update this.
+
+ProxyTransport by A. Ellerton 2006-07-06

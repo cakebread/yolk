@@ -10,7 +10,7 @@ You can install yolk with ``easy_install yolk`` or install from the `subversion
 repository <http://anonymous@tools.assembla.com/svn/yolk/trunk/#egg=yolk-dev>`_
 with ``easy_install yolk==dev``.
 
-As of 0.0.7 yolk is in Gentoo's Portage tree.
+As of 0.0.7 yolk is in Gentoo's Portage tree as dev-python/yolk and a plugin for Portage named dev-python/yolk-portage.
 
 
 Summary
@@ -78,6 +78,15 @@ These options query PyPI::
 
 Changes
 -------
+**0.4.0**: Added http proxy support for XML-RPC
+            
+           Added case-insensitive search for -f
+
+           Non-existent packages with -S no longer show entire index (bug was with PyPI)
+
+           Fixed exception when package has no metadata
+
+
 **0.3.0**: Added -C and -L options for new PyPI XML-RPC methods `changelog` and `updated_releases`
 
            Always check package name cache on disk before querying PyPi to see if a package exists and has proper case.
@@ -151,5 +160,5 @@ Requirements
 
 * setuptools
 
-* elementtree (For RSS feed option extra_requires [RSS])
+* elementtree (For RSS feed option extra_requires [RSS]) (included in Python >=2.5)
 
