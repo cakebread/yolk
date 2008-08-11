@@ -78,6 +78,11 @@ These options query PyPI::
 
 Changes
 -------
+**0.4.1**: Fix for -f fields
+           
+           Add check for integer with -L
+
+
 **0.4.0**: Added http proxy support for XML-RPC
             
            Added case-insensitive search for -f

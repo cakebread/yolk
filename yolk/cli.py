@@ -354,8 +354,11 @@ class Yolk(object):
         
         """
         show_metadata = self.options.metadata
-        fields = self.options.fields.split(',')
-        fields = map(str.strip, fields)
+        if self.options.fields:
+            fields = self.options.fields.split(',')
+            fields = map(str.strip, fields)
+        else:
+            fields = []
         version = metadata['Version']
 
         #When showing all packages, note which are not active:
@@ -458,7 +461,11 @@ class Yolk(object):
         @returns: 0 = success or 1 if failed to retrieve from XML-RPC server
 
         """
-        hours = int(self.options.show_pypi_releases)
+        try:
+            hours = int(self.options.show_pypi_releases)
+        except ValueError:
+            self.logger.error("ERROR: You must supply an integer.")
+            return 1
         try:
             latest_releases = self.pypi.updated_releases(hours)
         except XMLRPCFault, err_msg:
