@@ -50,10 +50,8 @@ class ProxyTransport(xmlrpclib.Transport):
     """
 
     def request(self, host, handler, request_body, verbose):
-        self.verbose = verbose
+        '''Send xml-rpc request using proxy'''
         url = 'http://' + host + handler
-        if self.verbose:
-            print 'ProxyTransport URL: [%s]' % url
         request = urllib2.Request(url)
         request.add_data(request_body)
         # Note: 'Host' and 'Content-Length' are added automatically
@@ -77,7 +75,7 @@ def check_proxy_setting():
     This routine does that, and returns the transport for xmlrpc.
     """
     try:
-        http_proxy=os.environ['HTTP_PROXY']
+        http_proxy = os.environ['HTTP_PROXY']
     except KeyError:
         return
     
@@ -85,7 +83,8 @@ def check_proxy_setting():
         match = re.match('(http://)?([-_\.A-Za-z]+):(\d+)', http_proxy)
         if not match:
             raise Exception('Proxy format not recognised: [%s]' % http_proxy)
-        os.environ['HTTP_PROXY'] = 'http://%s:%s' % (match.group(2), match.group(3))
+        os.environ['HTTP_PROXY'] = 'http://%s:%s' % (match.group(2),
+                match.group(3))
     return
 
 
@@ -149,7 +148,7 @@ class CheeseShop:
     def query_versions_pypi(self, package_name):
         """Fetch list of available versions for a package from The CheeseShop"""
         if not package_name in self.pkg_list:
-            self.logger.debug("DEBUG: package %s not in cache, querying PyPI..." \
+            self.logger.debug("Package %s not in cache, querying PyPI..." \
                     % package_name)
             self.fetch_pkg_list()
         #I have to set version=[] for edge cases like "Magic file extensions" 

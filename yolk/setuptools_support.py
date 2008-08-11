@@ -93,7 +93,7 @@ def get_pkglist():
 
     dists = Distributions()
     projects = []
-    for (dist, active) in dists.get_distributions("all"):
+    for (dist, _active) in dists.get_distributions("all"):
         if dist.project_name not in projects:
             projects.append(dist.project_name)
     return projects

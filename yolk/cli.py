@@ -523,7 +523,8 @@ class Yolk(object):
             pkg_type = "egg"
 
         #Use setuptools monkey-patch to grab url
-        url = get_download_uri(self.project_name, version, source, self.options.pypi_index)
+        url = get_download_uri(self.project_name, version, source,
+                self.options.pypi_index)
         if url:
             print "%s" % url
         else:

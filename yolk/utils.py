@@ -59,7 +59,7 @@ def command_successful(cmd):
     Returns True if command exited normally, False otherwise.
 
     """
-    return_code, output = run_command(cmd)
+    return_code, _output = run_command(cmd)
     return return_code == 0
 
 
