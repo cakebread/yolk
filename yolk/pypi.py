@@ -16,11 +16,13 @@ License  : GNU General Public License Version 2
 
 __docformat__ = 'restructuredtext'
 
+import re
 import xmlrpclib
 import cPickle
 import os
 import time
 import logging
+import urllib2
 
 from yolk.utils import get_yolk_dir
 
@@ -28,6 +30,63 @@ from yolk.utils import get_yolk_dir
 XML_RPC_SERVER = 'http://pypi.python.org/pypi'
 #XML_RPC_SERVER = 'http://download.zope.org/ppix/'
 #XML_RPC_SERVER = 'http://cheeseshop.python.org/simple'
+
+
+class ProxyTransport(xmlrpclib.Transport):
+    """
+    Provides an XMl-RPC transport routing via a http proxy.
+    
+    This is done by using urllib2, which in turn uses the environment
+    varable http_proxy and whatever else it is built to use (e.g. the
+    windows    registry).
+    
+    NOTE: the environment variable http_proxy should be set correctly.
+    See check_proxy_setting() below.
+    
+    Written from scratch but inspired by xmlrpc_urllib_transport.py
+    file from http://starship.python.net/crew/jjkunce/ by jjk.
+    
+    A. Ellerton 2006-07-06
+    """
+
+    def request(self, host, handler, request_body, verbose):
+        self.verbose = verbose
+        url = 'http://' + host + handler
+        if self.verbose:
+            print 'ProxyTransport URL: [%s]' % url
+        request = urllib2.Request(url)
+        request.add_data(request_body)
+        # Note: 'Host' and 'Content-Length' are added automatically
+        request.add_header('User-Agent', self.user_agent)
+        request.add_header('Content-Type', 'text/xml')
+        proxy_handler = urllib2.ProxyHandler()
+        opener = urllib2.build_opener(proxy_handler)
+        fhandle = opener.open(request)
+        return(self.parse_response(fhandle))
+
+
+def check_proxy_setting():
+    """
+    If the environmental variable 'HTTP_PROXY' is set, it will most likely be
+    in one of these forms:
+    
+          proxyhost:8080
+          http://proxyhost:8080
+    
+    urlllib2 seems to require it to have 'http;//" at the start.
+    This routine does that, and returns the transport for xmlrpc.
+    """
+    try:
+        http_proxy=os.environ['HTTP_PROXY']
+    except KeyError:
+        return
+    
+    if not http_proxy.startswith('http://'): 
+        match = re.match('(http://)?([-_\.A-Za-z]+):(\d+)', http_proxy)
+        if not match:
+            raise Exception('Proxy format not recognised: [%s]' % http_proxy)
+        os.environ['HTTP_PROXY'] = 'http://%s:%s' % (match.group(2), match.group(3))
+    return
 
 
 class CheeseShop:
@@ -74,8 +133,9 @@ class CheeseShop:
         """
         Returns PyPI's XML-RPC server instance
         """
+        check_proxy_setting()
         try:
-            return xmlrpclib.Server(XML_RPC_SERVER)
+            return xmlrpclib.Server(XML_RPC_SERVER, transport=ProxyTransport())
         except IOError:
             self.logger("ERROR: Can't connect to XML-RPC server: %s" \
                     % XML_RPC_SERVER)
