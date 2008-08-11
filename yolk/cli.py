@@ -354,12 +354,11 @@ class Yolk(object):
         
         """
         show_metadata = self.options.metadata
-        fields = self.options.fields
-
+        fields = self.options.fields.split(',')
+        fields = map(str.strip, fields)
         version = metadata['Version']
 
         #When showing all packages, note which are not active:
-
         if active:
             if fields:
                 active_status = ""
@@ -382,23 +381,18 @@ class Yolk(object):
             print '%s (%s)%s %s' % (metadata['Name'], version, active_status,
                                     development_status)
         else:
-
             # Need intelligent justification
-
             print metadata['Name'].ljust(15) + " - " + version.ljust(12) + \
                 " - " + status
         if fields:
-
-            #Only show specific fields
-
+            #Only show specific fields, using case-insensitive search
+            fields = map(str.lower, fields)
             for field in metadata.keys():
-                if field in fields:
+                if field.lower() in fields:
                     print '    %s: %s' % (field, metadata[field])
             print
         elif show_metadata:
-
             #Print all available metadata fields
-
             for field in metadata.keys():
                 if field != 'Name' and field != 'Summary':
                     print '    %s: %s' % (field, metadata[field])
