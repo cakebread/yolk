@@ -314,7 +314,7 @@ class Yolk(object):
                     add_column_text += my_plugin.add_column(dist) + " "
                 self.print_metadata(metadata, develop, active, add_column_text)
             else:
-                print dist + " has no metadata"
+                print str(dist) + " has no metadata"
             results = True
         if not results and self.project_name:
             if self.version:
