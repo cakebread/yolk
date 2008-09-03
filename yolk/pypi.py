@@ -73,7 +73,7 @@ def check_proxy_setting():
           proxyhost:8080
           http://proxyhost:8080
     
-    urlllib2 seems to require it to have 'http;//" at the start.
+    urlllib2 requires the proxy URL to start with 'http://' 
     This routine does that, and returns the transport for xmlrpc.
     """
     try:
@@ -83,8 +83,8 @@ def check_proxy_setting():
     
     if not http_proxy.startswith('http://'): 
         match = re.match('(http://)?([-_\.A-Za-z]+):(\d+)', http_proxy)
-        if not match:
-            raise Exception('Proxy format not recognised: [%s]' % http_proxy)
+        #if not match:
+        #    raise Exception('Proxy format not recognised: [%s]' % http_proxy)
         os.environ['HTTP_PROXY'] = 'http://%s:%s' % (match.group(2),
                 match.group(3))
     return
@@ -94,11 +94,13 @@ class CheeseShop:
 
     """Interface to Python Package Index"""
 
-    def __init__(self, debug=False, no_cache=False):
-        """init"""
-        self.no_cache = no_cache
+    def __init__(self, debug=False, no_cache=False, yolk_dir=None):
         self.debug = debug
-        self.yolk_dir = get_yolk_dir()
+        self.no_cache = no_cache
+        if yolk_dir:
+            self.yolk_dir = yolk_dir
+        else:
+            self.yolk_dir = get_yolk_dir()
         self.xmlrpc = self.get_xmlrpc_server()
         self.pkg_cache_file = self.get_pkg_cache_file()
         self.last_sync_file = self.get_last_sync_file()
@@ -126,7 +128,7 @@ class CheeseShop:
 
     def get_last_sync_file(self):
         """
-        Get the last time in seconds since The Epoc snce the last pkg list sync
+        Get the last time in seconds since The Epoc since the last pkg list sync
         """
         return os.path.abspath(self.yolk_dir + "/last_sync")
 
@@ -135,8 +137,12 @@ class CheeseShop:
         Returns PyPI's XML-RPC server instance
         """
         check_proxy_setting()
+        if os.environ.has_key('XMLRPC_DEBUG'):
+            debug = 1 
+        else:
+            debug = 0
         try:
-            return xmlrpclib.Server(XML_RPC_SERVER, transport=ProxyTransport())
+            return xmlrpclib.Server(XML_RPC_SERVER, transport=ProxyTransport(), verbose=debug)
         except IOError:
             self.logger("ERROR: Can't connect to XML-RPC server: %s" \
                     % XML_RPC_SERVER)
