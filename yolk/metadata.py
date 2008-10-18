@@ -35,8 +35,7 @@ def get_metadata(dist):
     if not dist.has_metadata('PKG-INFO'):
         return
 
-    my_metadata = dist.get_metadata('PKG-INFO')
-    msg = email.message_from_string(my_metadata) 
+    msg = email.message_from_string(dist.get_metadata('PKG-INFO'))
     metadata = {}
     for header in [l for l in msg._headers]:
         metadata[header[0]] = header[1]
