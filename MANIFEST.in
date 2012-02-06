@@ -1,4 +1,4 @@
-recursive-include tests *.py *.c *.pyx *.txt
+recursive-include tests *.py *.txt
 recursive-include docs *.py *.txt *.conf *.css *.css_t Makefile indexsidebar.html
 include *.py
 include *.rst
@@ -25,8 +25,4 @@ include examples/plugins/yolk_portage/README
 include examples/plugins/yolk_portage/setup.py
 include examples/plugins/yolk_portage/yolk_portage.py
 include tests/rss_feed.py
-include tests/test_metadata.py
-include tests/test_pypi.py
-include tests/test_setuptools_support.py
-include tests/test_yolklib.py
-
+include tests/test_cli.py
