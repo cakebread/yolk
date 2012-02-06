@@ -15,3 +15,12 @@ The StdOut class was modified to use ideas from Michael Foord's <fuzzyman@gmail.
 about StdOut which I need a URL for next time I update this.
 
 ProxyTransport by A. Ellerton 2006-07-06
+
+
+Patches:
+
+ Jesus Rivero: <neurogeek at gentoo dawt org>
+
+   entry-map patch in 0.4.2
+
+

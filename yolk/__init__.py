@@ -3,13 +3,13 @@
 
 __init__.py
 
-Author: Rob Cakebread <gentoodev@gmail.com>
+Author: Rob Cakebread <cakebread at gmail>
 
-License  : GNU General Public License Version 2
+License  : BSD
 
 """
 
 __docformat__ = 'restructuredtext'
-__version__ = '0.4.1'
+__version__ = '0.4.2'
 
 
