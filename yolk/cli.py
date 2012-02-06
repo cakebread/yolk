@@ -436,6 +436,10 @@ class Yolk(object):
 
         """
         hours = self.options.show_pypi_changelog
+        if not hours.isdigit():
+            self.logger.error("Error: You must supply an integer.")
+            return 1
+
         try:
             changelog = self.pypi.changelog(int(hours))
         except XMLRPCFault, err_msg:
@@ -830,10 +834,12 @@ class Yolk(object):
         """
         pprinter = pprint.PrettyPrinter()
         try:
-            pprinter.pprint(pkg_resources.get_entry_map(self.options.entry_map))
+            entry_map = pkg_resources.get_entry_map(self.options.show_entry_map)
+            if entry_map:
+                pprinter.pprint(entry_map)
         except pkg_resources.DistributionNotFound:
             self.logger.error("Distribution not found: %s" \
-                    % self.options.entry_map)
+                    % self.options.show_entry_map)
             return 1
         return 0
 
