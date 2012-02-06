@@ -1,4 +1,4 @@
-yolk 0.4.2
+yolk 0.4.3
 ==========
 
 .. contents::
@@ -83,14 +83,18 @@ Tips and Tricks
  * Upgrade all installed Python packages:
 
 
-  {{{Warning: You only want to do this inside a virtualenv. If you're using Linux, use your package manager to install Python packages globally whenever possible.
+ Warning: You only want to do this inside a virtualenv. If you're using Linux, use your package manager to install Python packages globally whenever possible. Think twice before upgrading all packages system-wide on OSX.
 
      $ pip install -U `yolk -U | awk '{print $1}'`
-}}}
+
 
 
 Changes
 -------
+**0.4.3**: Added missing documentation and license files
+
+
+           
 **0.4.2**: Fix for -C when an integer isn't supplied
            
            Fix for --entry-map from Jesus Rivero (Neurogeek) neurogeek@gentoo.org. Thanks, Jesus!

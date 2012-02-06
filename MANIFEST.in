@@ -1,0 +1,28 @@
+recursive-include tests *.py *.txt
+recursive-include docs *.py *.txt *.conf *.css *.css_t Makefile indexsidebar.html
+include *.py
+include *.rst
+include MANIFEST.in
+include AUTHORS
+include COPYING
+include CREDITS
+include ChangeLog
+include FAQ
+include INSTALL
+include NEWS
+include README
+include THANKS
+include TODO
+include setup.py
+include docs/tests.txt
+include docs/yolk-logo.png
+include docs/yolk.1
+include examples/plugins/README
+include examples/plugins/yolk_pkg_manager/README
+include examples/plugins/yolk_pkg_manager/setup.py
+include examples/plugins/yolk_pkg_manager/yolk_acme.py
+include examples/plugins/yolk_portage/README
+include examples/plugins/yolk_portage/setup.py
+include examples/plugins/yolk_portage/yolk_portage.py
+include tests/rss_feed.py
+include tests/test_cli.py
