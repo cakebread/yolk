@@ -1,4 +1,4 @@
-yolk 0.4.2
+yolk 0.4.3
 ==========
 
 .. contents::
@@ -91,6 +91,10 @@ Tips and Tricks
 
 Changes
 -------
+**0.4.3**: Added missing documentation and license files
+
+
+           
 **0.4.2**: Fix for -C when an integer isn't supplied
            
            Fix for --entry-map from Jesus Rivero (Neurogeek) neurogeek@gentoo.org. Thanks, Jesus!
