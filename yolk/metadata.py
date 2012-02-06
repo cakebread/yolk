@@ -6,9 +6,9 @@
 metadata.py
 ===========
 
-Author   : Rob Cakebread <gentoodev@gmail.com>
+Author   : Rob Cakebread <cakebread @ gmail>
 
-License  : GNU General Public License Version 2
+License  : BSD (See COPYING)
 
 Desc     : Return metadata for Python distribution installed by setuptools
            in a dict
@@ -27,10 +27,10 @@ def get_metadata(dist):
     Return dictionary of metadata for given dist
 
     @param dist: distribution
-    @type dist: pkg_resources Distribution object 
+    @type dist: pkg_resources Distribution object
 
     @returns: dict of metadata or None
-    
+
     """
     if not dist.has_metadata('PKG-INFO'):
         return
@@ -41,4 +41,3 @@ def get_metadata(dist):
         metadata[header[0]] = header[1]
 
     return metadata
-

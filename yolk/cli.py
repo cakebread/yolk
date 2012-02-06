@@ -13,12 +13,11 @@ Desc: Command-line tool for listing Python packages installed by setuptools,
 
 Author: Rob Cakebread <gentoodev a t gmail.com>
 
-License : GNU General Public License Version 2 (See COPYING)
+License : BSD (See COPYING)
 
 """
 
 __docformat__ = 'restructuredtext'
-__revision__ = '$Revision$'[11:-1].strip()
 
 
 import inspect
@@ -65,16 +64,16 @@ class StdOut:
     def write(self, inline):
         """
         Write a line to stdout if it isn't in a blacklist
-        
+
         Try to get the name of the calling module to see if we want
         to filter it. If there is no calling module, use current
         frame in case there's a traceback before there is any calling module
         """
         frame = inspect.currentframe().f_back
         if frame:
-            mod = frame.f_globals.get('__name__') 
+            mod = frame.f_globals.get('__name__')
         else:
-            mod = sys._getframe(0).f_globals.get('__name__') 
+            mod = sys._getframe(0).f_globals.get('__name__')
         if not mod in self.modulenames:
             self.stdout.write(inline)
 
@@ -93,7 +92,7 @@ class Yolk(object):
     def __init__(self):
         #PyPI project name with proper case
         self.project_name = ""
-        #PyPI project version 
+        #PyPI project version
         self.version = ""
         #List of all versions not hidden on PyPI
         self.all_versions = []
@@ -150,7 +149,7 @@ class Yolk(object):
     def run(self):
         """
         Perform actions based on CLI options
-        
+
         @returns: status code
         """
         opt_parser = setup_opt_parser()
@@ -176,7 +175,7 @@ class Yolk(object):
             want_installed = True
         else:
             want_installed = False
-        #show_updates may or may not have a pkg_spec 
+        #show_updates may or may not have a pkg_spec
         if not want_installed or self.options.show_updates:
             self.pypi = CheeseShop(self.options.debug)
             #XXX: We should return 2 here if we couldn't create xmlrpc server
@@ -276,7 +275,7 @@ class Yolk(object):
         @param show: type of pkgs to show (all, active or nonactive)
         @type show: string
 
-        @returns: None or 2 if error 
+        @returns: None or 2 if error
         """
         show_metadata = self.options.metadata
 
@@ -351,7 +350,7 @@ class Yolk(object):
         @type installed_by: string
 
         @returns: None
-        
+
         """
         show_metadata = self.options.metadata
         if self.options.fields:
@@ -455,7 +454,7 @@ class Yolk(object):
                 last_pkg = pkg
             else:
                 print "\t%s" % entry[3]
-         
+
         return 0
 
     def show_pypi_releases(self):
@@ -486,7 +485,7 @@ class Yolk(object):
         Query PyPI for pkg download URI for a packge
 
         @returns: 0
-        
+
         """
         #In case they specify version as 'dev' instead of using -T svn,
         #don't show three svn URI's
@@ -546,7 +545,7 @@ class Yolk(object):
         Download a package
 
         @returns: 0 = success or 1 if failed download
-        
+
         """
         #Default type to download
         source = True
@@ -616,7 +615,7 @@ class Yolk(object):
     def fetch_svn(self, svn_uri, directory):
         """
         Fetch subversion repository
-        
+
         @param svn_uri: subversion repository uri to check out
         @type svn_uri: string
 
@@ -624,7 +623,7 @@ class Yolk(object):
         @type directory: string
 
         @returns: 0 = success or 1 for failed download
-        
+
 
         """
         if not command_successful("svn --version"):
@@ -681,7 +680,7 @@ class Yolk(object):
         Show pkg metadata queried from PyPI
 
         @returns: 0
-        
+
         """
         if self.version and self.version in self.all_versions:
             metadata = self.pypi.release_data(self.project_name, self.version)
@@ -733,26 +732,26 @@ class Yolk(object):
                      license=ZPL
                      license=ZPL AND name=Cheetah
         @type spec: string
-        
+
         @returns:  tuple with spec and operator
         """
 
         usage = \
             """You can search PyPI by the following:
-     name 
-     version 
-     author 
-     author_email 
-     maintainer 
-     maintainer_email 
-     home_page 
-     license 
-     summary 
-     description 
-     keywords 
-     platform 
+     name
+     version
+     author
+     author_email
+     maintainer
+     maintainer_email
+     home_page
+     license
+     summary
+     description
+     keywords
+     platform
      download_url
-     
+
      e.g. yolk -S name=Cheetah
           yolk -S name=yolk AND license=PSF
           """
@@ -795,7 +794,7 @@ class Yolk(object):
 
         @param spec: Cheese Shop search spec
         @type spec: list of strings
-       
+
         spec examples:
           ["name=yolk"]
           ["license=GPL"]
@@ -826,10 +825,10 @@ class Yolk(object):
     def show_entry_map(self):
         """
         Show entry map for a package
-        
+
         @param dist: package
         @param type: srting
-        
+
         @returns: 0 for success or 1 if error
         """
         pprinter = pprint.PrettyPrinter()
@@ -846,9 +845,9 @@ class Yolk(object):
     def show_entry_points(self):
         """
         Show entry points for a module
-        
+
         @returns: 0 for success or 1 if error
-        
+
         """
         found = False
         for entry_point in \
@@ -875,7 +874,7 @@ class Yolk(object):
 
         @returns: 0
         """
-        self.logger.info("yolk version %s (rev. %s)" % (VERSION, __revision__))
+        self.logger.info("yolk version %s" % VERSION)
         return 0
 
     def parse_pkg_ver(self, want_installed):
@@ -886,8 +885,8 @@ class Yolk(object):
         @param want_installed: whether package we want is installed or not
         @type want_installed: boolean
 
-        @returns: tuple(project_name, version, all_versions) 
-        
+        @returns: tuple(project_name, version, all_versions)
+
         """
         all_versions = []
 
@@ -920,7 +919,7 @@ def setup_opt_parser():
     Setup the optparser
 
     @returns: opt_parser.OptionParser
-    
+
     """
     #pylint: disable-msg=C0301
     #line too long
@@ -1031,7 +1030,7 @@ def setup_opt_parser():
 
     group_pypi.add_option("-U", "--show-updates", action='store_true',
                           dest="show_updates", metavar='<PKG_NAME>',
-                          default=False, help= 
+                          default=False, help=
                           "Check PyPI for updates on package(s).")
 
     group_pypi.add_option("-V", "--versions-available", action=
@@ -1067,11 +1066,11 @@ def validate_pypi_opts(opt_parser):
     Check parse options that require pkg_spec
 
     @returns: pkg_spec
-    
+
     """
 
     (options, remaining_args) = opt_parser.parse_args()
-    options_pkg_specs = [ options.versions_available, 
+    options_pkg_specs = [ options.versions_available,
             options.query_metadata_pypi,
             options.show_download_links,
             options.browse_website,
@@ -1092,4 +1091,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-

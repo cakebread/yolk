@@ -8,7 +8,7 @@ utils.py
 Misc funcitions
 ---------------
 
-run_command borrowed from Cheesecake - See CREDITS. 
+run_command borrowed from Cheesecake - See CREDITS.
 """
 
 __docformat__ = 'restructuredtext'
@@ -61,5 +61,3 @@ def command_successful(cmd):
     """
     return_code, _output = run_command(cmd)
     return return_code == 0
-
-
