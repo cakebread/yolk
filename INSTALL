@@ -1,10 +1,13 @@
 
 
-With easy_install:
-  easy_install yolk
+With pip:
+  pip yolk
 
 With distutils:
   python setup.py install
 
 Gentoo Linux:
   emerge dev-python/yolk
+
+
+easy_install? See 'pip'.
