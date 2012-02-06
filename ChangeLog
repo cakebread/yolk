@@ -1,4 +1,100 @@
+2012-02-06  Rob Cakebread <cakebread@gmail.com>
+
+  * README, README.rst: Tidy docs.
+
+  * MANIFEST.in, NEWS, README, README.rst, yolk/__init__.py: Version bump
+
+  * MANIFEST.in, tox.ini: Added tox support for testing multiple python
+  versions
+
+  * docs/index.rst, requires.txt, tests/test_yolk_cli.py: Tidy up.
+
 2012-02-05  Rob Cakebread <cakebread@gmail.com>
+
+  * docs/yolk.1: Updated version
+
+  * docs/_build/doctrees/index.doctree, docs/_build/html/.buildinfo,
+  docs/_build/html/_sources/index.txt,
+  docs/_build/html/_static/ajax-loader.gif, docs/_build/html/_static/basic.css,
+  docs/_build/html/_static/comment-bright.png,
+  docs/_build/html/_static/comment-close.png,
+  docs/_build/html/_static/comment.png, docs/_build/html/_static/default.css,
+  docs/_build/html/_static/doctools.js,
+  docs/_build/html/_static/down-pressed.png, docs/_build/html/_static/down.png,
+  docs/_build/html/_static/file.png, docs/_build/html/_static/jquery.js,
+  docs/_build/html/_static/minus.png, docs/_build/html/_static/plus.png,
+  docs/_build/html/_static/pygments.css,
+  docs/_build/html/_static/searchtools.js, docs/_build/html/_static/sidebar.js,
+  docs/_build/html/_static/underscore.js,
+  docs/_build/html/_static/up-pressed.png, docs/_build/html/_static/up.png,
+  docs/_build/html/_static/websupport.js, docs/_build/html/genindex.html,
+  docs/_build/html/index.html, docs/_build/html/objects.inv,
+  docs/_build/html/search.html, docs/_build/html/searchindex.js: Don't need.
+
+  * docs/_build/_sources/index.txt, docs/_build/_static/ajax-loader.gif,
+  docs/_build/_static/basic.css, docs/_build/_static/comment-bright.png,
+  docs/_build/_static/comment-close.png, docs/_build/_static/comment.png,
+  docs/_build/_static/default.css, docs/_build/_static/doctools.js,
+  docs/_build/_static/down-pressed.png, docs/_build/_static/down.png,
+  docs/_build/_static/file.png, docs/_build/_static/jquery.js,
+  docs/_build/_static/minus.png, docs/_build/_static/plus.png,
+  docs/_build/_static/pygments.css, docs/_build/_static/searchtools.js,
+  docs/_build/_static/sidebar.js, docs/_build/_static/underscore.js,
+  docs/_build/_static/up-pressed.png, docs/_build/_static/up.png,
+  docs/_build/_static/websupport.js, docs/_build/doctrees/environment.pickle,
+  docs/_build/genindex.html, docs/_build/index.html, docs/_build/objects.inv,
+  docs/_build/search.html, docs/_build/searchindex.js: Un-needed.
+
+  * docs/_build/.buildinfo, docs/_build/.doctrees/environment.pickle,
+  docs/_build/.doctrees/index.doctree, docs/_build/_sources/index.txt,
+  docs/_build/_static/ajax-loader.gif, docs/_build/_static/basic.css,
+  docs/_build/_static/comment-bright.png,
+  docs/_build/_static/comment-close.png, docs/_build/_static/comment.png,
+  docs/_build/_static/default.css, docs/_build/_static/doctools.js,
+  docs/_build/_static/down-pressed.png, docs/_build/_static/down.png,
+  docs/_build/_static/file.png, docs/_build/_static/jquery.js,
+  docs/_build/_static/minus.png, docs/_build/_static/plus.png,
+  docs/_build/_static/pygments.css, docs/_build/_static/searchtools.js,
+  docs/_build/_static/sidebar.js, docs/_build/_static/underscore.js,
+  docs/_build/_static/up-pressed.png, docs/_build/_static/up.png,
+  docs/_build/_static/websupport.js, docs/_build/doctrees/environment.pickle,
+  docs/_build/doctrees/index.doctree, docs/_build/genindex.html,
+  docs/_build/html/.buildinfo, docs/_build/html/_sources/index.txt,
+  docs/_build/html/_static/ajax-loader.gif, docs/_build/html/_static/basic.css,
+  docs/_build/html/_static/comment-bright.png,
+  docs/_build/html/_static/comment-close.png,
+  docs/_build/html/_static/comment.png, docs/_build/html/_static/default.css,
+  docs/_build/html/_static/doctools.js,
+  docs/_build/html/_static/down-pressed.png, docs/_build/html/_static/down.png,
+  docs/_build/html/_static/file.png, docs/_build/html/_static/jquery.js,
+  docs/_build/html/_static/minus.png, docs/_build/html/_static/plus.png,
+  docs/_build/html/_static/pygments.css,
+  docs/_build/html/_static/searchtools.js, docs/_build/html/_static/sidebar.js,
+  docs/_build/html/_static/underscore.js,
+  docs/_build/html/_static/up-pressed.png, docs/_build/html/_static/up.png,
+  docs/_build/html/_static/websupport.js, docs/_build/html/genindex.html,
+  docs/_build/html/index.html, docs/_build/html/objects.inv,
+  docs/_build/html/search.html, docs/_build/html/searchindex.js,
+  docs/_build/index.html, docs/_build/objects.inv, docs/_build/search.html,
+  docs/_build/searchindex.js: Testing Sphinx
+
+  * docs/index.rst: Testing Sphinx
+
+  * requires.txt: For Sphix docs
+
+  * docs/Makefile, docs/conf.py, docs/index.rst: Setting up Sphix docs
+
+  * setup.py: Fixed README
+
+  * setup.py: Typo in desc
+
+  * README, README.rst: Update before release
+
+  * .gitignore: Added build/
+
+  * NEWS, README: Python 2 and 3 support\!
+
+  * ChangeLog: Updated ChangeLog
 
   * yolk/cli.py, yolk/metadata.py, yolk/pypi.py, yolk/setuptools_support.py,
   yolk/utils.py, yolk/yolklib.py: Change license info, email
