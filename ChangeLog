@@ -1,647 +1,711 @@
-2007-04-23 04:58  cakebread
+2012-02-05  Rob Cakebread <cakebread@gmail.com>
 
-	* README: Update changelog
+  * yolk/cli.py, yolk/metadata.py, yolk/pypi.py, yolk/setuptools_support.py,
+  yolk/utils.py, yolk/yolklib.py: Change license info, email
 
-2007-04-23 04:42  cakebread
+  * yolk/cli.py: entry-map patch from Jesus Rivero (Neurogeek)
 
-	* yolk/__version__.py: Update version for 0.0.7 release
+  * .gitignore: Update w/ dist/
 
-2007-04-23 03:03  cakebread
+  * .gitignore: Update w/ *.pyc
 
-	* FAQ, INSTALL, NEWS, README: Update for 0.7 release
+  * AUTHORS, COPYING, CREDITS, INSTALL, README, README.rst, THANKS, TODO,
+  setup.py, yolk/__init__.py: Prep for 0.4.2 release
 
-2007-04-23 02:46  cakebread
+2008-10-18  Rob Cakebread <cakebread@gmail.com>
 
-	* examples/plugins/yolk_portage: Add svn:ignore
+  * yolk/metadata.py: Simplify get_metadata
 
-2007-04-23 00:37  cakebread
+  * tests/test_yolk_metadata.py, tests/test_yolk_pypi.py,
+  tests/test_yolk_setuptools_support.py, tests/test_yolk_utils.py,
+  tests/test_yolk_yolklib.py: Renamed.
 
-	* README, yolk/cli.py, yolk/pypi.py: Make sure -M works with
-	  PKG_SPEC
+2008-09-03  Rob Cakebread <cakebread@gmail.com>
 
-2007-04-22 05:48  cakebread
+  * yolk/pypi.py: Added xmlrpc debug info when XMLRPC_DEBUG env variable is
+  set.
 
-	* setup.py: Added yolk.plugins
+2008-08-21  Rob Cakebread <cakebread@gmail.com>
 
-2007-04-22 05:06  cakebread
+  * : Moved to test_yolk_yolklib.py
 
-	* yolk/cli.py: Move PYPI to local scope. Tidy up.
+2008-08-11  Rob Cakebread <cakebread@gmail.com>
 
-2007-04-22 03:47  cakebread
+  * README, yolk/__init__.py, yolk/cli.py: Fix -f bug with -l
 
-	* examples/plugins/README, examples/plugins/yolk_portage,
-	  examples/plugins/yolk_portage/README,
-	  examples/plugins/yolk_portage/yolk_portage.py: Add docs.
+  * CREDITS, NEWS, README: Update docs for release
 
-2007-04-22 02:54  cakebread
+  * yolk/pypi.py: Add self.verbose to ProxyTransport
 
-	* tests: Updated svn:ignore
+  * yolk/cli.py, yolk/pypi.py, yolk/setuptools_support.py, yolk/utils.py: Tidy,
+  add doc strings
 
-2007-04-22 02:40  cakebread
+  * yolk/pypi.py: Add http proxy for xml-rpc. Closes #24
 
-	* yolk/plugins: Updated svn:ignore
+  * yolk/cli.py: Case-insensitive search for -f. Closes #12
 
-2007-04-21 21:59  cakebread
+  * yolk/cli.py: Don't choke on missing metadata. Closes #23
 
-	* yolk/cli.py: Fix bug when invalid package showed all installed.
+2008-04-23  Rob Cakebread <cakebread@gmail.com>
 
-2007-04-21 21:15  cakebread
+  * yolk/pypi.py: Fix pypi's new URL. No more cheeseshop.
 
-	* yolk/cli.py: new --entry-points and --entry-map options
+2007-07-20  Rob Cakebread <cakebread@gmail.com>
 
-2007-04-21 04:51  cakebread
+  * yolk/cli.py: Fix fetch_uri to be Python <2.5 compatible
 
-	* yolk/cli.py, yolk/metadata.py, yolk/plugins/__init__.py,
-	  yolk/plugins/base.py, yolk/pypi.py, yolk/setuptools_support.py:
-	  Tidy up after pylint.
+  * yolk/setuptools_support.py: Fix get_download_uri
 
-2007-04-21 04:14  cakebread
+  * yolk/cli.py, yolk/setuptools_support.py: Added --pypi-index option to
+  specify PyPI mirror.
 
-	* yolk/__version__.py, yolk/metadata.py, yolk/pypi.py,
-	  yolk/setuptools_support.py, yolk/yolklib.py: Change license info.
+  * yolk/cli.py: Fix problem with -D svn
 
-2007-04-21 04:13  cakebread
+2007-07-18  Rob Cakebread <cakebread@gmail.com>
 
-	* yolk/__init__.py: Change license to GPL-2
+  * yolk/cli.py: Update docstrings.
 
-2007-04-21 00:19  cakebread
+  * yolk/cli.py: MAJOR refactor of run(). Yay\!
 
-	* CHANGELOG, ChangeLog: Renamed.
+2007-07-17  Rob Cakebread <cakebread@gmail.com>
 
-2007-04-21 00:19  cakebread
+  * yolk/cli.py: Fixes #22
 
-	* CHANGELOG: Updated.
+  * yolk/__init__.py: Version bump.
 
-2007-04-20 21:18  cakebread
+  * THANKS: More thanks.
 
-	* examples/plugins, examples/plugins/yolk_pkg_manager,
-	  examples/plugins/yolk_pkg_manager/README,
-	  examples/plugins/yolk_pkg_manager/setup.py,
-	  examples/plugins/yolk_pkg_manager/yolk_acme.py,
-	  examples/plugins/yolk_portage,
-	  examples/plugins/yolk_portage/setup.py,
-	  examples/plugins/yolk_portage/yolk_portage.py: Initial commit.
+  * README: Updated changelog.
 
-2007-04-20 21:08  cakebread
+  * tests/test_cli.py: Removed test.
 
-	* yolk/cli.py: Remove false false positive.
+  * tests/rss_feed.py: Add skipped tests.
 
-2007-04-20 21:05  cakebread
+2007-07-16  Rob Cakebread <cakebread@gmail.com>
 
-	* yolk/cli.py: Don't detect workingenv dirs as development
+  * CREDITS: Updated.
 
-2007-04-20 18:33  cakebread
+  * tests/rss_feed.py, yolk/__init__.py, yolk/cli.py, yolk/pypi.py,
+  yolk/setuptools_support.py, yolk/utils.py: Refactor, smarter package list
+  cacheing.
 
-	* yolk/cli.py: Changed license to GPL-2
+2007-07-14  Rob Cakebread <cakebread@gmail.com>
 
-2007-04-20 17:47  cakebread
+  * README, setup.py, yolk/cli.py, yolk/pypi.py, yolk/utils.py: Remove rss
+  cruft.
 
-	* COPYING, setup.py: Change to GPL-2 license
+  * yolk/pypi.py: Removed RSS support in favor of new XML-RPC method.
 
-2007-04-20 17:33  cakebread
+  * yolk/cli.py, yolk/pypi.py, yolk/setuptools_support.py: Refactored XML-RPC
+  code a bit.
 
-	* CREDITS: Update credit due.
+  * yolk/cli.py, yolk/setuptools_support.py: Don't show source if no egg is
+  available (setuptools default)
 
-2007-04-20 17:29  cakebread
+  * yolk/cli.py, yolk/metadata.py, yolk/pypi.py, yolk/utils.py: Refactor -D
+  code
 
-	* yolk/cli.py, yolk/plugins, yolk/plugins/__init__.py,
-	  yolk/plugins/base.py: Initial plugin support.
+  * yolk/cli.py, yolk/pypi.py, yolk/setuptools_support.py: Huge refactoring.
 
-2007-04-18 22:40  cakebread
+2007-07-13  Rob Cakebread <cakebread@gmail.com>
 
-	* yolk/__version__.py: Update version.
+  * yolk/cli.py: Add support for svn fetching for -F -T svn
 
-2007-04-18 18:26  cakebread
+  * yolk/cli.py: Added -F option for source download.
 
-	* yolk/__init__.py, yolk/__version__.py, yolk/cli.py,
-	  yolk/metadata.py, yolk/pypi.py, yolk/setuptools_support.py,
-	  yolk/yolklib.py: Tidy up per pylint
+  * setup.py, yolk/__init__.py, yolk/__version__.py, yolk/cli.py, yolk/pypi.py:
+  Add Revision svn prop to version. Squelch pkg_resources output
 
-2007-04-18 18:08  cakebread
+2007-07-07  Rob Cakebread <cakebread@gmail.com>
 
-	* yolk/cli.py, yolk/setuptools_support.py, yolk/yolklib.py: Better
-	  setuptools hack for -D
+  * yolk/__version__.py: Version bump.
 
-2007-04-18 18:08  cakebread
+  * README, setup.py: Updated description.
 
-	* tests/rss_feed.py: Skip packages with space in name till fixed.
+  * setup.py: Removed obsolete comments.
 
-2007-04-14 01:51  cakebread
+  * yolk/cli.py: Remove result msg when no non-active pkgs installed
 
-	* yolk/pypi.py: Remove #md5 from urls
+  * README, setup.py, yolk/pypi.py: Make cElementTree optional for RSS
+  extra_requires
 
-2007-04-14 01:50  cakebread
+  * README, yolk/__version__.py: Version bump.
 
-	* tests/rss_feed.py: Use setuptoolks pkg spec format.
+  * tests/test_parse_pkg_ver.py: Moved to test_cli.py
 
-2007-04-10 17:46  cakebread
+2007-07-06  Rob Cakebread <cakebread@gmail.com>
 
-	* yolk/cli.py: Sort RSS feed by date
+  * setup.py: Add install_reqires and celementree-foo
 
-2007-04-10 17:23  cakebread
+  * yolk/cli.py, yolk/setuptools_support.py: Tidy up docstrings
 
-	* yolk/pypi.py: Sort RSS feed by date
+  * yolk/cli.py, yolk/metadata.py, yolk/pypi.py, yolk/setuptools_support.py:
+  Clean up docstrings
 
-2007-04-10 15:47  cakebread
+  * yolk/cli.py: Clarify msg when no pkgs installed
 
-	* yolk/yolklib.py: Use pkg_resource.require instead of Enviroent
-	  directly
+  * yolk/yolklib.py: Pretty-up docstrings
 
-2007-04-10 15:46  cakebread
+2007-06-24  Rob Cakebread <cakebread@gmail.com>
 
-	* yolk/pypi.py: Add date to RSS data
+  * yolk/cli.py: Fixed -M for non-specific version.
 
-2007-04-10 15:43  cakebread
+2007-06-23  Rob Cakebread <cakebread@gmail.com>
 
-	* docs/api: Remove API docs
+  * yolk/cli.py, yolk/setuptools_support.py: Added 'svn' type for -T
 
-2007-04-10 15:41  cakebread
+2007-06-13  Rob Cakebread <cakebread@gmail.com>
 
-	* docs/api/index.html,
-	  docs/api/private/exceptions.Exception-class.html,
-	  docs/api/private/frames.html, docs/api/private/help.html,
-	  docs/api/private/index.html, docs/api/private/indices.html,
-	  docs/api/private/toc-everything.html,
-	  docs/api/private/toc-yolk-module.html,
-	  docs/api/private/toc-yolk.__version__-module.html,
-	  docs/api/private/toc-yolk.cli-module.html,
-	  docs/api/private/toc-yolk.pypi-module.html,
-	  docs/api/private/toc-yolk.yolklib-module.html,
-	  docs/api/private/toc.html, docs/api/private/trees.html,
-	  docs/api/private/yolk-module.html,
-	  docs/api/private/yolk.__version__-module.html,
-	  docs/api/private/yolk.cli-module.html,
-	  docs/api/private/yolk.cli.Usage-class.html,
-	  docs/api/private/yolk.metadata-module.html,
-	  docs/api/private/yolk.pypi-module.html,
-	  docs/api/private/yolk.pypi.CheeseShop-class.html,
-	  docs/api/private/yolk.yolklib-module.html,
-	  docs/api/private/yolk.yolklib.Distributions-class.html,
-	  docs/api/public/exceptions.Exception-class.html,
-	  docs/api/public/frames.html, docs/api/public/help.html,
-	  docs/api/public/index.html, docs/api/public/indices.html,
-	  docs/api/public/toc-everything.html,
-	  docs/api/public/toc-yolk-module.html,
-	  docs/api/public/toc-yolk.__version__-module.html,
-	  docs/api/public/toc-yolk.cli-module.html,
-	  docs/api/public/toc-yolk.pypi-module.html,
-	  docs/api/public/toc-yolk.yolklib-module.html,
-	  docs/api/public/toc.html, docs/api/public/trees.html,
-	  docs/api/public/yolk-module.html,
-	  docs/api/public/yolk.__version__-module.html,
-	  docs/api/public/yolk.cli-module.html,
-	  docs/api/public/yolk.cli.Usage-class.html,
-	  docs/api/public/yolk.metadata-module.html,
-	  docs/api/public/yolk.pypi-module.html,
-	  docs/api/public/yolk.pypi.CheeseShop-class.html,
-	  docs/api/public/yolk.yolklib-module.html,
-	  docs/api/public/yolk.yolklib.Distributions-class.html: Update API
-	  docs
+  * yolk/cli.py: Tidy get_all_versions_pypi
 
-2007-03-21 17:29  cakebread
+  * yolk/cli.py: Remove obsolete comments.
 
-	* yolk/pypi.py: Fixed check for binary -T -D
+  * yolk/cli.py: Got rid of Usage excaption.
 
-2007-03-15 05:44  cakebread
+  * yolk/cli.py, yolk/pypi.py, yolk/setuptools_support.py: Clean up url for -D
+  if pkg_name==dev
 
-	* yolk/cli.py: Update ignores
+  * yolk/cli.py: Fix -M and -V to not show all versions when specific is asked
+  for.
 
-2007-03-07 05:09  cakebread
+  * setup.py: Remove un-needed find_packages
 
-	* yolk/pypi.py: Don't exit on PyPI errors
+2007-05-18  Rob Cakebread <cakebread@gmail.com>
 
-2007-03-07 02:33  cakebread
+  * README: Update changelog
 
-	* examples/rss_feed.py, tests/rss_feed.py: Moved.
+2007-05-17  Rob Cakebread <cakebread@gmail.com>
 
-2007-03-06 21:45  cakebread
+  * yolk/pypi.py: Fix indent level
 
-	* yolk/cli.py: Add Debian location ignores
+  * yolk/plugins/__init__.py: Reduce log level
 
-2007-03-06 21:07  cakebread
+  * tests/rss_feed.py: Fix celementtree dep for Python 2.5
 
-	* yolk/cli.py, yolk/yolklib.py: Case-insensitive searches for
-	  installed opts ticket #3
+  * setup.py: Changed from Pre-Alpha to Alpha classifier
 
-2007-03-06 21:07  cakebread
+  * yolk/__version__.py: Version bump.
 
-	* README: Updated svn yolk==dev link
+  * yolk/cli.py: Fixed undefined variable.
 
-2007-03-06 18:18  cakebread
+  * yolk/cli.py, yolk/pypi.py: More accurate support for -D. Fixes ticket #16
 
-	* README: Updated.
+  * yolk/metadata.py: Removed pylint disable-msg
 
-2007-03-06 17:47  cakebread
+  * yolk/setuptools_support.py: More accurate support for -D. Fixes ticket #16
 
-	* yolk/__version__.py: Version bump.
+2007-05-14  Rob Cakebread <cakebread@gmail.com>
 
-2007-03-01 20:02  cakebread
+  * yolk/cli.py: Allow -f option with -M
 
-	* CHANGELOG: Updated.
+2007-05-11  Rob Cakebread <cakebread@gmail.com>
 
-2007-03-01 19:58  cakebread
+  * yolk/cli.py: Tidy up logger.
 
-	* examples/rss_feed.py: Fixed bad interpreter error
+  * yolk/cli.py, yolk/yolklib.py: Add ability to only check one pkg for -U
 
-2007-03-01 19:53  cakebread
+  * yolk/cli.py: Refactor main w/ correct exit codes. Fixes ticket #15
 
-	* README: Updated svn dev egg
+2007-04-24  Rob Cakebread <cakebread@gmail.com>
 
-2007-03-01 19:52  cakebread
+  * yolk/cli.py: Tidy up opt parser help.
 
-	* setup.py: Added nose unit testing
+2007-04-23  Rob Cakebread <cakebread@gmail.com>
 
-2007-03-01 19:48  cakebread
+  * yolk/cli.py, yolk/yolklib.py: Fixes ticket #17
 
-	* ., yolk: propedit ignore
+  * README: New yolk-dev URL
 
-2007-03-01 19:46  cakebread
+  * yolk/__version__.py: Version bump.
 
-	* tests: propedit ignore
+  * ChangeLog: Update ChangeLog for 0.0.7 release
 
-2007-03-01 19:45  cakebread
+  * README: Update changelog
 
-	* tests/test_parse_pkg_ver.py: Initial commit.
+  * yolk/__version__.py: Update version for 0.0.7 release
 
-2007-03-01 19:36  cakebread
+  * FAQ, INSTALL, NEWS, README: Update for 0.7 release
 
-	* yolk/cli.py, yolk/metadata.py, yolk/pypi.py, yolk/yolklib.py: Use
-	  restructuredtext for docstrings
+  * README, yolk/cli.py, yolk/pypi.py: Make sure -M works with PKG_SPEC
 
-2007-03-01 02:33  cakebread
+2007-04-22  Rob Cakebread <cakebread@gmail.com>
 
-	* yolk: propedit ignores
+  * setup.py: Added yolk.plugins
 
-2007-03-01 02:32  cakebread
+  * yolk/cli.py: Move PYPI to local scope. Tidy up.
 
-	* .: propedit ignores
+  * examples/plugins/README, examples/plugins/yolk_portage/README,
+  examples/plugins/yolk_portage/yolk_portage.py: Add docs.
 
-2007-02-28 23:55  cakebread
+2007-04-21  Rob Cakebread <cakebread@gmail.com>
 
-	* CHANGELOG, README: Update for 0.0.6
+  * yolk/cli.py: Fix bug when invalid package showed all installed.
 
-2007-02-28 18:05  cakebread
+  * yolk/cli.py: new --entry-points and --entry-map options
 
-	* yolk/__version__.py: Version bump.
+  * yolk/cli.py, yolk/metadata.py, yolk/plugins/__init__.py,
+  yolk/plugins/base.py, yolk/pypi.py, yolk/setuptools_support.py: Tidy up after
+  pylint.
 
-2007-02-28 16:58  cakebread
+  * yolk/__version__.py, yolk/metadata.py, yolk/pypi.py,
+  yolk/setuptools_support.py, yolk/yolklib.py: Change license info.
 
-	* yolk/cli.py: Do case-insensitive prefix search
+  * yolk/__init__.py: Change license to GPL-2
 
-2007-02-27 22:34  cakebread
+  * CHANGELOG, ChangeLog: Renamed.
 
-	* setup.py: Fix desc
+  * CHANGELOG: Updated.
 
-2007-02-27 22:30  cakebread
+2007-04-20  Rob Cakebread <cakebread@gmail.com>
 
-	* README: Remove broken svn link auth required
+  * yolk/cli.py: Remove false false positive.
 
-2007-02-27 21:43  cakebread
+  * yolk/cli.py: Don't detect workingenv dirs as development
 
-	* yolk/cli.py: Fix shebang
+  * yolk/cli.py: Changed license to GPL-2
 
-2007-02-27 21:43  cakebread
+  * COPYING, setup.py: Change to GPL-2 license
 
-	* README: Added ebuild location.
+  * CREDITS: Update credit due.
 
-2007-02-27 18:17  cakebread
+  * yolk/cli.py, yolk/plugins/__init__.py, yolk/plugins/base.py: Initial plugin
+  support.
 
-	* yolk/cli.py, yolk/metadata.py, yolk/pypi.py, yolk/yolklib.py:
-	  Tidy up per pylint
+2007-04-18  Rob Cakebread <cakebread@gmail.com>
 
-2007-02-27 17:16  cakebread
+  * yolk/__version__.py: Update version.
 
-	* yolk/cli.py: Fix for pkgs with no metadata
+  * yolk/__init__.py, yolk/__version__.py, yolk/cli.py, yolk/metadata.py,
+  yolk/pypi.py, yolk/setuptools_support.py, yolk/yolklib.py: Tidy up per pylint
 
-2007-02-27 17:15  cakebread
+  * yolk/cli.py, yolk/setuptools_support.py, yolk/yolklib.py: Better setuptools
+  hack for -D
 
-	* yolk/cli.py: Fixed false positives for development pkgs
+  * tests/rss_feed.py: Skip packages with space in name till fixed.
 
-2007-02-27 06:35  cakebread
+2007-04-14  Rob Cakebread <cakebread@gmail.com>
 
-	* README, setup.py: Use reST for long desc
+  * yolk/pypi.py: Remove #md5 from urls
 
-2007-02-27 06:02  cakebread
+  * tests/rss_feed.py: Use setuptoolks pkg spec format.
 
-	* yolk/cli.py: Change 'egg' to 'binary' with -T
+2007-04-10  Rob Cakebread <cakebread@gmail.com>
 
-2007-02-27 05:31  cakebread
+  * yolk/cli.py: Sort RSS feed by date
 
-	* CHANGELOG, yolk/cli.py: Parse PKG_SPEC with ==
+  * yolk/pypi.py: Sort RSS feed by date
 
-2007-02-27 03:38  cakebread
+  * yolk/yolklib.py: Use pkg_resource.require instead of Enviroent directly
 
-	* examples/rss_feed.py: Updated to use new API
+  * yolk/pypi.py: Add date to RSS data
 
-2007-02-26 19:33  cakebread
+  * docs/api/epydoc.css, docs/api/index.html, docs/api/private/epydoc.css,
+  docs/api/private/exceptions.Exception-class.html,
+  docs/api/private/frames.html, docs/api/private/help.html,
+  docs/api/private/index.html, docs/api/private/indices.html,
+  docs/api/private/toc-everything.html, docs/api/private/toc-yolk-module.html,
+  docs/api/private/toc-yolk.__version__-module.html,
+  docs/api/private/toc-yolk.cli-module.html,
+  docs/api/private/toc-yolk.metadata-module.html,
+  docs/api/private/toc-yolk.pypi-module.html,
+  docs/api/private/toc-yolk.yolklib-module.html, docs/api/private/toc.html,
+  docs/api/private/trees.html, docs/api/private/yolk-module.html,
+  docs/api/private/yolk.__version__-module.html,
+  docs/api/private/yolk.cli-module.html,
+  docs/api/private/yolk.cli.Usage-class.html,
+  docs/api/private/yolk.metadata-module.html,
+  docs/api/private/yolk.pypi-module.html,
+  docs/api/private/yolk.pypi.CheeseShop-class.html,
+  docs/api/private/yolk.yolklib-module.html,
+  .../private/yolk.yolklib.Distributions-class.html,
+  docs/api/public/epydoc.css, docs/api/public/exceptions.Exception-class.html,
+  docs/api/public/frames.html, docs/api/public/help.html,
+  docs/api/public/index.html, docs/api/public/indices.html,
+  docs/api/public/toc-everything.html, docs/api/public/toc-yolk-module.html,
+  docs/api/public/toc-yolk.__version__-module.html,
+  docs/api/public/toc-yolk.cli-module.html,
+  docs/api/public/toc-yolk.metadata-module.html,
+  docs/api/public/toc-yolk.pypi-module.html,
+  docs/api/public/toc-yolk.yolklib-module.html, docs/api/public/toc.html,
+  docs/api/public/trees.html, docs/api/public/yolk-module.html,
+  docs/api/public/yolk.__version__-module.html,
+  docs/api/public/yolk.cli-module.html,
+  docs/api/public/yolk.cli.Usage-class.html,
+  docs/api/public/yolk.metadata-module.html,
+  docs/api/public/yolk.pypi-module.html,
+  docs/api/public/yolk.pypi.CheeseShop-class.html,
+  docs/api/public/yolk.yolklib-module.html,
+  .../public/yolk.yolklib.Distributions-class.html: Remove API docs
 
-	* yolk/cli.py: Removed -p
+  * docs/api/index.html, docs/api/private/exceptions.Exception-class.html,
+  docs/api/private/frames.html, docs/api/private/help.html,
+  docs/api/private/index.html, docs/api/private/indices.html,
+  docs/api/private/toc-everything.html, docs/api/private/toc-yolk-module.html,
+  docs/api/private/toc-yolk.__version__-module.html,
+  docs/api/private/toc-yolk.cli-module.html,
+  docs/api/private/toc-yolk.pypi-module.html,
+  docs/api/private/toc-yolk.yolklib-module.html, docs/api/private/toc.html,
+  docs/api/private/trees.html, docs/api/private/yolk-module.html,
+  docs/api/private/yolk.__version__-module.html,
+  docs/api/private/yolk.cli-module.html,
+  docs/api/private/yolk.cli.Usage-class.html,
+  docs/api/private/yolk.metadata-module.html,
+  docs/api/private/yolk.pypi-module.html,
+  docs/api/private/yolk.pypi.CheeseShop-class.html,
+  docs/api/private/yolk.yolklib-module.html,
+  .../private/yolk.yolklib.Distributions-class.html,
+  docs/api/public/exceptions.Exception-class.html, docs/api/public/frames.html,
+  docs/api/public/help.html, docs/api/public/index.html,
+  docs/api/public/indices.html, docs/api/public/toc-everything.html,
+  docs/api/public/toc-yolk-module.html,
+  docs/api/public/toc-yolk.__version__-module.html,
+  docs/api/public/toc-yolk.cli-module.html,
+  docs/api/public/toc-yolk.pypi-module.html,
+  docs/api/public/toc-yolk.yolklib-module.html, docs/api/public/toc.html,
+  docs/api/public/trees.html, docs/api/public/yolk-module.html,
+  docs/api/public/yolk.__version__-module.html,
+  docs/api/public/yolk.cli-module.html,
+  docs/api/public/yolk.cli.Usage-class.html,
+  docs/api/public/yolk.metadata-module.html,
+  docs/api/public/yolk.pypi-module.html,
+  docs/api/public/yolk.pypi.CheeseShop-class.html,
+  docs/api/public/yolk.yolklib-module.html,
+  .../public/yolk.yolklib.Distributions-class.html: Update API docs
 
-2007-02-26 19:10  cakebread
+2007-03-21  Rob Cakebread <cakebread@gmail.com>
 
-	* FAQ: Updated.
+  * yolk/pypi.py: Fixed check for binary -T -D
 
-2007-02-18 03:29  cakebread
+2007-03-15  Rob Cakebread <cakebread@gmail.com>
 
-	* yolk/cli.py, yolk/yolklib.py: Added -p PKG_SPEC
+  * yolk/cli.py: Update ignores
 
-2007-02-14 00:52  cakebread
+2007-03-07  Rob Cakebread <cakebread@gmail.com>
 
-	* yolk/__version__.py: Version bump.
+  * yolk/pypi.py: Don't exit on PyPI errors
 
-2007-02-13 02:44  cakebread
+  * examples/rss_feed.py, tests/rss_feed.py: Moved.
 
-	* docs/api, docs/api/epydoc.css, docs/api/index.html,
-	  docs/api/private, docs/api/private/epydoc.css,
-	  docs/api/private/exceptions.Exception-class.html,
-	  docs/api/private/frames.html, docs/api/private/help.html,
-	  docs/api/private/index.html, docs/api/private/indices.html,
-	  docs/api/private/toc-everything.html,
-	  docs/api/private/toc-yolk-module.html,
-	  docs/api/private/toc-yolk.__version__-module.html,
-	  docs/api/private/toc-yolk.cli-module.html,
-	  docs/api/private/toc-yolk.metadata-module.html,
-	  docs/api/private/toc-yolk.pypi-module.html,
-	  docs/api/private/toc-yolk.yolklib-module.html,
-	  docs/api/private/toc.html, docs/api/private/trees.html,
-	  docs/api/private/yolk-module.html,
-	  docs/api/private/yolk.__version__-module.html,
-	  docs/api/private/yolk.cli-module.html,
-	  docs/api/private/yolk.cli.Usage-class.html,
-	  docs/api/private/yolk.metadata-module.html,
-	  docs/api/private/yolk.pypi-module.html,
-	  docs/api/private/yolk.pypi.CheeseShop-class.html,
-	  docs/api/private/yolk.yolklib-module.html,
-	  docs/api/private/yolk.yolklib.Distributions-class.html,
-	  docs/api/public, docs/api/public/epydoc.css,
-	  docs/api/public/exceptions.Exception-class.html,
-	  docs/api/public/frames.html, docs/api/public/help.html,
-	  docs/api/public/index.html, docs/api/public/indices.html,
-	  docs/api/public/toc-everything.html,
-	  docs/api/public/toc-yolk-module.html,
-	  docs/api/public/toc-yolk.__version__-module.html,
-	  docs/api/public/toc-yolk.cli-module.html,
-	  docs/api/public/toc-yolk.metadata-module.html,
-	  docs/api/public/toc-yolk.pypi-module.html,
-	  docs/api/public/toc-yolk.yolklib-module.html,
-	  docs/api/public/toc.html, docs/api/public/trees.html,
-	  docs/api/public/yolk-module.html,
-	  docs/api/public/yolk.__version__-module.html,
-	  docs/api/public/yolk.cli-module.html,
-	  docs/api/public/yolk.cli.Usage-class.html,
-	  docs/api/public/yolk.metadata-module.html,
-	  docs/api/public/yolk.pypi-module.html,
-	  docs/api/public/yolk.pypi.CheeseShop-class.html,
-	  docs/api/public/yolk.yolklib-module.html,
-	  docs/api/public/yolk.yolklib.Distributions-class.html: Updated
-	  API docs.
+2007-03-06  Rob Cakebread <cakebread@gmail.com>
 
-2007-02-13 02:43  cakebread
+  * yolk/cli.py: Add Debian location ignores
 
-	* docs/api: Update API docs.
+  * yolk/cli.py, yolk/yolklib.py: Case-insensitive searches for installed opts
+  ticket #3
 
-2007-02-13 02:43  cakebread
+  * README: Updated svn yolk==dev link
 
-	* lib, setup.py, yolk, yolk/__version__.py, yolk/cli.py,
-	  yolk/pypi.py, yolk/yolklib.py: Fixed -U false positives. ticket
-	  #2
+  * README: Updated.
 
-2007-02-13 02:41  cakebread
+  * yolk/__version__.py: Version bump.
 
-	* CHANGELOG: Updated.
+2007-03-01  Rob Cakebread <cakebread@gmail.com>
 
-2007-02-12 21:20  cakebread
+  * CHANGELOG: Updated.
 
-	* docs/api, docs/api/epydoc.css, docs/api/index.html,
-	  docs/api/private, docs/api/private/epydoc.css,
-	  docs/api/private/exceptions.Exception-class.html,
-	  docs/api/private/frames.html, docs/api/private/help.html,
-	  docs/api/private/index.html, docs/api/private/indices.html,
-	  docs/api/private/toc-everything.html,
-	  docs/api/private/toc-yolk-module.html,
-	  docs/api/private/toc-yolk.__version__-module.html,
-	  docs/api/private/toc-yolk.cli-module.html,
-	  docs/api/private/toc-yolk.metadata-module.html,
-	  docs/api/private/toc-yolk.pypi-module.html,
-	  docs/api/private/toc-yolk.yolklib-module.html,
-	  docs/api/private/toc.html, docs/api/private/trees.html,
-	  docs/api/private/yolk-module.html,
-	  docs/api/private/yolk.__version__-module.html,
-	  docs/api/private/yolk.cli-module.html,
-	  docs/api/private/yolk.cli.Usage-class.html,
-	  docs/api/private/yolk.metadata-module.html,
-	  docs/api/private/yolk.pypi-module.html,
-	  docs/api/private/yolk.pypi.CheeseShop-class.html,
-	  docs/api/private/yolk.yolklib-module.html,
-	  docs/api/private/yolk.yolklib.Distributions-class.html,
-	  docs/api/public, docs/api/public/epydoc.css,
-	  docs/api/public/exceptions.Exception-class.html,
-	  docs/api/public/frames.html, docs/api/public/help.html,
-	  docs/api/public/index.html, docs/api/public/indices.html,
-	  docs/api/public/toc-everything.html,
-	  docs/api/public/toc-yolk-module.html,
-	  docs/api/public/toc-yolk.__version__-module.html,
-	  docs/api/public/toc-yolk.cli-module.html,
-	  docs/api/public/toc-yolk.metadata-module.html,
-	  docs/api/public/toc-yolk.pypi-module.html,
-	  docs/api/public/toc-yolk.yolklib-module.html,
-	  docs/api/public/toc.html, docs/api/public/trees.html,
-	  docs/api/public/yolk-module.html,
-	  docs/api/public/yolk.__version__-module.html,
-	  docs/api/public/yolk.cli-module.html,
-	  docs/api/public/yolk.cli.Usage-class.html,
-	  docs/api/public/yolk.metadata-module.html,
-	  docs/api/public/yolk.pypi-module.html,
-	  docs/api/public/yolk.pypi.CheeseShop-class.html,
-	  docs/api/public/yolk.yolklib-module.html,
-	  docs/api/public/yolk.yolklib.Distributions-class.html: Update API
-	  docs.
+  * examples/rss_feed.py: Fixed bad interpreter error
 
-2007-02-12 21:19  cakebread
+  * README: Updated svn dev egg
 
-	* docs/api: Update api docs
+  * setup.py: Added nose unit testing
 
-2007-02-12 20:31  cakebread
+  * yolk/cli.py, yolk/metadata.py, yolk/pypi.py, yolk/yolklib.py: Use
+  restructuredtext for docstrings
 
-	* yolklib: Moved to lib
+2007-02-28  Rob Cakebread <cakebread@gmail.com>
 
-2007-02-12 20:31  cakebread
+  * CHANGELOG, README: Update for 0.0.6
 
-	* yolklib/scripts: Removed
+  * yolk/__version__.py: Version bump.
 
-2007-02-12 20:30  cakebread
+  * yolk/cli.py: Do case-insensitive prefix search
 
-	* lib, lib/__init__.py, lib/__version__.py, lib/cli.py,
-	  lib/metadata.py, lib/pypi.py, lib/yolklib.py, setup.py:
-	  Refactored yolklib to lib
+2007-02-27  Rob Cakebread <cakebread@gmail.com>
 
-2007-02-12 20:25  cakebread
+  * setup.py: Fix desc
 
-	* CHANGELOG, FAQ: Updated.
+  * README: Remove broken svn link auth required
 
-2007-02-08 21:55  cakebread
+  * yolk/cli.py: Fix shebang
 
-	* yolk.py: Moved to yolklib/scripts.
+  * README: Added ebuild location.
 
-2007-02-08 21:54  cakebread
+  * yolk/cli.py, yolk/metadata.py, yolk/pypi.py, yolk/yolklib.py: Tidy up per
+  pylint
 
-	* setup.py: Moved yolk.py to scripts directory.
+  * yolk/cli.py: Fix for pkgs with no metadata
 
-2007-02-08 21:54  cakebread
+  * yolk/cli.py: Fixed false positives for development pkgs
 
-	* CHANGELOG: Updated.
+  * README, setup.py: Use reST for long desc
 
-2007-02-08 21:51  cakebread
+  * yolk/cli.py: Change 'egg' to 'binary' with -T
 
-	* yolklib/pypi.py: Added check for Python2.5 elementtree
+  * CHANGELOG, yolk/cli.py: Parse PKG_SPEC with ==
 
-2007-02-08 21:50  cakebread
+  * examples/rss_feed.py: Updated to use new API
 
-	* docs/api/index.html, docs/api/private/frames.html,
-	  docs/api/private/help.html, docs/api/private/index.html,
-	  docs/api/private/indices.html,
-	  docs/api/private/toc-everything.html,
-	  docs/api/private/toc-yolk-module.html,
-	  docs/api/private/toc-yolklib-module.html,
-	  docs/api/private/toc-yolklib.__version__-module.html,
-	  docs/api/private/toc-yolklib.pypi-module.html,
-	  docs/api/private/toc.html, docs/api/private/trees.html,
-	  docs/api/private/yolk-module.html,
-	  docs/api/private/yolklib-module.html,
-	  docs/api/private/yolklib.__version__-module.html,
-	  docs/api/private/yolklib.metadata-module.html,
-	  docs/api/private/yolklib.pypi-module.html,
-	  docs/api/private/yolklib.pypi.CheeseShop-class.html,
-	  docs/api/private/yolklib.yolklib-module.html,
-	  docs/api/private/yolklib.yolklib.Distributions-class.html,
-	  docs/api/public/frames.html, docs/api/public/help.html,
-	  docs/api/public/index.html, docs/api/public/indices.html,
-	  docs/api/public/toc-everything.html,
-	  docs/api/public/toc-yolk-module.html,
-	  docs/api/public/toc-yolklib-module.html,
-	  docs/api/public/toc-yolklib.__version__-module.html,
-	  docs/api/public/toc-yolklib.pypi-module.html,
-	  docs/api/public/toc.html, docs/api/public/trees.html,
-	  docs/api/public/yolk-module.html,
-	  docs/api/public/yolklib-module.html,
-	  docs/api/public/yolklib.__version__-module.html,
-	  docs/api/public/yolklib.metadata-module.html,
-	  docs/api/public/yolklib.pypi-module.html,
-	  docs/api/public/yolklib.pypi.CheeseShop-class.html,
-	  docs/api/public/yolklib.yolklib-module.html,
-	  docs/api/public/yolklib.yolklib.Distributions-class.html: Updated
-	  via epydoc
+2007-02-26  Rob Cakebread <cakebread@gmail.com>
 
-2007-02-08 19:30  cakebread
+  * yolk/cli.py: Removed -p
 
-	* yolklib/scripts/yolk.py, yolklib/yolk.py: Moving file
+  * FAQ: Updated.
 
-2007-02-08 19:30  cakebread
+2007-02-18  Rob Cakebread <cakebread@gmail.com>
 
-	* yolklib/scripts, yolklib/yolk.py: Moving file
+  * yolk/cli.py, yolk/yolklib.py: Added -p PKG_SPEC
 
-2007-02-06 03:57  cakebread
+2007-02-14  Rob Cakebread <cakebread@gmail.com>
 
-	* yolk.py: Added get_highest_version
+  * yolk/__version__.py: Version bump.
 
-2007-02-05 18:31  cakebread
+2007-02-13  Rob Cakebread <cakebread@gmail.com>
 
-	* yolklib/pypi.py, yolklib/yolklib.py: Remove #\!/usr/bin/python
+  * docs/api/epydoc.css, docs/api/index.html, docs/api/private/epydoc.css,
+  docs/api/private/exceptions.Exception-class.html,
+  docs/api/private/frames.html, docs/api/private/help.html,
+  docs/api/private/index.html, docs/api/private/indices.html,
+  docs/api/private/toc-everything.html, docs/api/private/toc-yolk-module.html,
+  docs/api/private/toc-yolk.__version__-module.html,
+  docs/api/private/toc-yolk.cli-module.html,
+  docs/api/private/toc-yolk.metadata-module.html,
+  docs/api/private/toc-yolk.pypi-module.html,
+  docs/api/private/toc-yolk.yolklib-module.html, docs/api/private/toc.html,
+  docs/api/private/trees.html, docs/api/private/yolk-module.html,
+  docs/api/private/yolk.__version__-module.html,
+  docs/api/private/yolk.cli-module.html,
+  docs/api/private/yolk.cli.Usage-class.html,
+  docs/api/private/yolk.metadata-module.html,
+  docs/api/private/yolk.pypi-module.html,
+  docs/api/private/yolk.pypi.CheeseShop-class.html,
+  docs/api/private/yolk.yolklib-module.html,
+  .../private/yolk.yolklib.Distributions-class.html,
+  docs/api/public/epydoc.css, docs/api/public/exceptions.Exception-class.html,
+  docs/api/public/frames.html, docs/api/public/help.html,
+  docs/api/public/index.html, docs/api/public/indices.html,
+  docs/api/public/toc-everything.html, docs/api/public/toc-yolk-module.html,
+  docs/api/public/toc-yolk.__version__-module.html,
+  docs/api/public/toc-yolk.cli-module.html,
+  docs/api/public/toc-yolk.metadata-module.html,
+  docs/api/public/toc-yolk.pypi-module.html,
+  docs/api/public/toc-yolk.yolklib-module.html, docs/api/public/toc.html,
+  docs/api/public/trees.html, docs/api/public/yolk-module.html,
+  docs/api/public/yolk.__version__-module.html,
+  docs/api/public/yolk.cli-module.html,
+  docs/api/public/yolk.cli.Usage-class.html,
+  docs/api/public/yolk.metadata-module.html,
+  docs/api/public/yolk.pypi-module.html,
+  docs/api/public/yolk.pypi.CheeseShop-class.html,
+  docs/api/public/yolk.yolklib-module.html,
+  .../public/yolk.yolklib.Distributions-class.html: Updated API docs.
 
-2007-02-05 17:09  cakebread
+  * docs/api/epydoc.css, docs/api/index.html, docs/api/private/epydoc.css,
+  docs/api/private/exceptions.Exception-class.html,
+  docs/api/private/frames.html, docs/api/private/help.html,
+  docs/api/private/index.html, docs/api/private/indices.html,
+  docs/api/private/toc-everything.html, docs/api/private/toc-yolk-module.html,
+  docs/api/private/toc-yolk.__version__-module.html,
+  docs/api/private/toc-yolk.cli-module.html,
+  docs/api/private/toc-yolk.metadata-module.html,
+  docs/api/private/toc-yolk.pypi-module.html,
+  docs/api/private/toc-yolk.yolklib-module.html, docs/api/private/toc.html,
+  docs/api/private/trees.html, docs/api/private/yolk-module.html,
+  docs/api/private/yolk.__version__-module.html,
+  docs/api/private/yolk.cli-module.html,
+  docs/api/private/yolk.cli.Usage-class.html,
+  docs/api/private/yolk.metadata-module.html,
+  docs/api/private/yolk.pypi-module.html,
+  docs/api/private/yolk.pypi.CheeseShop-class.html,
+  docs/api/private/yolk.yolklib-module.html,
+  .../private/yolk.yolklib.Distributions-class.html,
+  docs/api/public/epydoc.css, docs/api/public/exceptions.Exception-class.html,
+  docs/api/public/frames.html, docs/api/public/help.html,
+  docs/api/public/index.html, docs/api/public/indices.html,
+  docs/api/public/toc-everything.html, docs/api/public/toc-yolk-module.html,
+  docs/api/public/toc-yolk.__version__-module.html,
+  docs/api/public/toc-yolk.cli-module.html,
+  docs/api/public/toc-yolk.metadata-module.html,
+  docs/api/public/toc-yolk.pypi-module.html,
+  docs/api/public/toc-yolk.yolklib-module.html, docs/api/public/toc.html,
+  docs/api/public/trees.html, docs/api/public/yolk-module.html,
+  docs/api/public/yolk.__version__-module.html,
+  docs/api/public/yolk.cli-module.html,
+  docs/api/public/yolk.cli.Usage-class.html,
+  docs/api/public/yolk.metadata-module.html,
+  docs/api/public/yolk.pypi-module.html,
+  docs/api/public/yolk.pypi.CheeseShop-class.html,
+  docs/api/public/yolk.yolklib-module.html,
+  .../public/yolk.yolklib.Distributions-class.html: Update API docs.
 
-	* yolk.py: Only show newer packages on PyPI -U
+  * lib/__init__.py, lib/__version__.py, lib/cli.py, lib/metadata.py,
+  lib/pypi.py, lib/yolklib.py, setup.py, yolk/__init__.py, yolk/__version__.py,
+  yolk/cli.py, yolk/metadata.py, yolk/pypi.py, yolk/yolklib.py: Fixed -U false
+  positives. ticket #2
 
-2007-02-02 06:05  cakebread
+  * CHANGELOG: Updated.
 
-	* yolk.py: Check for Summary metadata key.
+2007-02-12  Rob Cakebread <cakebread@gmail.com>
 
-2007-02-01 21:15  cakebread
+  * docs/api/epydoc.css, docs/api/index.html, docs/api/private/epydoc.css,
+  docs/api/private/exceptions.Exception-class.html,
+  docs/api/private/frames.html, docs/api/private/help.html,
+  docs/api/private/index.html, docs/api/private/indices.html,
+  docs/api/private/toc-everything.html, docs/api/private/toc-yolk-module.html,
+  docs/api/private/toc-yolk.__version__-module.html,
+  docs/api/private/toc-yolk.cli-module.html,
+  docs/api/private/toc-yolk.metadata-module.html,
+  docs/api/private/toc-yolk.pypi-module.html,
+  docs/api/private/toc-yolk.yolklib-module.html, docs/api/private/toc.html,
+  docs/api/private/trees.html, docs/api/private/yolk-module.html,
+  docs/api/private/yolk.__version__-module.html,
+  docs/api/private/yolk.cli-module.html,
+  docs/api/private/yolk.cli.Usage-class.html,
+  docs/api/private/yolk.metadata-module.html,
+  docs/api/private/yolk.pypi-module.html,
+  docs/api/private/yolk.pypi.CheeseShop-class.html,
+  docs/api/private/yolk.yolklib-module.html,
+  .../private/yolk.yolklib.Distributions-class.html,
+  docs/api/public/epydoc.css, docs/api/public/exceptions.Exception-class.html,
+  docs/api/public/frames.html, docs/api/public/help.html,
+  docs/api/public/index.html, docs/api/public/indices.html,
+  docs/api/public/toc-everything.html, docs/api/public/toc-yolk-module.html,
+  docs/api/public/toc-yolk.__version__-module.html,
+  docs/api/public/toc-yolk.cli-module.html,
+  docs/api/public/toc-yolk.metadata-module.html,
+  docs/api/public/toc-yolk.pypi-module.html,
+  docs/api/public/toc-yolk.yolklib-module.html, docs/api/public/toc.html,
+  docs/api/public/trees.html, docs/api/public/yolk-module.html,
+  docs/api/public/yolk.__version__-module.html,
+  docs/api/public/yolk.cli-module.html,
+  docs/api/public/yolk.cli.Usage-class.html,
+  docs/api/public/yolk.metadata-module.html,
+  docs/api/public/yolk.pypi-module.html,
+  docs/api/public/yolk.pypi.CheeseShop-class.html,
+  docs/api/public/yolk.yolklib-module.html,
+  .../public/yolk.yolklib.Distributions-class.html: Update API docs.
 
-	* yolk.py: Show which pkgs have updates based on PyPI.
+  * docs/api/epydoc.css, docs/api/index.html, docs/api/private/epydoc.css,
+  docs/api/private/frames.html, docs/api/private/help.html,
+  docs/api/private/index.html, docs/api/private/indices.html,
+  docs/api/private/toc-everything.html, docs/api/private/toc-yolk-module.html,
+  docs/api/private/toc-yolklib-module.html,
+  .../private/toc-yolklib.__version__-module.html,
+  docs/api/private/toc-yolklib.metadata-module.html,
+  docs/api/private/toc-yolklib.pypi-module.html,
+  docs/api/private/toc-yolklib.yolklib-module.html, docs/api/private/toc.html,
+  docs/api/private/trees.html, docs/api/private/yolk-module.html,
+  docs/api/private/yolklib-module.html,
+  docs/api/private/yolklib.__version__-module.html,
+  docs/api/private/yolklib.metadata-module.html,
+  docs/api/private/yolklib.pypi-module.html,
+  .../api/private/yolklib.pypi.CheeseShop-class.html,
+  docs/api/private/yolklib.yolklib-module.html,
+  .../yolklib.yolklib.Distributions-class.html, docs/api/public/epydoc.css,
+  docs/api/public/frames.html, docs/api/public/help.html,
+  docs/api/public/index.html, docs/api/public/indices.html,
+  docs/api/public/toc-everything.html, docs/api/public/toc-yolk-module.html,
+  docs/api/public/toc-yolklib-module.html,
+  .../api/public/toc-yolklib.__version__-module.html,
+  docs/api/public/toc-yolklib.metadata-module.html,
+  docs/api/public/toc-yolklib.pypi-module.html,
+  docs/api/public/toc-yolklib.yolklib-module.html, docs/api/public/toc.html,
+  docs/api/public/trees.html, docs/api/public/yolk-module.html,
+  docs/api/public/yolklib-module.html,
+  docs/api/public/yolklib.__version__-module.html,
+  docs/api/public/yolklib.metadata-module.html,
+  docs/api/public/yolklib.pypi-module.html,
+  docs/api/public/yolklib.pypi.CheeseShop-class.html,
+  docs/api/public/yolklib.yolklib-module.html,
+  .../yolklib.yolklib.Distributions-class.html: Update api docs
 
-2007-02-01 19:47  cakebread
+  * yolklib/__init__.py, yolklib/__version__.py, yolklib/metadata.py,
+  yolklib/pypi.py, yolklib/yolklib.py: Moved to lib
 
-	* yolk.py: Fixed print_help printing None.
+  * yolklib/scripts/yolk.py: Removed
 
-2007-01-31 19:31  cakebread
+  * lib/__init__.py, lib/__version__.py, lib/cli.py, lib/metadata.py,
+  lib/pypi.py, lib/yolklib.py, setup.py: Refactored yolklib to lib
 
-	* yolk.py, yolklib/pypi.py: Add check for filetype -T
+  * CHANGELOG, FAQ: Updated.
 
-2007-01-30 03:24  cakebread
+2007-02-08  Rob Cakebread <cakebread@gmail.com>
 
-	* yolklib/__version__.py: Update version.
+  * yolk.py: Moved to yolklib/scripts.
 
-2007-01-29 19:11  cakebread
+  * setup.py: Moved yolk.py to scripts directory.
 
-	* tests/rss_feed.py: Removed flakey test.
+  * CHANGELOG: Updated.
 
-2007-01-29 02:15  cakebread
+  * yolklib/pypi.py: Added check for Python2.5 elementtree
 
-	* examples/rss_feed.py: Tidy.
+  * docs/api/index.html, docs/api/private/frames.html,
+  docs/api/private/help.html, docs/api/private/index.html,
+  docs/api/private/indices.html, docs/api/private/toc-everything.html,
+  docs/api/private/toc-yolk-module.html,
+  docs/api/private/toc-yolklib-module.html,
+  .../private/toc-yolklib.__version__-module.html,
+  docs/api/private/toc-yolklib.pypi-module.html, docs/api/private/toc.html,
+  docs/api/private/trees.html, docs/api/private/yolk-module.html,
+  docs/api/private/yolklib-module.html,
+  docs/api/private/yolklib.__version__-module.html,
+  docs/api/private/yolklib.metadata-module.html,
+  docs/api/private/yolklib.pypi-module.html,
+  .../api/private/yolklib.pypi.CheeseShop-class.html,
+  docs/api/private/yolklib.yolklib-module.html,
+  .../yolklib.yolklib.Distributions-class.html, docs/api/public/frames.html,
+  docs/api/public/help.html, docs/api/public/index.html,
+  docs/api/public/indices.html, docs/api/public/toc-everything.html,
+  docs/api/public/toc-yolk-module.html,
+  docs/api/public/toc-yolklib-module.html,
+  .../api/public/toc-yolklib.__version__-module.html,
+  docs/api/public/toc-yolklib.pypi-module.html, docs/api/public/toc.html,
+  docs/api/public/trees.html, docs/api/public/yolk-module.html,
+  docs/api/public/yolklib-module.html,
+  docs/api/public/yolklib.__version__-module.html,
+  docs/api/public/yolklib.metadata-module.html,
+  docs/api/public/yolklib.pypi-module.html,
+  docs/api/public/yolklib.pypi.CheeseShop-class.html,
+  docs/api/public/yolklib.yolklib-module.html,
+  .../yolklib.yolklib.Distributions-class.html: Updated via epydoc
 
-2007-01-29 02:14  cakebread
+  * yolklib/scripts/yolk.py, yolklib/yolk.py: Moving file
 
-	* setup.py, yolklib/__version__.py: Updated version.
+  * yolklib/yolk.py: Moving file
 
-2007-01-29 02:14  cakebread
+2007-02-06  Rob Cakebread <cakebread@gmail.com>
 
-	* yolk.py, yolklib/pypi.py: Added operator parsing for PyPI
-	  searches
+  * yolk.py: Added get_highest_version
 
-2007-01-27 07:15  cakebread
+2007-02-05  Rob Cakebread <cakebread@gmail.com>
 
-	* docs/api, docs/api/epydoc.css, docs/api/index.html,
-	  docs/api/private, docs/api/private/epydoc.css,
-	  docs/api/private/frames.html, docs/api/private/help.html,
-	  docs/api/private/index.html, docs/api/private/indices.html,
-	  docs/api/private/toc-everything.html,
-	  docs/api/private/toc-yolk-module.html,
-	  docs/api/private/toc-yolklib-module.html,
-	  docs/api/private/toc-yolklib.__version__-module.html,
-	  docs/api/private/toc-yolklib.metadata-module.html,
-	  docs/api/private/toc-yolklib.pypi-module.html,
-	  docs/api/private/toc-yolklib.yolklib-module.html,
-	  docs/api/private/toc.html, docs/api/private/trees.html,
-	  docs/api/private/yolk-module.html,
-	  docs/api/private/yolklib-module.html,
-	  docs/api/private/yolklib.__version__-module.html,
-	  docs/api/private/yolklib.metadata-module.html,
-	  docs/api/private/yolklib.pypi-module.html,
-	  docs/api/private/yolklib.pypi.CheeseShop-class.html,
-	  docs/api/private/yolklib.yolklib-module.html,
-	  docs/api/private/yolklib.yolklib.Distributions-class.html,
-	  docs/api/public, docs/api/public/epydoc.css,
-	  docs/api/public/frames.html, docs/api/public/help.html,
-	  docs/api/public/index.html, docs/api/public/indices.html,
-	  docs/api/public/toc-everything.html,
-	  docs/api/public/toc-yolk-module.html,
-	  docs/api/public/toc-yolklib-module.html,
-	  docs/api/public/toc-yolklib.__version__-module.html,
-	  docs/api/public/toc-yolklib.metadata-module.html,
-	  docs/api/public/toc-yolklib.pypi-module.html,
-	  docs/api/public/toc-yolklib.yolklib-module.html,
-	  docs/api/public/toc.html, docs/api/public/trees.html,
-	  docs/api/public/yolk-module.html,
-	  docs/api/public/yolklib-module.html,
-	  docs/api/public/yolklib.__version__-module.html,
-	  docs/api/public/yolklib.metadata-module.html,
-	  docs/api/public/yolklib.pypi-module.html,
-	  docs/api/public/yolklib.pypi.CheeseShop-class.html,
-	  docs/api/public/yolklib.yolklib-module.html,
-	  docs/api/public/yolklib.yolklib.Distributions-class.html: Initial
-	  commit.
+  * yolklib/pypi.py, yolklib/yolklib.py: Remove #\!/usr/bin/python
 
-2007-01-27 07:10  cakebread
+  * yolk.py: Only show newer packages on PyPI -U
 
-	* AUTHORS, CHANGELOG, COPYING, CREDITS, FAQ, INSTALL, NEWS, README,
-	  THANKS, TODO, docs, docs/tests.txt, docs/yolk.1, examples,
-	  examples/rss_feed.py, setup.py, tests, tests/rss_feed.py,
-	  yolk.py, yolklib, yolklib/__init__.py, yolklib/__version__.py,
-	  yolklib/metadata.py, yolklib/pypi.py, yolklib/yolklib.py: Initial
-	  commit.
+2007-02-02  Rob Cakebread <cakebread@gmail.com>
 
-2007-01-08 22:54  cakebread
+  * yolk.py: Check for Summary metadata key.
 
-	* branches, tags, ., yolk.py: Initial commit.
+2007-02-01  Rob Cakebread <cakebread@gmail.com>
 
+  * yolk.py: Show which pkgs have updates based on PyPI.
+
+  * yolk.py: Fixed print_help printing None.
+
+2007-01-31  Rob Cakebread <cakebread@gmail.com>
+
+  * yolk.py, yolklib/pypi.py: Add check for filetype -T
+
+2007-01-30  Rob Cakebread <cakebread@gmail.com>
+
+  * yolklib/__version__.py: Update version.
+
+2007-01-29  Rob Cakebread <cakebread@gmail.com>
+
+  * tests/rss_feed.py: Removed flakey test.
+
+  * examples/rss_feed.py: Tidy.
+
+  * setup.py, yolklib/__version__.py: Updated version.
+
+  * yolk.py, yolklib/pypi.py: Added operator parsing for PyPI searches
