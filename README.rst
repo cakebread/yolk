@@ -83,10 +83,10 @@ Tips and Tricks
  * Upgrade all installed Python packages:
 
 
-  {{{Warning: You only want to do this inside a virtualenv. If you're using Linux, use your package manager to install Python packages globally whenever possible.
+ Warning: You only want to do this inside a virtualenv. If you're using Linux, use your package manager to install Python packages globally whenever possible. Think twice before upgrading all packages system-wide on OSX.
 
      $ pip install -U `yolk -U | awk '{print $1}'`
-}}}
+
 
 
 Changes
