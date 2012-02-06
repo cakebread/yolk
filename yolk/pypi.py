@@ -8,9 +8,9 @@ Desc: Library for getting information about Python packages by querying
       The CheeseShop (PYPI a.k.a. Python Package Index).
 
 
-Author: Rob Cakebread <gentoodev@gmail.com>
+Author: Rob Cakebread <cakebread at gmail>
 
-License  : GNU General Public License Version 2
+License  : BSD (See COPYING)
 
 """
 
@@ -35,17 +35,17 @@ XML_RPC_SERVER = 'http://pypi.python.org/pypi'
 class ProxyTransport(xmlrpclib.Transport):
     """
     Provides an XMl-RPC transport routing via a http proxy.
-    
+
     This is done by using urllib2, which in turn uses the environment
     varable http_proxy and whatever else it is built to use (e.g. the
     windows    registry).
-    
+
     NOTE: the environment variable http_proxy should be set correctly.
     See check_proxy_setting() below.
-    
+
     Written from scratch but inspired by xmlrpc_urllib_transport.py
     file from http://starship.python.net/crew/jjkunce/ by jjk.
-    
+
     A. Ellerton 2006-07-06
     """
 
@@ -69,19 +69,19 @@ def check_proxy_setting():
     """
     If the environmental variable 'HTTP_PROXY' is set, it will most likely be
     in one of these forms:
-    
+
           proxyhost:8080
           http://proxyhost:8080
-    
-    urlllib2 requires the proxy URL to start with 'http://' 
+
+    urlllib2 requires the proxy URL to start with 'http://'
     This routine does that, and returns the transport for xmlrpc.
     """
     try:
         http_proxy = os.environ['HTTP_PROXY']
     except KeyError:
         return
-    
-    if not http_proxy.startswith('http://'): 
+
+    if not http_proxy.startswith('http://'):
         match = re.match('(http://)?([-_\.A-Za-z]+):(\d+)', http_proxy)
         #if not match:
         #    raise Exception('Proxy format not recognised: [%s]' % http_proxy)
@@ -108,7 +108,7 @@ class CheeseShop:
         self.logger = logging.getLogger("yolk")
         self.get_cache()
 
-    def get_cache(self): 
+    def get_cache(self):
         """
         Get a package name list from disk cache or PyPI
         """
@@ -138,7 +138,7 @@ class CheeseShop:
         """
         check_proxy_setting()
         if os.environ.has_key('XMLRPC_DEBUG'):
-            debug = 1 
+            debug = 1
         else:
             debug = 0
         try:
@@ -159,7 +159,7 @@ class CheeseShop:
             self.logger.debug("Package %s not in cache, querying PyPI..." \
                     % package_name)
             self.fetch_pkg_list()
-        #I have to set version=[] for edge cases like "Magic file extensions" 
+        #I have to set version=[] for edge cases like "Magic file extensions"
         #but I'm not sure why this happens. It's included with Python or
         #because it has a space in it's name?
         versions = []
@@ -188,7 +188,7 @@ class CheeseShop:
     def search(self, spec, operator):
         '''Query PYPI via XMLRPC interface using search spec'''
         return self.xmlrpc.search(spec, operator.lower())
-    
+
     def changelog(self, hours):
         '''Query PYPI via XMLRPC interface using search spec'''
         return self.xmlrpc.changelog(get_seconds(hours))
@@ -257,7 +257,7 @@ class CheeseShop:
                         if url:
                             all_urls.append(url)
         return all_urls
-        
+
 def filter_url(pkg_type, url):
     """
     Returns URL of specified file type
@@ -297,4 +297,3 @@ def get_seconds(hours):
 
     """
     return int(time.time() - (60 * 60) * hours)
-
