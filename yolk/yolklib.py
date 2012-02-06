@@ -9,9 +9,9 @@ Desc: Library for getting information about Python packages installed by
       The CheeseShop (PYPI) for Python package release information.
 
 
-Author: Rob Cakebread <gentoodev a t gmail.com>
+Author: Rob Cakebread <cakebread @ gmail>
 
-License  : GNU General Public License Version 2
+License  : BSD (See COPYING)
 
 '''
 
@@ -39,7 +39,7 @@ class Distributions:
         @param dist: pkg_resources Distribution object
 
         @returns: True or False
-        
+
         """
         if dist in self.working_set:
             return True
@@ -61,7 +61,7 @@ class Distributions:
 
         @returns: yields tuples of distribution and True or False depending
                   on active state. e.g. (dist, True)
-        
+
         """
         #pylint: disable-msg=W0612
         #'name' is a placeholder for the sorted list
@@ -79,7 +79,7 @@ class Distributions:
     def get_alpha(self, show, pkg_name="", version=""):
         """
         Return list of alphabetized packages
-        
+
         @param pkg_name: PyPI project name
         @type pkg_name: string
 
@@ -87,9 +87,9 @@ class Distributions:
         @type version: string
 
         @returns: Alphabetized list of tuples. Each tuple contains
-                  a string and a pkg_resources Distribution object. 
+                  a string and a pkg_resources Distribution object.
                   The string is the project name + version.
-        
+
         """
         alpha_list = []
         for dist in self.get_packages(show):
@@ -103,7 +103,7 @@ class Distributions:
                 alpha_list.append((dist.project_name + dist.version, dist))
         alpha_list.sort()
         return alpha_list
-    
+
     def get_packages(self, show):
         """
         Return list of Distributions filtered by active status or all
@@ -133,7 +133,7 @@ class Distributions:
 
         @param project_name: PyPI project name
         @type project_name: string
-        
+
         """
         if len(self.environment[package_name]):
             return self.environment[package_name][0].project_name
@@ -146,7 +146,7 @@ class Distributions:
         @type project_name: string
 
         @return: string of highest installed version
-        
+
         """
         return self.environment[project_name][0].version
 
@@ -160,8 +160,8 @@ def get_highest_version(versions):
     @type versions: List of strings
 
     @returns: string of a PyPI package version
-    
-    
+
+
     """
     sorted_versions = []
     for ver in versions:

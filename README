@@ -1,22 +1,22 @@
-yolk
-====
+yolk 0.4.2
+==========
 
 .. contents::
 
 Installation
 ------------
 
-You can install yolk with ``pip install yolk`` 
+You can install yolk with ``pip install yolk`` or via your distro's package manager, if available.
 
-As of 0.0.7 yolk is in Gentoo's Portage tree as dev-python/yolk and a plugin for Portage named dev-python/yolk-portage. The portage plugin shows you which Python packages were installed via the package manager and which were installed directly with pip (or easy_install). Check out that plugin and make one for your favorite distro. It's a great way to find Python cruft.
+As of 0.0.7 yolk is in Gentoo's Portage tree as dev-python/yolk and a plugin for Portage named dev-python/yolk-portage. The portage plugin shows you which Python packages were installed via Portage and which were installed directly with pip (or easy_install). Check out that plugin and make one for your favorite distro. It's a great way to find Python cruft.
 
 
 Summary
 -------
 
-Yolk is a Python tool for obtaining information about packages installed by distutils, pip and easy_install and querying packages on PyPI (Python Package Index a.k.a. The Cheese Shop). 
+Yolk is a Python tool for obtaining information about installed Python packages and querying packages avilable on PyPI (Python Package Index). 
 
-Yolk can list all the packages installed by distutils or pip on your system by >=Python2.5 or packages installed by pip if you have <=Python2.4. You can see which packages are active, non-active or in development mode and show you which have newer versions available by querying PyPI. 
+You can see which packages are active, non-active or in development mode and show you which have newer versions available by querying PyPI. 
 
 Usage Examples::
 
@@ -74,8 +74,30 @@ These options query PyPI::
      $ yolk -H twisted 
          Launches your web browser at Twisted's home page 
 
+
+Tips and Tricks
+---------------
+
+ * Use yolk inside your virtualenv to see which packages are installed.
+
+ * Upgrade all installed Python packages:
+
+
+  {{{Warning: You only want to do this inside a virtualenv. If you're using Linux, use your package manager to install Python packages globally whenever possible.
+
+     $ pip install -U `yolk -U | awk '{print $1}'`
+}}}
+
+
 Changes
 -------
+**0.4.2**: Fix for -C when an integer isn't supplied
+           
+           Fix for --entry-map from Jesus Rivero (Neurogeek) neurogeek@gentoo.org. Thanks, Jesus!
+		
+		   Switch to BSD license from GPL-2
+
+
 **0.4.1**: Fix for -f fields
            
            Add check for integer with -L

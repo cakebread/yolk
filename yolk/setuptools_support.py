@@ -7,7 +7,7 @@
 setuptools_support
 ==================
 
-License  : GNU General Public License Version 2
+License  : BSD (See COPYING)
 
 """
 
@@ -51,7 +51,7 @@ def get_download_uri(package_name, version, source, index_url=None):
 
     """
     Use setuptools to search for a package's URI
-    
+
     @returns: URI string
     """
     tmpdir = None
@@ -67,7 +67,7 @@ def get_download_uri(package_name, version, source, index_url=None):
     req = pkg_resources.Requirement.parse(pkg_spec)
     pkg_index = MyPackageIndex(index_url)
     try:
-        pkg_index.fetch_distribution(req, tmpdir, force_scan, source, 
+        pkg_index.fetch_distribution(req, tmpdir, force_scan, source,
                 develop_ok)
     except DownloadURI, url:
         #Remove #egg=pkg-dev
@@ -86,9 +86,9 @@ def get_pkglist():
 
     Note: It returns one project name per pkg no matter how many versions
     of a particular package is installed
-     
+
     @returns: list of project name strings for every installed pkg
-    
+
     """
 
     dists = Distributions()

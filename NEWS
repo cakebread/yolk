@@ -1,7 +1,9 @@
 
-Lots of changes in 0.0.2 including:
+0.4.2 -
 
- * PyPI interface 
- * Much refactoring of yolklib.
+02/05/2012
+
+A new branch of yolk supporting both Python 2 and 3 is in development and will be pushed out on github soon!
+
 
 
