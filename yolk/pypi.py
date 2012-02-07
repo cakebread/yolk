@@ -23,13 +23,34 @@ import os
 import time
 import logging
 import urllib2
+import httplib
 
 from yolk.utils import get_yolk_dir
 
 
 XML_RPC_SERVER = 'http://pypi.python.org/pypi'
-#XML_RPC_SERVER = 'http://download.zope.org/ppix/'
-#XML_RPC_SERVER = 'http://cheeseshop.python.org/simple'
+
+
+class addinfourl(urllib2.addinfourl):
+    """
+    Replacement addinfourl class compatible with python-2.7's xmlrpclib
+
+    In python-2.7, xmlrpclib expects that the response object that it receives
+    has a getheader method. httplib.HTTPResponse provides this but
+    urllib2.addinfourl does not. Add the necessary functions here, ported to
+    use the internal data structures of addinfourl.
+    """
+    def getheader(self, name, default=None):
+        if self.headers is None:
+            raise httplib.ResponseNotReady()
+        return self.headers.getheader(name, default)
+
+    def getheaders(self):
+        if self.headers is None:
+            raise httplib.ResponseNotReady()
+        return self.headers.items()
+urllib2.addinfourl = addinfourl
+
 
 
 class ProxyTransport(xmlrpclib.Transport):

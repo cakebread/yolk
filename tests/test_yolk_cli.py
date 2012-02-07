@@ -1,4 +1,3 @@
-from nose import SkipTest
 
 class TestStdOut:
     def test_object_initialization(self):

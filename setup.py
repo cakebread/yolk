@@ -24,10 +24,8 @@ setup(name="yolk",
                  "Topic :: Software Development :: Libraries :: Python Modules",
                  ],
     install_requires=["setuptools"],
-    tests_require=["nose"],
     packages=['yolk', 'yolk.plugins'],
     package_dir={'yolk':'yolk'},
     entry_points={'console_scripts': ['yolk = yolk.cli:main',]},
-    test_suite = 'nose.collector',
 )
 

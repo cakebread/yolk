@@ -1,4 +1,4 @@
-yolk 0.4.3
+yolk 0.4.4
 ==========
 
 .. contents::
@@ -91,6 +91,9 @@ Tips and Tricks
 
 Changes
 -------
+**0.4.4**: XML-RPC issue#3 for Python 2.7
+
+
 **0.4.3**: Added missing documentation and license files
 
 
