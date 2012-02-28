@@ -1,4 +1,3 @@
-
 """
 
 pypi.py
@@ -90,7 +89,7 @@ def check_proxy_setting():
     return
 
 
-class CheeseShop:
+class CheeseShop(object):
 
     """Interface to Python Package Index"""
 
