@@ -1,4 +1,3 @@
-
 '''
 
 yolklib.py
@@ -21,7 +20,7 @@ import pkg_resources
 
 
 
-class Distributions:
+class Distributions(object):
 
     """Helper class for pkg_resources"""
 
