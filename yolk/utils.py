@@ -37,7 +37,7 @@ def run_command(cmd, env=None, max_timeout=None):
     output = os.tmpfile()
     try:
         pipe = Popen(arglist, stdout=output, stderr=STDOUT, env=env)
-    except Exception, errmsg:
+    except Exception as errmsg:
         return 1, errmsg
 
     # Wait only max_timeout seconds.

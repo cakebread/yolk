@@ -29,11 +29,16 @@ import optparse
 import pkg_resources
 import webbrowser
 import logging
-from xmlrpclib import Fault as XMLRPCFault
+import platform
+if platform.python_version().startswith('2'):
+    from xmlrpclib import Fault as XMLRPCFault
+    from urllib import urlretrieve
+    from urlparse import urlparse
+else:
+    from xmlrpc.client import Fault as XMLRPCFault
+    from urllib.request import urlretrieve
+    from urllib.parse import urlparse
 from distutils.sysconfig import get_python_lib
-from urllib import urlretrieve
-from urlparse import urlparse
-
 from yolk.metadata import get_metadata
 from yolk.yolklib import get_highest_version, Distributions
 from yolk.pypi import CheeseShop
@@ -259,8 +264,8 @@ class Yolk(object):
                         if pkg_resources.parse_version(dist.version) < \
                             pkg_resources.parse_version(newest):
                             found = True
-                            print " %s %s (%s)" % (project_name, dist.version,
-                                    newest)
+                            print(" %s %s (%s)" % (project_name, dist.version,
+                                    newest))
         if not found and self.project_name:
             self.logger.info("You have the latest version installed.")
         elif not found:
@@ -313,7 +318,7 @@ class Yolk(object):
                     add_column_text += my_plugin.add_column(dist) + " "
                 self.print_metadata(metadata, develop, active, add_column_text)
             else:
-                print str(dist) + " has no metadata"
+                print(str(dist) + " has no metadata")
             results = True
         if not results and self.project_name:
             if self.version:
@@ -329,8 +334,8 @@ class Yolk(object):
                         (show, pkg_spec))
             return 2
         elif show == "all" and results and self.options.fields:
-            print "Versions with '*' are non-active."
-            print "Versions with '!' are deployed in development mode."
+            print("Versions with '*' are non-active.")
+            print("Versions with '!' are deployed in development mode.")
 
 
     def print_metadata(self, metadata, develop, active, installed_by):
@@ -380,24 +385,24 @@ class Yolk(object):
             development_status = installed_by
         status = "%s %s" % (active_status, development_status)
         if fields:
-            print '%s (%s)%s %s' % (metadata['Name'], version, active_status,
-                                    development_status)
+            print('%s (%s)%s %s' % (metadata['Name'], version, active_status,
+                                    development_status))
         else:
             # Need intelligent justification
-            print metadata['Name'].ljust(15) + " - " + version.ljust(12) + \
-                " - " + status
+            print(metadata['Name'].ljust(15) + " - " + version.ljust(12) + \
+                " - " + status)
         if fields:
             #Only show specific fields, using case-insensitive search
             fields = map(str.lower, fields)
             for field in metadata.keys():
                 if field.lower() in fields:
-                    print '    %s: %s' % (field, metadata[field])
-            print
+                    print('    %s: %s' % (field, metadata[field]))
+            print()
         elif show_metadata:
             #Print all available metadata fields
             for field in metadata.keys():
                 if field != 'Name' and field != 'Summary':
-                    print '    %s: %s' % (field, metadata[field])
+                    print('    %s: %s' % (field, metadata[field]))
 
     def show_deps(self):
         """
@@ -410,7 +415,7 @@ class Yolk(object):
 
         for pkg in pkgs[self.project_name]:
             if not self.version:
-                print pkg.project_name, pkg.version
+                print(pkg.project_name, pkg.version)
 
             i = len(pkg._dep_map.values()[0])
             if i:
@@ -418,8 +423,8 @@ class Yolk(object):
                     if not self.version or self.version and \
                             pkg.version == self.version:
                         if self.version and i == len(pkg._dep_map.values()[0]):
-                            print pkg.project_name, pkg.version
-                        print "  " + str(pkg._dep_map.values()[0][i - 1])
+                            print(pkg.project_name, pkg.version)
+                        print("  " + str(pkg._dep_map.values()[0][i - 1]))
                     i -= 1
             else:
                 self.logger.info(\
@@ -441,7 +446,7 @@ class Yolk(object):
 
         try:
             changelog = self.pypi.changelog(int(hours))
-        except XMLRPCFault, err_msg:
+        except XMLRPCFault as err_msg:
             self.logger.error(err_msg)
             self.logger.error("ERROR: Couldn't retrieve changelog.")
             return 1
@@ -450,10 +455,10 @@ class Yolk(object):
         for entry in changelog:
             pkg = entry[0]
             if pkg != last_pkg:
-                print "%s %s\n\t%s" % (entry[0], entry[1], entry[3])
+                print("%s %s\n\t%s" % (entry[0], entry[1], entry[3]))
                 last_pkg = pkg
             else:
-                print "\t%s" % entry[3]
+                print("\t%s" % entry[3])
 
         return 0
 
@@ -471,13 +476,13 @@ class Yolk(object):
             return 1
         try:
             latest_releases = self.pypi.updated_releases(hours)
-        except XMLRPCFault, err_msg:
+        except XMLRPCFault as err_msg:
             self.logger.error(err_msg)
             self.logger.error("ERROR: Couldn't retrieve latest releases.")
             return 1
 
         for release in latest_releases:
-            print "%s %s" % (release[0], release[1])
+            print("%s %s" % (release[0], release[1]))
         return 0
 
     def show_download_links(self):
@@ -536,7 +541,7 @@ class Yolk(object):
         url = get_download_uri(self.project_name, version, source,
                 self.options.pypi_index)
         if url:
-            print "%s" % url
+            print("%s" % url)
         else:
             self.logger.info("No download URL found for %s" % pkg_type)
 
@@ -596,7 +601,7 @@ class Yolk(object):
         try:
             downloaded_filename, headers = urlretrieve(uri, filename)
             self.logger.info("Downloaded ./" + filename)
-        except IOError, err_msg:
+        except IOError as err_msg:
             self.logger.error("Error downloading package %s from URL %s"  \
                     % (filename, uri))
             self.logger.error(str(err_msg))
@@ -635,7 +640,7 @@ class Yolk(object):
             return 1
         try:
             os.mkdir(directory)
-        except OSError, err_msg:
+        except OSError as err_msg:
             self.logger.error("ERROR: " + str(err_msg))
             return 1
         cwd = os.path.realpath(os.curdir)
@@ -693,7 +698,7 @@ class Yolk(object):
             for key in metadata.keys():
                 if not self.options.fields or (self.options.fields and \
                         self.options.fields==key):
-                    print "%s: %s" % (key, metadata[key])
+                    print("%s: %s" % (key, metadata[key]))
         return 0
 
     def versions_available(self):
@@ -816,10 +821,10 @@ class Yolk(object):
                 summary = pkg['summary'].encode('utf-8')
             else:
                 summary = ""
-            print """%s (%s):
+            print("""%s (%s):
         %s
     """ % (pkg['name'].encode('utf-8'), pkg["version"],
-                    summary)
+                    summary))
         return 0
 
     def show_entry_map(self):
@@ -855,10 +860,10 @@ class Yolk(object):
             found = True
             try:
                 plugin = entry_point.load()
-                print plugin.__module__
-                print "   %s" % entry_point
+                print(plugin.__module__)
+                print("   %s" % entry_point)
                 if plugin.__doc__:
-                    print plugin.__doc__
+                    print(plugin.__doc__)
                 print
             except ImportError:
                 pass
@@ -1059,7 +1064,7 @@ def print_pkg_versions(project_name, versions):
 
     """
     for ver in versions:
-        print "%s %s" % (project_name, ver)
+        print("%s %s" % (project_name, ver))
 
 def validate_pypi_opts(opt_parser):
     """
