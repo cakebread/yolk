@@ -95,7 +95,7 @@ def load_plugins(builtin=True, others=True):
             plugin = entry_point.load()
         except KeyboardInterrupt:
             raise
-        except Exception, err_msg:
+        except Exception as err_msg:
             # never want a plugin load to exit yolk
             # but we can't log here because the logger is not yet
             # configured

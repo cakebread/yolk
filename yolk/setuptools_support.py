@@ -69,7 +69,7 @@ def get_download_uri(package_name, version, source, index_url=None):
     try:
         pkg_index.fetch_distribution(req, tmpdir, force_scan, source,
                 develop_ok)
-    except DownloadURI, url:
+    except DownloadURI as url:
         #Remove #egg=pkg-dev
         clean_url = url.value.split("#")[0]
         #If setuptools is asked for an egg and there isn't one, it will

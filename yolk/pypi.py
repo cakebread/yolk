@@ -17,12 +17,18 @@ License  : BSD (See COPYING)
 __docformat__ = 'restructuredtext'
 
 import re
-import xmlrpclib
-import cPickle
+import platform
+if platform.python_version().startswith('2'):
+    import xmlrpclib
+    import cPickle
+    import urllib2
+else:
+    import xmlrpc.client as xmlrpclib
+    import pickle
+    import urllib.request as urllib2
 import os
 import time
 import logging
-import urllib2
 import urllib
 
 from yolk.utils import get_yolk_dir
