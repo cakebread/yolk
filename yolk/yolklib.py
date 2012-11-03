@@ -167,6 +167,7 @@ def get_highest_version(versions):
     for ver in versions:
         sorted_versions.append((pkg_resources.parse_version(ver), ver))
 
+    sorted_versions = sorted(sorted_versions)
     sorted_versions.reverse()
     return sorted_versions[0][1]
 
