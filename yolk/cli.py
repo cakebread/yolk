@@ -66,6 +66,12 @@ class StdOut:
             return getattr(self.stdout, attribute)
         return self.__dict__[attribute]
 
+    def flush(self):
+        """Bug workaround for Python 3.2+:
+         Exception AttributeError: 'flush' in <yolk.cli.StdOut object...
+         """
+        pass
+
     def write(self, inline):
         """
         Write a line to stdout if it isn't in a blacklist
